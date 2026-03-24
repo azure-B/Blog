@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>글쓰기 템플릿 | 이승빈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="common.css" />
+</head>
+<body>
+<div id="app">
+
+  <div class="template-page">
+    <div class="template-hero">
+      <div class="template-label">✦ Writing Template</div>
+      <div class="template-title">새 글 작성 가이드</div>
+      <div class="template-desc">
+        아래 템플릿을 복사해 <code>posts/</code> 폴더에 새 파일을 만들고,
+        해당 게시판 HTML의 <code>posts</code> 배열에 메타 정보를 한 줄 추가하면 끝입니다.
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────── -->
+    <p class="template-section-label">// STEP 1 — 게시판 목록에 메타 데이터 추가 (예: tech.html)</p>
+    <pre class="template-code">
+<span class="code-comment">/* tech.html 의 posts 배열 맨 앞에 추가 */</span>
+{
+  <span class="code-key">id</span>:       <span class="code-val">'tech-004'</span>,          <span class="code-comment">// 파일명과 동일하게</span>
+  <span class="code-key">category</span>: <span class="code-val">'Deep Learning'</span>,    <span class="code-comment">// 세부 분류 (자유)</span>
+  <span class="code-key">title</span>:    <span class="code-val">'글 제목'</span>,
+  <span class="code-key">excerpt</span>:  <span class="code-val">'목록에 보일 한 두 줄 요약'</span>,
+  <span class="code-key">tags</span>:     [<span class="code-val">'태그1'</span>, <span class="code-val">'태그2'</span>],
+  <span class="code-key">date</span>:     <span class="code-val">'2025.07.15'</span>,
+},</pre>
+
+    <!-- ─────────────────────────────────────── -->
+    <p class="template-section-label">// STEP 2 — posts/tech-004.html 파일 생성 (아래 전체 복사)</p>
+    <pre class="template-code">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+  &lt;title&gt;<span class="code-val">글 제목</span> | 이승빈&lt;/title&gt;
+  &lt;link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&amp;family=Bebas+Neue&amp;family=JetBrains+Mono:wght@300;400;700&amp;display=swap" rel="stylesheet" /&gt;
+  &lt;link rel="stylesheet" href="../common.css" /&gt;   <span class="code-comment">&lt;!-- posts/ 안이라 ../ --&gt;</span>
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="app"&gt;
+&lt;div class="post-detail"&gt;
+
+  &lt;!-- 뒤로가기 버튼 --&gt;
+  &lt;a class="detail-back" href="../tech.html"&gt;← 기술 분석으로 돌아가기&lt;/a&gt;
+
+  &lt;!-- 카테고리 / 제목 / 메타 --&gt;
+  &lt;div class="detail-category"&gt;<span class="code-val">Deep Learning</span>&lt;/div&gt;
+  &lt;h1 class="detail-title"&gt;<span class="code-val">글 제목을 여기에 쓰세요</span>&lt;/h1&gt;
+  &lt;div class="detail-meta"&gt;
+    &lt;span class="detail-author"&gt;이승빈&lt;/span&gt;
+    &lt;span class="meta-dot"&gt;&lt;/span&gt;
+    &lt;span class="detail-date"&gt;<span class="code-val">2025.07.15</span>&lt;/span&gt;
+    &lt;div class="detail-tags"&gt;
+      &lt;span class="detail-tag"&gt;#태그1&lt;/span&gt;
+      &lt;span class="detail-tag"&gt;#태그2&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- ───────────────────────────────────────────
+       본문 영역 — 아래 클래스들을 활용하세요.
+  ─────────────────────────────────────────────── --&gt;
+  &lt;div class="detail-content"&gt;
+
+    &lt;!-- ① 도입부 --&gt;
+    &lt;p&gt;도입부 내용을 작성하세요.&lt;/p&gt;
+
+    &lt;!-- ② 소제목 (왼쪽 파란 선이 붙습니다) --&gt;
+    &lt;h2&gt;소제목&lt;/h2&gt;
+    &lt;p&gt;본문 내용...&lt;/p&gt;
+
+    &lt;!-- ③ 수식 블록 --&gt;
+    &lt;div class="formula"&gt;
+      P(y=1|x) = σ(wᵀx + b)
+    &lt;/div&gt;
+
+    &lt;!-- ④ 코드 블록 --&gt;
+    &lt;pre&gt;&lt;code&gt;
+# Python 예시
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+    &lt;/code&gt;&lt;/pre&gt;
+
+    &lt;!-- ⑤ 하이라이트 박스 (파란 배경) --&gt;
+    &lt;div class="highlight-box"&gt;
+      &lt;strong&gt;⚡ 핵심 포인트:&lt;/strong&gt; 강조할 내용을 여기에.
+    &lt;/div&gt;
+
+    &lt;!-- ⑥ 인용문 (분홍 왼쪽 선) --&gt;
+    &lt;blockquote&gt;
+      "인용문을 여기에 작성하세요." — 출처
+    &lt;/blockquote&gt;
+
+    &lt;!-- ⑦ 목록 --&gt;
+    &lt;ul&gt;
+      &lt;li&gt;포인트 1&lt;/li&gt;
+      &lt;li&gt;포인트 2&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;!-- ⑧ 정리 섹션 --&gt;
+    &lt;h2&gt;정리&lt;/h2&gt;
+    &lt;p&gt;이번 글의 핵심을 요약하세요.&lt;/p&gt;
+
+  &lt;/div&gt;
+  &lt;!-- /detail-content --&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script src="../components.js"&gt;&lt;/script&gt;   <span class="code-comment">&lt;!-- posts/ 안이라 ../ --&gt;</span>
+&lt;script&gt;
+  renderLayout({
+    page: <span class="code-val">'tech'</span>,              <span class="code-comment">// 현재 게시판 키</span>
+    breadcrumb: <span class="code-val">'기술 분석 / 글 제목'</span>,
+    root: <span class="code-val">'../'</span>               <span class="code-comment">// posts/ 안이라 반드시 '../'</span>
+  });
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+    <!-- ─────────────────────────────────────── -->
+    <p class="template-section-label">// 프로젝트 리뷰 전용 추가 섹션</p>
+    <pre class="template-code">
+<span class="code-comment">/* detail-content 안에 추가로 쓰면 좋은 섹션 */</span>
+
+&lt;!-- 프로젝트 개요 박스 --&gt;
+&lt;div class="highlight-box"&gt;
+  &lt;strong&gt;기간:&lt;/strong&gt; 2025.03 — 2025.06&lt;br/&gt;
+  &lt;strong&gt;팀:&lt;/strong&gt; 3인 (본인: 백엔드 / AI)&lt;br/&gt;
+  &lt;strong&gt;스택:&lt;/strong&gt; Python · FastAPI · PyTorch · Docker
+&lt;/div&gt;
+
+&lt;h2&gt;문제 정의&lt;/h2&gt;
+<span class="code-comment">&lt;!-- 어떤 문제를 해결하려 했는지 --&gt;</span>
+
+&lt;h2&gt;설계 및 구현&lt;/h2&gt;
+<span class="code-comment">&lt;!-- 아키텍처, 핵심 알고리즘 --&gt;</span>
+
+&lt;h2&gt;결과 및 성능&lt;/h2&gt;
+<span class="code-comment">&lt;!-- 정량적 결과, 스크린샷 등 --&gt;</span>
+
+&lt;h2&gt;회고&lt;/h2&gt;
+<span class="code-comment">&lt;!-- 잘 된 점, 아쉬운 점, 개선 방향 --&gt;</span></pre>
+
+  </div>
+
+</div>
+
+<script src="components.js"></script>
+<script>
+  renderLayout({ page: 'template', breadcrumb: '글쓰기 템플릿', root: '' });
+</script>
+</body>
+</html>

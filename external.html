@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>대외 활동 | 이승빈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="common.css" />
+</head>
+<body>
+<div id="app">
+
+  <div class="board-header">
+    <div class="board-header-eng">// 03 · External Activity</div>
+    <div class="board-header-title">대외 활동</div>
+    <div class="board-header-desc">AI 해커톤, 공모전, 외부 커뮤니티 참여 기록</div>
+  </div>
+
+  <!-- ✏️ 새 글: posts 배열에 추가 + posts/external-NNN.html 생성 -->
+  <div class="post-list" id="post-list"></div>
+
+</div>
+
+<script src="components.js"></script>
+<script>
+  const posts = [
+    {
+      id: 'external-002',
+      category: 'AI 대회',
+      title: '공개 AI 경진대회 참가기 — 이미지 분류 태스크',
+      excerpt: 'Dacon 이미지 분류 대회에 처음 참가했습니다. EfficientNet 파인튜닝부터 앙상블까지 전 과정을 공유합니다.',
+      tags: ['Dacon', 'EfficientNet', 'Image Classification', 'Ensemble', '대회'],
+      date: '2025.06.01',
+    },
+    {
+      id: 'external-001',
+      category: '해커톤',
+      title: '구름톤 2025 유니브 부대표 활동 회고',
+      excerpt: '전국 대학생 개발자 연합 해커톤 구름톤 유니브에서 부대표로 활동한 6개월의 여정을 기록합니다.',
+      tags: ['9oormthon', '구름톤', '해커톤', '대학생', '운영진'],
+      date: '2025.07.10',
+    },
+  ];
+
+  document.getElementById('post-list').innerHTML = posts.map((p, i) => `
+    <a class="post-item" href="posts/${p.id}.html">
+      <div class="post-num">0${posts.length - i}</div>
+      <div class="post-body">
+        <span class="post-cat">${p.category}</span>
+        <div class="post-title">${p.title}</div>
+        <div class="post-excerpt">${p.excerpt}</div>
+        <div class="post-tags">${p.tags.map(t => `<span class="post-tag">#${t}</span>`).join('')}</div>
+      </div>
+      <div class="post-meta">
+        <div class="post-date">${p.date}</div>
+      </div>
+    </a>
+  `).join('');
+
+  renderLayout({ page: 'external', breadcrumb: '대외 활동', root: '' });
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>프로젝트 리뷰 | 이승빈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="common.css" />
+</head>
+<body>
+<div id="app">
+
+  <div class="board-header">
+    <div class="board-header-eng">// 02 · Project Review</div>
+    <div class="board-header-title">프로젝트 리뷰</div>
+    <div class="board-header-desc">직접 구현한 프로젝트의 설계, 구현, 회고를 담은 글 모음</div>
+  </div>
+
+  <!-- ✏️ 새 글: posts 배열에 추가 + posts/project-NNN.html 생성 -->
+  <div class="post-list" id="post-list"></div>
+
+</div>
+
+<script src="components.js"></script>
+<script>
+  const posts = [
+    {
+      id: 'project-002',
+      category: 'Full Stack',
+      title: '폴라리스 창업동아리 팀 관리 플랫폼 제작기',
+      excerpt: '동아리 운영을 위한 사내 툴을 직접 만들었습니다. 프로젝트 보드, 회의록, 멤버 관리 기능을 포함합니다.',
+      tags: ['Next.js', 'Supabase', 'Tailwind', 'Startup', 'Polaris'],
+      date: '2025.04.20',
+    },
+    {
+      id: 'project-001',
+      category: 'Computer Vision',
+      title: '실시간 손 제스처 인식 시스템 개발기',
+      excerpt: 'MediaPipe + PyTorch로 실시간 손 제스처를 인식하는 경량 분류기를 만들었습니다. 데이터 수집부터 배포까지 전 과정을 기록합니다.',
+      tags: ['MediaPipe', 'PyTorch', 'Gesture Recognition', 'FastAPI', 'IPCG Lab'],
+      date: '2025.05.15',
+    },
+  ];
+
+  document.getElementById('post-list').innerHTML = posts.map((p, i) => `
+    <a class="post-item" href="posts/${p.id}.html">
+      <div class="post-num">0${posts.length - i}</div>
+      <div class="post-body">
+        <span class="post-cat">${p.category}</span>
+        <div class="post-title">${p.title}</div>
+        <div class="post-excerpt">${p.excerpt}</div>
+        <div class="post-tags">${p.tags.map(t => `<span class="post-tag">#${t}</span>`).join('')}</div>
+      </div>
+      <div class="post-meta">
+        <div class="post-date">${p.date}</div>
+      </div>
+    </a>
+  `).join('');
+
+  renderLayout({ page: 'project', breadcrumb: '프로젝트 리뷰', root: '' });
+</script>
+</body>
+</html>

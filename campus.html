@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>교내 활동 | 이승빈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="common.css" />
+</head>
+<body>
+<div id="app">
+
+  <div class="board-header">
+    <div class="board-header-eng">// 04 · Campus Activity</div>
+    <div class="board-header-title">교내 활동</div>
+    <div class="board-header-desc">동아리, 랩 활동, 교내 행사 참여 기록</div>
+  </div>
+
+  <!-- ✏️ 새 글: posts 배열에 추가 + posts/campus-NNN.html 생성 -->
+  <div class="post-list" id="post-list"></div>
+
+</div>
+
+<script src="components.js"></script>
+<script>
+  const posts = [
+    {
+      id: 'campus-002',
+      category: 'IPCG Lab',
+      title: 'IPCG 랩 정기 세미나 — Diffusion Model 발표 후기',
+      excerpt: '랩 세미나에서 Stable Diffusion의 수학적 기반(DDPM)을 발표했습니다. 발표 내용과 Q&A 내용을 정리합니다.',
+      tags: ['IPCG Lab', 'Diffusion Model', 'DDPM', '랩 세미나', '곽노윤'],
+      date: '2025.05.28',
+    },
+    {
+      id: 'campus-001',
+      category: '동아리',
+      title: '폴라리스 창업동아리 2025년 출범 — 대표 취임 회고',
+      excerpt: '2025년 창업동아리 폴라리스를 창설하고 대표를 맡게 된 배경과 동아리 방향성을 공유합니다.',
+      tags: ['폴라리스', '창업', '동아리', '백석대학교', '스타트업'],
+      date: '2025.03.05',
+    },
+  ];
+
+  document.getElementById('post-list').innerHTML = posts.map((p, i) => `
+    <a class="post-item" href="posts/${p.id}.html">
+      <div class="post-num">0${posts.length - i}</div>
+      <div class="post-body">
+        <span class="post-cat">${p.category}</span>
+        <div class="post-title">${p.title}</div>
+        <div class="post-excerpt">${p.excerpt}</div>
+        <div class="post-tags">${p.tags.map(t => `<span class="post-tag">#${t}</span>`).join('')}</div>
+      </div>
+      <div class="post-meta">
+        <div class="post-date">${p.date}</div>
+      </div>
+    </a>
+  `).join('');
+
+  renderLayout({ page: 'campus', breadcrumb: '교내 활동', root: '' });
+</script>
+</body>
+</html>

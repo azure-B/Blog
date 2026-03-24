@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>기술 분석 | 이승빈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="common.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ── 게시판 헤더 ── -->
+  <div class="board-header">
+    <div class="board-header-eng">// 01 · Tech Analysis</div>
+    <div class="board-header-title">기술 분석</div>
+    <div class="board-header-desc">머신러닝, 딥러닝, 컴퓨터 비전 기법을 직접 분석·정리한 글 모음</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════
+       ✏️  새 글을 추가할 때는 아래 posts 배열에
+           객체 하나를 추가하고,
+           posts/ 폴더에 해당 HTML 파일을 생성하세요.
+           파일명은 id 값과 동일하게 맞춰주세요.
+           예) id: 'tech-004'  →  posts/tech-004.html
+  ════════════════════════════════════════════════════ -->
+  <div class="post-list" id="post-list"></div>
+
+</div>
+
+<script src="components.js"></script>
+<script>
+  /* ──────────────────────────────────────────────────────
+     게시글 목록 데이터
+     새 글 추가 시 배열 맨 앞에 객체를 추가하세요 (최신 글이 위로).
+  ────────────────────────────────────────────────────── */
+  const posts = [
+    {
+      id: 'tech-003',
+      category: 'Transformer',
+      title: 'Self-Attention 메커니즘 수식 완전 분해',
+      excerpt: 'Query, Key, Value의 역할과 Scaled Dot-Product Attention을 수식부터 코드까지 단계별로 분석합니다.',
+      tags: ['Transformer', 'Attention', 'NLP', 'Self-Attention', 'QKV'],
+      date: '2025.07.01',
+    },
+    {
+      id: 'tech-002',
+      category: 'Deep Learning',
+      title: 'CNN(합성곱 신경망) 구조 분석 — 필터부터 풀링까지',
+      excerpt: '합성곱 연산, 패딩, 스트라이드, 풀링의 작동 방식을 직접 계산 예시와 함께 정리합니다.',
+      tags: ['CNN', 'Convolution', 'Pooling', 'Feature Map', 'Computer Vision'],
+      date: '2025.06.20',
+    },
+    {
+      id: 'tech-001',
+      category: 'Machine Learning',
+      title: '로지스틱 회귀(Logistic Regression) 완전 분석',
+      excerpt: '시그모이드 함수부터 최대 우도 추정, 경사하강법까지 로지스틱 회귀의 수학적 기반을 정리했습니다.',
+      tags: ['Logistic Regression', 'MLE', 'Gradient Descent', 'Classification'],
+      date: '2025.06.10',
+    },
+  ];
+
+  /* 목록 렌더링 (수정 불필요) */
+  document.getElementById('post-list').innerHTML = posts.map((p, i) => `
+    <a class="post-item" href="posts/${p.id}.html">
+      <div class="post-num">0${posts.length - i}</div>
+      <div class="post-body">
+        <span class="post-cat">${p.category}</span>
+        <div class="post-title">${p.title}</div>
+        <div class="post-excerpt">${p.excerpt}</div>
+        <div class="post-tags">${p.tags.map(t => `<span class="post-tag">#${t}</span>`).join('')}</div>
+      </div>
+      <div class="post-meta">
+        <div class="post-date">${p.date}</div>
+      </div>
+    </a>
+  `).join('');
+
+  renderLayout({ page: 'tech', breadcrumb: '기술 분석', root: '' });
+</script>
+</body>
+</html>

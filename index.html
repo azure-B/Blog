@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이승빈 | Portfolio Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="common.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══════════════════════════════
+       홈 컨텐츠
+       (components.js가 사이드바+탑바를 자동으로 감싸줍니다)
+  ═══════════════════════════════ -->
+
+  <!-- 히어로 섹션 -->
+  <div class="home-hero">
+    <div class="hero-eyebrow">✦ Portfolio &amp; Dev Blog · 2025</div>
+    <h1 class="hero-title">LEE<br><em>SEUNG</em><br>BIN</h1>
+    <p class="hero-desc">
+      백석대학교 IPCG 랩장으로 이미지 처리 및 컴퓨터 그래픽스를 연구합니다.
+      기술을 분석하고, 프로젝트를 구현하며, AI 대회와 창업 활동을 통해
+      성장의 궤적을 기록하는 공간입니다.
+    </p>
+    <div class="hero-chips">
+      <span class="chip">⚗ IPCG Lab · 랩장</span>
+      <span class="chip highlight">☁ 구름톤 2025 유니브 부대표</span>
+      <span class="chip">✦ 폴라리스 창업동아리 대표</span>
+      <span class="chip">◈ 백석대학교</span>
+    </div>
+  </div>
+
+  <!-- 게시판 카드 그리드 -->
+  <div class="board-grid">
+    <a class="board-card" href="tech.html">
+      <div class="board-num">01</div>
+      <div class="board-icon">⎔</div>
+      <div class="board-eng">Tech Analysis</div>
+      <div class="board-title">기술 분석</div>
+      <div class="board-desc">로지스틱 회귀, CNN, Transformer 등 다양한 머신러닝·딥러닝 기법을 직접 분석하고 정리한 글을 올립니다.</div>
+      <div class="board-count">— 3개의 글</div>
+    </a>
+
+    <a class="board-card" href="project.html">
+      <div class="board-num">02</div>
+      <div class="board-icon">◈</div>
+      <div class="board-eng">Project Review</div>
+      <div class="board-title">프로젝트 리뷰</div>
+      <div class="board-desc">직접 구현한 프로젝트의 설계 의도, 구현 과정, 회고를 담은 리뷰 글을 공유합니다.</div>
+      <div class="board-count">— 2개의 글</div>
+    </a>
+
+    <a class="board-card" href="external.html">
+      <div class="board-num">03</div>
+      <div class="board-icon">◎</div>
+      <div class="board-eng">External Activity</div>
+      <div class="board-title">대외 활동</div>
+      <div class="board-desc">AI 해커톤, 공모전, 외부 커뮤니티 활동 등 대학 밖에서의 경험을 기록합니다.</div>
+      <div class="board-count">— 2개의 글</div>
+    </a>
+
+    <a class="board-card" href="campus.html">
+      <div class="board-num">04</div>
+      <div class="board-icon">◐</div>
+      <div class="board-eng">Campus Activity</div>
+      <div class="board-title">교내 활동</div>
+      <div class="board-desc">동아리, 랩 세미나, 교내 프로젝트 등 학교 안에서의 다양한 활동을 기록합니다.</div>
+      <div class="board-count">— 2개의 글</div>
+    </a>
+  </div>
+
+</div>
+
+<script src="components.js"></script>
+<script>
+  renderLayout({
+    page: 'home',
+    breadcrumb: '홈',
+    root: ''
+  });
+</script>
+</body>
+</html>

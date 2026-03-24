@@ -1,0 +1,293 @@
+/* ═══════════════════════════════════════════════════
+   common.css — 이승빈 포트폴리오 블로그 공통 스타일
+   모든 페이지에서 <link rel="stylesheet" href="common.css"> 로 불러옵니다.
+   (posts/ 하위 파일은 ../common.css)
+═══════════════════════════════════════════════════ */
+
+/* ── CSS 변수 ── */
+:root {
+  --bg:          #0a0a0f;
+  --bg2:         #12121a;
+  --bg3:         #1a1a26;
+  --border:      #2a2a3e;
+  --accent:      #5b8cff;
+  --accent2:     #ff5b8c;
+  --accent3:     #5bffb8;
+  --text:        #e8e8f0;
+  --text-muted:  #7070a0;
+  --text-dim:    #4a4a6a;
+  --card:        #14141e;
+  --sidebar-w:   280px;
+}
+
+/* ── 리셋 ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Serif KR', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── 노이즈 오버레이 ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 999; opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════════════
+   레이아웃
+═══════════════════════════════════════════════════ */
+#app { display: flex; min-height: 100vh; }
+
+/* ── 사이드바 ── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0;
+  z-index: 100; padding: 0 0 2rem;
+}
+
+.sidebar-header {
+  padding: 2.5rem 2rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+.site-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.3em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 0.75rem;
+}
+.site-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem; letter-spacing: 0.05em; line-height: 1; color: var(--text);
+}
+.site-name span { color: var(--accent); }
+
+.profile-card { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
+.profile-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: white;
+  margin-bottom: 0.85rem; box-shadow: 0 0 24px rgba(91,140,255,0.3);
+}
+.profile-name { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+.profile-role { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--accent3); letter-spacing: 0.05em; margin-bottom: 0.6rem; }
+.profile-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+.tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; padding: 0.2rem 0.5rem; border: 1px solid var(--border); border-radius: 2px; color: var(--text-muted); letter-spacing: 0.04em; }
+.tag.accent { border-color: var(--accent); color: var(--accent); }
+
+/* ── 내비게이션 ── */
+.sidebar-nav { padding: 1.5rem; flex: 1; }
+.nav-section-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 0.25em; color: var(--text-dim); text-transform: uppercase;
+  padding: 0 0.5rem; margin-bottom: 0.6rem; margin-top: 1.2rem;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.65rem 0.85rem; border-radius: 6px; cursor: pointer;
+  transition: all 0.18s; margin-bottom: 0.15rem;
+  border: 1px solid transparent; text-decoration: none;
+}
+.nav-item:hover { background: var(--bg3); border-color: var(--border); }
+.nav-item.active { background: rgba(91,140,255,0.1); border-color: rgba(91,140,255,0.3); }
+.nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+.nav-text { flex: 1; }
+.nav-text-main { font-size: 0.82rem; font-weight: 600; color: var(--text); display: block; }
+.nav-item.active .nav-text-main { color: var(--accent); }
+.nav-text-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--text-dim); letter-spacing: 0.03em; }
+.nav-count { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); background: var(--bg3); padding: 0.1rem 0.4rem; border-radius: 20px; }
+
+/* ── 메인 영역 ── */
+.main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; }
+
+/* ── 탑바 ── */
+.topbar {
+  height: 56px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 2rem; gap: 1.5rem;
+  position: sticky; top: 0;
+  background: rgba(10,10,15,0.85); backdrop-filter: blur(12px); z-index: 50;
+}
+.topbar-breadcrumb {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-muted);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.topbar-breadcrumb span { color: var(--accent); }
+.topbar-line { flex: 1; height: 1px; background: var(--border); }
+.topbar-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); }
+
+/* ═══════════════════════════════════════════════════
+   홈 페이지
+═══════════════════════════════════════════════════ */
+.home-hero {
+  padding: 4rem 3rem 3rem;
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.home-hero::before {
+  content: 'PORTFOLIO'; position: absolute; right: -1rem; bottom: -1.5rem;
+  font-family: 'Bebas Neue', sans-serif; font-size: 8rem;
+  color: rgba(91,140,255,0.04); letter-spacing: 0.1em;
+  pointer-events: none; line-height: 1;
+}
+.hero-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; margin-bottom: 1.2rem; }
+.hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 4.5rem; letter-spacing: 0.03em; line-height: 0.95; margin-bottom: 1.5rem; }
+.hero-title em { color: var(--accent); font-style: normal; }
+.hero-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; max-width: 540px; font-weight: 300; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem; }
+.chip {
+  display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border); border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--text-muted);
+  letter-spacing: 0.04em; text-decoration: none; transition: all 0.18s;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.highlight { border-color: var(--accent3); color: var(--accent3); }
+
+/* 게시판 카드 그리드 */
+.board-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border-top: 1px solid var(--border); }
+.board-card { background: var(--bg); padding: 2.5rem; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; text-decoration: none; display: block; }
+.board-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+.board-card:hover::after { transform: scaleX(1); }
+.board-card:hover { background: var(--bg2); }
+.board-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--border); line-height: 1; margin-bottom: 1rem; }
+.board-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+.board-title { font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+.board-eng { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.8rem; text-transform: uppercase; }
+.board-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; font-weight: 300; }
+.board-count { margin-top: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); }
+
+/* ═══════════════════════════════════════════════════
+   게시판 목록 페이지
+═══════════════════════════════════════════════════ */
+.board-header { padding: 2.5rem 3rem 1.5rem; border-bottom: 1px solid var(--border); }
+.board-header-eng { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.6rem; }
+.board-header-title { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.03em; color: var(--text); }
+.board-header-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; font-weight: 300; }
+
+.post-list { padding: 0.5rem 3rem; }
+.post-item { display: grid; grid-template-columns: auto 1fr auto; gap: 1.5rem; align-items: start; padding: 1.5rem 0; border-bottom: 1px solid var(--border); text-decoration: none; transition: all 0.18s; }
+.post-item:hover .post-title { color: var(--accent); }
+.post-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--border); line-height: 1; min-width: 36px; }
+.post-cat { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent2); margin-bottom: 0.4rem; }
+.post-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; transition: color 0.18s; line-height: 1.4; }
+.post-excerpt { font-size: 0.78rem; color: var(--text-muted); font-weight: 300; line-height: 1.6; }
+.post-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.6rem; }
+.post-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.52rem; padding: 0.1rem 0.4rem; border: 1px solid var(--border); border-radius: 2px; color: var(--text-dim); }
+.post-meta { text-align: right; }
+.post-date { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); white-space: nowrap; }
+
+/* ═══════════════════════════════════════════════════
+   게시글 상세 페이지
+═══════════════════════════════════════════════════ */
+.post-detail { max-width: 760px; margin: 0 auto; padding: 3rem; }
+.detail-back {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  color: var(--text-dim); text-decoration: none; margin-bottom: 2rem;
+  transition: color 0.18s; letter-spacing: 0.05em;
+}
+.detail-back:hover { color: var(--accent); }
+.detail-category { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent2); margin-bottom: 0.75rem; }
+.detail-title { font-size: 2rem; font-weight: 900; line-height: 1.3; color: var(--text); margin-bottom: 1rem; }
+.detail-meta { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; flex-wrap: wrap; }
+.detail-author { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); }
+.meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-dim); }
+.detail-date { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); }
+.detail-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-left: auto; }
+.detail-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; padding: 0.2rem 0.5rem; border: 1px solid var(--accent); border-radius: 2px; color: var(--accent); }
+
+/* ── 본문 컨텐츠 스타일 ── */
+.detail-content { font-size: 0.9rem; line-height: 1.9; color: var(--text-muted); font-weight: 300; }
+.detail-content h2 { font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 2.5rem 0 1rem; padding-left: 1rem; border-left: 3px solid var(--accent); }
+.detail-content h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin: 1.8rem 0 0.6rem; }
+.detail-content p { margin-bottom: 1.2rem; }
+.detail-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: var(--bg3); padding: 0.1rem 0.4rem; border-radius: 3px; color: var(--accent3); }
+.detail-content pre { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent3); border-radius: 6px; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.5rem 0; }
+.detail-content pre code { background: none; padding: 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.7; }
+.detail-content ul, .detail-content ol { padding-left: 1.5rem; margin-bottom: 1.2rem; }
+.detail-content li { margin-bottom: 0.4rem; }
+.detail-content blockquote { border-left: 3px solid var(--accent2); padding: 0.8rem 1.2rem; margin: 1.5rem 0; background: rgba(255,91,140,0.05); border-radius: 0 4px 4px 0; }
+.detail-content .highlight-box { background: rgba(91,140,255,0.07); border: 1px solid rgba(91,140,255,0.2); border-radius: 6px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+.detail-content .formula { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; text-align: center; padding: 1rem; background: var(--bg3); border-radius: 6px; margin: 1.5rem 0; color: var(--text); }
+
+/* ═══════════════════════════════════════════════════
+   소개 페이지
+═══════════════════════════════════════════════════ */
+.about-page { padding: 3rem; }
+.about-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+.about-name { font-family: 'Bebas Neue', sans-serif; font-size: 5rem; letter-spacing: 0.03em; line-height: 0.9; color: var(--text); margin-bottom: 0.5rem; }
+.about-name em { color: var(--accent); font-style: normal; }
+.about-title-en { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--accent3); text-transform: uppercase; }
+.about-bio { font-size: 0.88rem; line-height: 1.9; color: var(--text-muted); font-weight: 300; }
+.section-heading { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text); }
+.career-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
+.career-item { background: var(--bg); padding: 1.5rem; }
+.career-year { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--accent); margin-bottom: 0.3rem; }
+.career-role { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
+.career-org { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.04em; }
+
+/* ═══════════════════════════════════════════════════
+   템플릿 페이지
+═══════════════════════════════════════════════════ */
+.template-page { padding: 3rem; }
+.template-hero { border: 1px solid var(--border); border-radius: 8px; padding: 2rem; margin-bottom: 2rem; background: var(--bg2); }
+.template-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--accent3); text-transform: uppercase; margin-bottom: 0.6rem; }
+.template-title { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+.template-desc { font-size: 0.8rem; color: var(--text-muted); font-weight: 300; line-height: 1.6; }
+.template-section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 1rem; margin-top: 2rem; }
+pre.template-code {
+  background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent3);
+  border-radius: 6px; padding: 1.5rem; overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; line-height: 1.75;
+  color: var(--text-muted); margin-bottom: 1.5rem; white-space: pre-wrap; word-break: break-word;
+}
+.code-comment { color: #4a6a5a; }
+.code-key { color: var(--accent2); }
+.code-val { color: var(--accent3); }
+
+/* ═══════════════════════════════════════════════════
+   애니메이션
+═══════════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.main > * { animation: fadeUp 0.35s ease both; }
+
+/* ═══════════════════════════════════════════════════
+   스크롤바
+═══════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════════════
+   반응형
+═══════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  :root { --sidebar-w: 220px; }
+  .board-grid { grid-template-columns: 1fr; }
+  .about-hero  { grid-template-columns: 1fr; }
+  .career-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .sidebar { display: none; }
+  .main    { margin-left: 0; }
+  .post-detail  { padding: 2rem 1.5rem; }
+  .board-header { padding: 1.5rem; }
+  .post-list    { padding: 1rem 1.5rem; }
+  .home-hero    { padding: 2rem 1.5rem 1.5rem; }
+  .hero-title   { font-size: 3rem; }
+  .about-page   { padding: 1.5rem; }
+  .template-page{ padding: 1.5rem; }
+}

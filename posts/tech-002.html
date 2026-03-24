@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CNN 구조 분석 | 이승빈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../common.css" />
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../tech.html">← 기술 분석으로 돌아가기</a>
+
+  <div class="detail-category">Deep Learning</div>
+  <h1 class="detail-title">CNN(합성곱 신경망) 구조 분석 — 필터부터 풀링까지</h1>
+  <div class="detail-meta">
+    <span class="detail-author">이승빈</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2025.06.20</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#CNN</span>
+      <span class="detail-tag">#Convolution</span>
+      <span class="detail-tag">#Pooling</span>
+      <span class="detail-tag">#Computer Vision</span>
+    </div>
+  </div>
+
+  <div class="detail-content">
+
+    <p>CNN은 이미지의 <strong>공간적 지역성(Spatial Locality)</strong>을 활용해 파라미터 수를 대폭 줄이는 딥러닝 구조입니다. IPCG 랩에서 다루는 이미지 처리의 핵심 기반이기도 합니다.</p>
+
+    <h2>1. 합성곱(Convolution) 연산</h2>
+    <p>입력 이미지에 작은 <strong>필터(커널)</strong>를 슬라이딩하며 내적을 계산합니다. 동일한 필터가 이미지 전체를 훑으므로 <strong>가중치 공유(Weight Sharing)</strong>가 이루어집니다.</p>
+
+    <div class="formula">Feature Map(i,j) = Σₘ Σₙ Input(i+m, j+n) · Filter(m,n) + b</div>
+
+    <h2>2. 출력 크기 계산</h2>
+    <pre><code># 출력 크기 계산 공식
+# Input: H×W, Filter: F×F, Padding: P, Stride: S
+
+output_h = (H + 2P - F) // S + 1
+output_w = (W + 2P - F) // S + 1
+
+# 예: 28×28 입력, 3×3 필터, P=1, S=1
+# → (28 + 2 - 3) // 1 + 1 = 28  (same padding)</code></pre>
+
+    <h2>3. 풀링(Pooling)</h2>
+    <p>Max Pooling은 특징 맵에서 최댓값만 추출해 공간 크기를 줄이고, 위치 불변성(Translation Invariance)을 제공합니다.</p>
+
+    <div class="highlight-box">
+      <strong>⚡ Same vs Valid Padding</strong><br/>
+      Same: 출력 크기 = 입력 크기 (P = F//2)<br/>
+      Valid: 패딩 없음, 출력이 작아짐 (P = 0)
+    </div>
+
+    <h2>4. PyTorch 구현 예시</h2>
+    <pre><code>import torch.nn as nn
+
+class SimpleCNN(nn.Module):
+    def __init__(self, num_classes=10):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        self.pool  = nn.MaxPool2d(2, 2)
+        self.fc    = nn.Linear(64 * 7 * 7, num_classes)
+        self.relu  = nn.ReLU()
+
+    def forward(self, x):
+        x = self.pool(self.relu(self.conv1(x)))  # 28→14
+        x = self.pool(self.relu(self.conv2(x)))  # 14→7
+        x = x.view(x.size(0), -1)
+        return self.fc(x)</code></pre>
+
+  </div>
+
+</div>
+</div>
+
+<script src="../components.js"></script>
+<script>
+  renderLayout({
+    page: 'tech',
+    breadcrumb: '기술 분석 / CNN 구조 분석',
+    root: '../'
+  });
+</script>
+</body>
+</html>
