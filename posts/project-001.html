@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>손 제스처 인식 시스템 | 이승빈</title>
+  <title>멍멍케어 | 이승빈</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../common.css" />
 </head>
@@ -14,15 +14,15 @@
   <a class="detail-back" href="../project.html">← 프로젝트 리뷰로 돌아가기</a>
 
   <div class="detail-category">Computer Vision</div>
-  <h1 class="detail-title">실시간 손 제스처 인식 시스템 개발기</h1>
+  <h1 class="detail-title">멍멍케어</h1>
   <div class="detail-meta">
     <span class="detail-author">이승빈</span>
     <span class="meta-dot"></span>
-    <span class="detail-date">2025.05.15</span>
+    <span class="detail-date">2025.11.18</span>
     <div class="detail-tags">
-      <span class="detail-tag">#MediaPipe</span>
-      <span class="detail-tag">#PyTorch</span>
-      <span class="detail-tag">#IPCG Lab</span>
+      <span class="detail-tag">#docker</span>
+      <span class="detail-tag">#LLM pineTuning</span>
+      <span class="detail-tag"><a href="https://github.com/SMG05oein/smart_it">github</a></span>
     </div>
   </div>
 
@@ -30,45 +30,53 @@
 
     <div class="highlight-box">
       <strong>프로젝트 개요</strong><br/>
-      <strong>기간:</strong> 2025.03 — 2025.05 (2개월)<br/>
-      <strong>팀:</strong> 2인 (본인: 모델 설계 + 백엔드 / 팀원: 프론트엔드)<br/>
-      <strong>스택:</strong> Python · PyTorch · MediaPipe · FastAPI · React
+      <strong>기간:</strong> 2025.11 — 2025.11 (1개월)<br/>
+      <strong>팀:</strong> 3인 (본인: LLM 파인튜닝 + 프론트엔드 / 팀원: 백엔드 및 프론트엔드)<br/>
+      <strong>스택:</strong> Python · PyTorch · MediaPipe · React
     </div>
 
     <h2>문제 정의</h2>
-    <p>IPCG 랩 세미나에서 "화면을 터치하지 않고 발표 슬라이드를 제어할 수 있을까?" 라는 아이디어에서 출발했습니다. 기존 솔루션은 무거운 모델을 사용해 지연이 발생했기에, 경량 실시간 시스템을 직접 구현하기로 했습니다.</p>
-
+    <p>백석대학교 Smart_it 출품 작으로 반려견 케어 어플리케이션을 만들었습니다.</p>
     <h2>설계 및 구현</h2>
-    <p><strong>MediaPipe Hands</strong>로 21개의 손 랜드마크를 추출한 뒤, 좌표를 정규화해 경량 MLP 분류기에 입력합니다.</p>
+    <p><strong>Exaone3.5</strong>를 파인튜닝하여 LLM 모델을 구축하였으며, <br/> 역번역을 통해 사용자의 Input을 늘려 정확한 답변을 하도록 개선하였습니다.</p>
 
-    <pre><code>import mediapipe as mp
+    <pre><code>
+      # 1. 사용할 모델 이름
+LOCAL_MODEL_NAME = "exaone3.5"
 
-mp_hands = mp.solutions.hands
+# 2. Ollama 주소 설정
+default_url = "http://localhost:11434/v1"
+OLLAMA_URL = os.getenv("OLLAMA_URL", default_url)
 
-def extract_landmarks(frame):
-    with mp_hands.Hands(
-        static_image_mode=False,
-        max_num_hands=1,
-        min_detection_confidence=0.7
-    ) as hands:
-        result = hands.process(frame)
-        if result.multi_hand_landmarks:
-            lm = result.multi_hand_landmarks[0].landmark
-            return [(p.x, p.y) for p in lm]
-    return None</code></pre>
+# Ollama 클라이언트 초기화
+client = OpenAI(
+    base_url=OLLAMA_URL,
+    api_key="ollama"
+)
+
+# 3. 장치 자동 설정
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+print("-" * 30)
+if device == "cuda":
+    print(f"CUDA 사용 중 ({torch.cuda.get_device_name(0)})")
+else:
+    print("CPU 사용 중")
+print("-" * 30)
+
+EMBEDDING_FILE = config.EMBEDDING_FILE
+TEXT_DATA_FILE = config.TEXT_DATA_FILE
+... 이외
+    </code></pre>
 
     <h2>결과 및 성능</h2>
-    <p>10가지 제스처를 평균 <strong>96.4%</strong> 정확도로 분류했습니다. 추론 속도는 RTX 3060에서 약 2ms / 프레임으로, 웹캠 30fps에서 실시간 동작을 확인했습니다.</p>
-
-    <blockquote>
-      "손 좌표 정규화 시 손목을 원점으로 설정하고 손바닥 크기로 나누는 방식이 회전과 거리 변화에 강건함을 보였습니다."
-    </blockquote>
+    <p>한정된 데이터로 특정 답변에서 어려움을 보임.<br/> 예제로, 피부병 관련 검색을 하면 질문자의 견종은 말티즈여도 포메라니안에 대한 답변이 나옴.</p>
 
     <h2>회고</h2>
     <ul>
-      <li>✅ 잘 된 점: 경량 MLP만으로도 충분한 정확도 달성</li>
-      <li>❌ 아쉬운 점: 조명 변화에 취약, 배경이 복잡할 때 인식률 저하</li>
-      <li>🔜 개선 방향: 시간적 정보를 반영하는 LSTM 적용 검토</li>
+      <li>✅ 잘 된 점: Exaone3.5를 파인튜닝하는 과정에서 사용자의 Input을 증강하여 답변의 정확도 상승 </li>
+      <li>❌ 아쉬운 점: 데이터셋 부족으로 인한 할루시네이션.</li>
+      <li>🔜 개선 방향: 데이터셋 검토 및 증강 고려</li>
     </ul>
 
   </div>
