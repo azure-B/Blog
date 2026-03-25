@@ -77,7 +77,44 @@ function renderLayout({ page, breadcrumb, root = '' }) {
       <div class="topbar-meta">${dateStr}</div>
     </div>`;
 
+  // ── 모바일 햄버거 버튼 & 오버레이 ──
+  const mobHTML = `
+    <button class="mob-menu-btn" id="mob-menu-btn" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="mob-overlay" id="mob-overlay"></div>`;
+
   // ── #app 에 주입 ──
   const app = document.getElementById('app');
-  app.innerHTML = sidebarHTML + `<main class="main">${topbarHTML}` + app.innerHTML + `</main>`;
+  app.innerHTML = sidebarHTML + `<main class="main">${topbarHTML}` + app.innerHTML + `</main>` + mobHTML;
+
+  // ── 햄버거 토글 동작 ──
+  const btn     = document.getElementById('mob-menu-btn');
+  const overlay = document.getElementById('mob-overlay');
+  const sidebar = document.querySelector('.sidebar');
+
+  function openMenu() {
+    sidebar.classList.add('open');
+    btn.classList.add('open');
+    overlay.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    sidebar.classList.remove('open');
+    btn.classList.remove('open');
+    overlay.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', () => {
+    sidebar.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+
+  // 사이드바 링크 클릭 시 모바일에서 메뉴 자동 닫기
+  sidebar.querySelectorAll('a.nav-item').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 640) closeMenu();
+    });
+  });
 }
