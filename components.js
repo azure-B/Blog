@@ -12,7 +12,15 @@
 ═══════════════════════════════════════════════════ */
 
 function renderLayout({ page, breadcrumb, root = '' }) {
-  const r = root; // 경로 접두사
+  const r = root;
+
+  // ── CSS 동적 주입 (GitHub Pages 경로 문제 방지) ──
+  // 기존 <link href="...common.css"> 를 제거하고 정확한 경로로 재주입합니다.
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(el => el.remove());
+  const cssLink = document.createElement('link');
+  cssLink.rel  = 'stylesheet';
+  cssLink.href = `${r}common.css`;
+  document.head.appendChild(cssLink);
 
   // ── 탑바 날짜 ──
   const now = new Date();
