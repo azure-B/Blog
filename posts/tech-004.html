@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Self-Attention 분해 | 이승빈</title>
+  <title>Tensor 자료구조</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../common.css" />
 </head>
@@ -26,36 +26,170 @@
 
   <div class="detail-content">
 
-    <p>"Attention is All You Need" (Vaswani et al., 2017) 이후 Transformer는 NLP를 넘어 Vision, Audio 전 영역의 표준이 되었습니다. 그 핵심인 <strong>Self-Attention</strong>을 처음부터 뜯어봅니다.</p>
+    <p>
+      TensorFlow를 공부하고 있으나, 정작 Tensor에 대해 아는 것은 없는 것 같아
+      <br/>
+      <strong>Tensor의 자료구조</strong>
+      를 처음부터 공부해보려고 합니다.
+    </p>
 
-    <h2>1. Query, Key, Value</h2>
-    <p>입력 시퀀스의 각 토큰은 세 가지 벡터로 선형 변환됩니다.</p>
+    <h2>1. Tensor</h2>
+    <p>텐서는 수학적인 개념으로 데이터의 배열이라고 볼 수 있다.</br>
+        간단히 말하자면 다차원 배열을 통칭한다.</p>
 
-    <div class="formula">Q = XWQ,   K = XWK,   V = XWV</div>
+    <h2>2. Rank</h2>
+    <figure>
+      <img src="../image/tech-004.01.png" alt="RANK의 예시" />
+      <figcaption>[출처] Data 101 Course Notes - Data Models</figcaption>
+    </figure>
 
-    <p>직관적으로: <strong>Q</strong>는 "내가 뭘 찾고 있나?", <strong>K</strong>는 "나는 무엇인가?", <strong>V</strong>는 "실제 정보"입니다.</p>
+    <h3>2-1. Scalar ( 0D Tensor )</h3>
+    <p>Scalar는 축과 형상이 없이 하나의 숫자를 가지고 있는 텐서를 의미한다.</p>
+    
+    <pre><code>
+      import numpy as np
+      x = np.array(1)
+      print(x)
+      print(x.ndim)
+    </code></pre>
+    <p> 결과는 1, 0이 나온다.<br/>
+        즉 <code>ndim</code>을 통해 차원을 파악하면 0차원, 값은 단일 숫자인 1이 나오는 것이다.</p>
 
-    <h2>2. Scaled Dot-Product Attention</h2>
-    <div class="formula">Attention(Q, K, V) = softmax( QKᵀ / √dₖ ) · V</div>
+    <h3>2-2. Vector ( 1D Tensor )</h3>
+    <p>   Vector는 1차원 텐서로 스칼라 값을 나열한 리스트라 생각하면 편하다.
+    <br/> *보통 1D Tensor의 shape는 (N,)으로 표기되어지는데,<br>
+          이는 행렬과 구분하기 위해 (N,1)이 아닌 (N,)으로 표기하는 것이다.</p>
 
-    <p><code>√dₖ</code>로 스케일링하는 이유: 차원이 커질수록 내적이 커져 소프트맥스가 포화(Saturation)되기 때문입니다.</p>
+    <pre><code>
+      import numpy as np
+      x = np.array([1,2,3,4,5])
+      print(x)
+      print(x.ndim)
+    </code></pre>
+    <p> 결과는 [1 2 3 4 5] , 1이 나온다.</br>
+        즉 Vector는 1차원 데이터이며, Scalar인 값 1,2,3,4,5가 담긴 리스트이다.</p>
 
-    <h2>3. NumPy 구현</h2>
-    <pre><code>import numpy as np
+    <h3>2-3. Matrix ( 2D Tensor ) </h3>
+    <p>Matrix는 2차원 텐서로 Vector와 비슷하게, <br/>이전 차원인 값인 Vector를 나열한 리스트라 생각하면 편하다.</p>
 
-def scaled_dot_product_attention(Q, K, V, mask=None):
-    d_k = Q.shape[-1]
-    scores = Q @ K.T / np.sqrt(d_k)
+    <pre><code>
+      import numpy as np
+      x = np.array([[1,2,3,4,5], [6,7,8,9,10]])
+      print(x)
+      print(x.ndim)
+    </code></pre>
+    <p> 결과는 [[1 2 3 4 5] [6 7 8 9 10]] , 2이 나온다.</br>
+        즉 Matrix는 2차원 데이터이며, Vector인 값 [1 2 3 4 5]와 [6 7 8 9 10]가 담긴 리스트이다.</p>
+    
+    <h3>2-4. Tensor ( 3D Tensor ) </h3>
+    <p>Tensor 역시 이전 차원의 Matrix를 나열한 리스트이다.</p>
+    
+    <pre><code class="language-python">
+    import numpy as np
 
-    if mask is not None:
-        scores = scores + (mask * -1e9)
+    # 대괄호가 3개([[[)로 시작하며, Vector가 쌓여있는 형태이다.
+    x = np.array([
+        [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]], 
+        [[11, 12, 13, 14, 15], [16, 17, 18, 19, 20]]
+    ]) 
 
-    weights = np.exp(scores) / np.sum(np.exp(scores), axis=-1, keepdims=True)
-    return weights @ V, weights</code></pre>
+    print(x)
+    print(x.ndim)
+    </code></pre>
+
+    <p>출력 결과로 [[[ 1  2  3  4  5][ 6  7  8  9 10]] [[11 12 13 14 15][16 17 18 19 20]]]</br>
+    차원이 <strong>3</strong>으로 나오는 것을 확인할 수 있습니다.<br/>
+
+    <h3>2-4. *Note</h3>
+
+    <img src="../image/tech-004.02.png" alt="구조" />
+    <p>
+    우선 0차원 텐서인 Scalar는 축이 없는 0차원 데이터이고
+    </p>
+    <p>
+    1차원 텐서인 Vector는 <strong>1개의 선</strong>을 가지고 있으며, 크기와 더불어 방향을 가진다.
+    </p>
+    <p>
+    2차원 텐서인 Matrix는 <strong>행과 열이라는 두개의 축</strong>이 존재한다.<br/>
+    앞서 설명에서 Vector를 나열한 리스트라 생각하면 편하다 하였는데, 이는 곧 선이 모여 면이 된 구조이다.
+    </p>
+    <p>
+    3차원 이후에는 #D Tensor로 표기하면 되며, 3D Tensor는<strong>행과 열에 더해 깊이</strong>를 가진다.<br/>
+    이는 면이 모여 입방체가 된 구조이다.
+    </p>
+
+    <h2>3. Shape</h2>
+    <p>RANK가 축의 개수라면 Shape는 각 축의 길이이다.<br/>
+    RANK는 데이터가 선인지 면인지 입방체인지 알려주는 반면 <br/>
+    그 선이 얼마나 긴지 면은 얼마나 넓은지 입방체가 얼마나 큰지 알려준다.</p>
+
+    <pre><code class="language-python">
+    import numpy as np
+
+    x = np.array([
+        [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]], 
+        [[11, 12, 13, 14, 15], [16, 17, 18, 19, 20]]
+    ]) 
+
+    print(x.shape)
+    </code></pre>
+    <p>출력 결과는 <code>(2, 2, 5)</code>이며 각각의 의미는 다음과 같다</p>
+    <p>첫번째 2 (깊이) : 입방체의 면에 2개의 행렬이 있다. </p>
+    <p>두번째 2 (행) : 각 행렬에 가로행이 2개씩 있다.</p>
+    <p>세번째 5 (열) : 각 행렬의 가로행에 원소가 5개씩 있다.</p>
+
+    <h2>4. Tensorflow에서 Tensor의 선언 및 활용</h2>
+    
+    <h3>4-1. tf.constant</h3>
+    <p>한번 선언하면 <storng>값을 바꿀 수 없는</storng> 텐서이다.</p>
+
+    <h3>4-2. tf.Variable</h3>
+    <p>값을 자유롭게 바꿀 수 있는 텐서이다.</p>
+
+    <h3>4-3. tf.placeholder</h3>
+    <p>TensorFlow 1.X버전의 핵심 이었으나, 현재는 사용하지 않는다.<br/>
+    선언시 값을 바로 주는 것이 아니라, 데이터를 나중에 받기 위해 비워두는 공간이다.</p>
+
+    <h3>4-4. 선언</h3>
+    <p> 선언 방식은 모두 비슷하거나 동일하다. </p>
+    <p>TensorFlow 1.X</p>
+    <pre><code>
+      import tensorflow as tf
+      x = tf.Variable([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]], name='weight')
+      sess = tf.Session()
+      sess.run(tf.global_variables_initializer())
+      print(sess.run(x))
+    </code></pre>
+
+    <p>
+      Tensorflow 1.X 버전에서는 선언 시점과 초기화 시점이 다르다.<br/>
+      tf.Variable()를 통해 정의를 해도 global_variables_initializer 시점에서 정의하며<br/>
+      sess.run(init)에서 실제 메모리에 할당이 되고 초기화된다.
+    </p>
+
+    <p>TensorFlow 2.X</p>
+    <pre><code>
+      import tensorflow as tf
+      x = tf.Variable([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]], name='weight')
+      print(x)
+    </code></pre>
+    
+    <p>
+      Tensorflow 2.X버전 이후부터는 선언 즉시 값이 정의된다.
+    </p>
+
+    <h2>5. 유의사항</h3>
+    <h3>5-1. 데이터 타입과 명사</h3>
+    <p>하나의 텐서 안에는 <strong>반드시 같은 데이터 타입</strong>을 사용한다. <br/>
+    만약 정수와 실수를 같이 넣는다면, 임의로 타입을 변환하여 에러가 날 수 있다.</p>
+
+    <h3>5-2. 구조 유지</h3>
+    <p>2차원 텐서 이상을 선언 할 때, 안쪽에 있는 리스트 들의 길이가 들쭉날쭉하면 안된다.<br/>
+    행마다 열의 개수가 다르다면 행렬 연산이 되지 않기 때문이다.</p>
 
     <div class="highlight-box">
-      <strong>⚡ Multi-Head Attention</strong><br/>
-      h개의 헤드가 병렬로 서로 다른 표현 공간에서 Attention을 계산한 뒤 concat → 선형 변환합니다. 다양한 의존 관계를 동시에 포착할 수 있습니다.
+      <strong>⚡ Tensor </strong><br/>
+      Tensor의 Rank, Shape, 선언에 대해 알아보았다.
     </div>
 
   </div>
@@ -67,7 +201,7 @@ def scaled_dot_product_attention(Q, K, V, mask=None):
 <script>
   renderLayout({
     page: 'tech',
-    breadcrumb: '기술 분석 / Self-Attention',
+    breadcrumb: '기술 분석 / Tensorflow',
     root: '../'
   });
 </script>
