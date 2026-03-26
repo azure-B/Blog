@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Self-Attention 분해 | 이승빈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../common.css" />
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../tech.html">← 기술 분석으로 돌아가기</a>
+
+  <div class="detail-category">TensorFlow</div>
+  <h1 class="detail-title">Tensor 자료구조</h1>
+  <div class="detail-meta">
+    <span class="detail-author">이승빈</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2026.03.26</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#TensorFlow</span>
+    </div>
+  </div>
+
+  <div class="detail-content">
+
+    <p>"Attention is All You Need" (Vaswani et al., 2017) 이후 Transformer는 NLP를 넘어 Vision, Audio 전 영역의 표준이 되었습니다. 그 핵심인 <strong>Self-Attention</strong>을 처음부터 뜯어봅니다.</p>
+
+    <h2>1. Query, Key, Value</h2>
+    <p>입력 시퀀스의 각 토큰은 세 가지 벡터로 선형 변환됩니다.</p>
+
+    <div class="formula">Q = XWQ,   K = XWK,   V = XWV</div>
+
+    <p>직관적으로: <strong>Q</strong>는 "내가 뭘 찾고 있나?", <strong>K</strong>는 "나는 무엇인가?", <strong>V</strong>는 "실제 정보"입니다.</p>
+
+    <h2>2. Scaled Dot-Product Attention</h2>
+    <div class="formula">Attention(Q, K, V) = softmax( QKᵀ / √dₖ ) · V</div>
+
+    <p><code>√dₖ</code>로 스케일링하는 이유: 차원이 커질수록 내적이 커져 소프트맥스가 포화(Saturation)되기 때문입니다.</p>
+
+    <h2>3. NumPy 구현</h2>
+    <pre><code>import numpy as np
+
+def scaled_dot_product_attention(Q, K, V, mask=None):
+    d_k = Q.shape[-1]
+    scores = Q @ K.T / np.sqrt(d_k)
+
+    if mask is not None:
+        scores = scores + (mask * -1e9)
+
+    weights = np.exp(scores) / np.sum(np.exp(scores), axis=-1, keepdims=True)
+    return weights @ V, weights</code></pre>
+
+    <div class="highlight-box">
+      <strong>⚡ Multi-Head Attention</strong><br/>
+      h개의 헤드가 병렬로 서로 다른 표현 공간에서 Attention을 계산한 뒤 concat → 선형 변환합니다. 다양한 의존 관계를 동시에 포착할 수 있습니다.
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<script src="../components.js"></script>
+<script>
+  renderLayout({
+    page: 'tech',
+    breadcrumb: '기술 분석 / Self-Attention',
+    root: '../'
+  });
+</script>
+</body>
+</html>
