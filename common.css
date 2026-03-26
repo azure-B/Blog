@@ -489,7 +489,7 @@ body, .sidebar, .topbar, .board-card, .post-item, .detail-content,
 .about-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
 .about-name { font-family: 'Bebas Neue', sans-serif; font-size: 5rem; letter-spacing: 0.03em; line-height: 0.9; color: var(--text); margin-bottom: 0.5rem; }
 .about-name em { color: var(--accent); font-style: normal; }
-.about-title-en { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--accent3); text-transform: uppercase; }
+.about-title-en { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--accent3); text-transform: uppercase; margin-top: 2rem; }
 .about-bio { font-size: 0.9rem; line-height: 1.95; color: var(--text-muted); font-weight: 400; }
 .section-heading { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text); }
 .career-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
