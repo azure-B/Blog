@@ -21,6 +21,42 @@
     </div>
 
     <!-- ─────────────────────────────────────── -->
+    <p class="template-section-label">// 수식 작성 (KaTeX)</p>
+    <pre class="template-code">
+<span class="code-comment">/* KaTeX는 components.js가 자동으로 로드합니다. 별도 설치 불필요. */</span>
+
+<span class="code-comment">/* ① 블록 수식 — .formula div 안에 $$...$$ */</span>
+&lt;div class="formula"&gt;
+  $$\sigma(z) = \frac{1}{1 + e^{-z}}$$
+&lt;/div&gt;
+
+<span class="code-comment">/* ② 본문 인라인 수식 — $...$ */</span>
+&lt;p&gt;
+  시그모이드 함수 $\sigma(z)$는 출력을 $[0, 1]$ 범위로 변환합니다.
+&lt;/p&gt;
+
+<span class="code-comment">/* ③ 여러 줄 수식 — \\ 로 줄바꿈, aligned 환경 */</span>
+&lt;div class="formula"&gt;
+$$\begin{aligned}
+  \frac{\partial \mathcal{L}}{\partial w} &amp;= \frac{1}{N} X^\top (\hat{y} - y) \\
+  \frac{\partial \mathcal{L}}{\partial b} &amp;= \frac{1}{N} \sum_{i=1}^{N} (\hat{y}_i - y_i)
+\end{aligned}$$
+&lt;/div&gt;
+
+<span class="code-comment">/* ④ 자주 쓰는 LaTeX 기호 모음 */</span>
+<span class="code-comment">  분수:      \frac{분자}{분모}         →  ½ 형태</span>
+<span class="code-comment">  합:        \sum_{i=1}^{N}            →  Σ</span>
+<span class="code-comment">  곱:        \prod_{i=1}^{N}           →  Π</span>
+<span class="code-comment">  루트:      \sqrt{x},  \sqrt[3]{x}   →  √</span>
+<span class="code-comment">  벡터:      \mathbf{w}, \vec{v}       →  볼드/화살표</span>
+<span class="code-comment">  전치:      W^\top                    →  Wᵀ</span>
+<span class="code-comment">  정규분포:  \mathcal{N}(\mu, \sigma^2)</span>
+<span class="code-comment">  편미분:    \frac{\partial L}{\partial w}</span>
+<span class="code-comment">  기댓값:    \mathbb{E}[X]</span>
+<span class="code-comment">  절댓값:    \left| x \right|</span>
+</pre>
+
+    <!-- ─────────────────────────────────────── -->
     <p class="template-section-label">// STEP 1 — 게시판 목록에 메타 데이터 추가 (예: tech.html)</p>
     <pre class="template-code">
 <span class="code-comment">/* tech.html 의 posts 배열 맨 앞에 추가 */</span>

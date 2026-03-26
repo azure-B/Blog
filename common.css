@@ -388,6 +388,11 @@ body, .sidebar, .topbar, .board-card, .post-item, .detail-content,
 .detail-content blockquote { border-left: 3px solid var(--accent2); padding: 0.8rem 1.2rem; margin: 1.5rem 0; background: rgba(255,91,140,0.05); border-radius: 0 4px 4px 0; color: var(--text-muted); }
 .detail-content .highlight-box { background: rgba(91,140,255,0.07); border: 1px solid rgba(91,140,255,0.2); border-radius: 6px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; color: var(--text); }
 .detail-content .formula { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; text-align: center; padding: 1rem; background: var(--bg3); border-radius: 6px; margin: 1.5rem 0; color: var(--text); overflow-x: auto; max-width: 100%; white-space: pre; }
+/* KaTeX 블록 수식 ($$...$$) 스타일 조정 */
+.detail-content .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.5rem 0; }
+.detail-content .katex { font-size: 1.05em; }
+/* 인라인 수식 크기 보정 */
+.detail-content p .katex { font-size: 0.98em; }
 
 /* ── GitHub 링크 버튼 ── */
 .github-link,

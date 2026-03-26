@@ -22,6 +22,41 @@ function renderLayout({ page, breadcrumb, root = '' }) {
   cssLink.href = `${r}common.css`;
   document.head.appendChild(cssLink);
 
+  // ── KaTeX 수식 렌더링 ──
+  function renderMath() {
+    if (typeof renderMathInElement === 'undefined') return;
+    document.querySelectorAll('.detail-content, .formula').forEach(el => {
+      renderMathInElement(el, {
+        delimiters: [
+          { left: '$$',  right: '$$',  display: true  },  // $$...$$ 블록 수식
+          { left: '\\[', right: '\\]', display: true  },  // \[...\] 블록 수식
+          { left: '$',   right: '$',   display: false },  // $...$ 인라인 수식
+          { left: '\\(', right: '\\)', display: false },  // \(...\) 인라인 수식
+        ],
+        throwOnError: false,
+      });
+    });
+  }
+  if (!document.getElementById('katex-css')) {
+    const kCss = document.createElement('link');
+    kCss.id   = 'katex-css';
+    kCss.rel  = 'stylesheet';
+    kCss.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css';
+    document.head.appendChild(kCss);
+
+    const kJs = document.createElement('script');
+    kJs.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js';
+    kJs.onload = () => {
+      const autoRender = document.createElement('script');
+      autoRender.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js';
+      autoRender.onload = renderMath;
+      document.head.appendChild(autoRender);
+    };
+    document.head.appendChild(kJs);
+  } else {
+    setTimeout(renderMath, 0);
+  }
+
   // ── 테마 초기화 (저장된 설정 또는 시스템 설정 따름) ──
   const savedTheme = localStorage.getItem('blog-theme');
   const preferLight = window.matchMedia('(prefers-color-scheme: light)').matches;
