@@ -212,13 +212,100 @@ body::before {
 .detail-content h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin: 1.8rem 0 0.6rem; }
 .detail-content p { margin-bottom: 1.2rem; }
 .detail-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: var(--bg3); padding: 0.1rem 0.4rem; border-radius: 3px; color: var(--accent3); }
-.detail-content pre { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent3); border-radius: 6px; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.5rem 0; }
+.detail-content pre { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent3); border-radius: 6px; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.5rem 0; max-width: 100%; }
 .detail-content pre code { background: none; padding: 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.7; }
 .detail-content ul, .detail-content ol { padding-left: 1.5rem; margin-bottom: 1.2rem; }
 .detail-content li { margin-bottom: 0.4rem; }
 .detail-content blockquote { border-left: 3px solid var(--accent2); padding: 0.8rem 1.2rem; margin: 1.5rem 0; background: rgba(255,91,140,0.05); border-radius: 0 4px 4px 0; }
 .detail-content .highlight-box { background: rgba(91,140,255,0.07); border: 1px solid rgba(91,140,255,0.2); border-radius: 6px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
-.detail-content .formula { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; text-align: center; padding: 1rem; background: var(--bg3); border-radius: 6px; margin: 1.5rem 0; color: var(--text); }
+.detail-content .formula { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; text-align: center; padding: 1rem; background: var(--bg3); border-radius: 6px; margin: 1.5rem 0; color: var(--text); overflow-x: auto; max-width: 100%; white-space: pre; }
+
+/* ── GitHub 링크 버튼 ── */
+.github-link,
+.detail-content .github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.1rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  transition: all 0.18s;
+  margin: 0.35rem 0;
+}
+.github-link:hover,
+.detail-content .github-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(91,140,255,0.07);
+}
+.github-link svg,
+.detail-content .github-link svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.18s;
+}
+.github-link:hover svg,
+.detail-content .github-link:hover svg { opacity: 1; }
+
+/* 링크 묶음 줄세울 때 */
+.link-row,
+.detail-content .link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+.detail-content img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  display: block;
+  margin: 1.5rem 0;
+}
+/* 이미지 + 캡션 묶음 */
+.detail-content figure {
+  margin: 2rem 0;
+}
+.detail-content figure img {
+  margin: 0 0 0.6rem;
+}
+.detail-content figcaption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+/* 나란히 2열 이미지 그리드 */
+.detail-content .img-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+.detail-content .img-grid img { margin: 0; }
+/* 이미지 강조 박스 (배경 어둡게 패딩) */
+.detail-content .img-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+.detail-content .img-box img { margin: 0 0 0.75rem; }
+.detail-content .img-box p {
+  font-size: 0.78rem;
+  margin-bottom: 0;
+  color: var(--text-muted);
+}
 
 /* ═══════════════════════════════════════════════════
    소개 페이지
@@ -272,22 +359,282 @@ pre.template-code {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
 /* ═══════════════════════════════════════════════════
-   반응형
+   모바일 햄버거 버튼 & 오버레이
+   (데스크탑에서는 숨김 — components.js가 자동 주입)
 ═══════════════════════════════════════════════════ */
-@media (max-width: 900px) {
-  :root { --sidebar-w: 220px; }
-  .board-grid { grid-template-columns: 1fr; }
-  .about-hero  { grid-template-columns: 1fr; }
-  .career-grid { grid-template-columns: 1fr; }
+
+/* 햄버거 버튼 */
+.mob-menu-btn {
+  display: none;
+  position: fixed;
+  top: 12px; right: 16px;
+  z-index: 500;
+  width: 40px; height: 40px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+  transition: background 0.2s;
 }
+.mob-menu-btn:hover { background: var(--bg3); }
+.mob-menu-btn span {
+  display: block;
+  width: 18px; height: 2px;
+  background: var(--text-muted);
+  border-radius: 2px;
+  transition: all 0.25s;
+  transform-origin: center;
+}
+/* 열렸을 때 X 모양 */
+.mob-menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.mob-menu-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.mob-menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* 배경 딤 오버레이 */
+.mob-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 150;
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;          /* ← 기본: 클릭 통과 */
+  transition: opacity 0.25s;
+}
+.mob-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;          /* ← 열렸을 때만 클릭 차단 */
+}
+
+/* ═══════════════════════════════════════════════════
+   반응형 — 태블릿 (≤ 960px)
+═══════════════════════════════════════════════════ */
+@media (max-width: 960px) {
+  :root { --sidebar-w: 240px; }
+
+  /* 그리드 1열로 */
+  .board-grid  { grid-template-columns: 1fr; }
+  .about-hero  { grid-template-columns: 1fr; gap: 2rem; }
+  .career-grid { grid-template-columns: 1fr; }
+
+  /* 홈 히어로 여백 축소 */
+  .home-hero   { padding: 3rem 2rem 2.5rem; }
+  .hero-title  { font-size: 4rem; }
+
+  /* 게시판 헤더/목록 여백 */
+  .board-header { padding: 2rem 2rem 1.25rem; }
+  .post-list    { padding: 0.5rem 2rem; }
+  .post-detail  { padding: 2.5rem 2rem; }
+  .about-page   { padding: 2rem; }
+  .template-page{ padding: 2rem; }
+}
+
+/* ═══════════════════════════════════════════════════
+   반응형 — 모바일 (≤ 640px)
+═══════════════════════════════════════════════════ */
 @media (max-width: 640px) {
-  .sidebar { display: none; }
-  .main    { margin-left: 0; }
-  .post-detail  { padding: 2rem 1.5rem; }
-  .board-header { padding: 1.5rem; }
-  .post-list    { padding: 1rem 1.5rem; }
-  .home-hero    { padding: 2rem 1.5rem 1.5rem; }
-  .hero-title   { font-size: 3rem; }
-  .about-page   { padding: 1.5rem; }
-  .template-page{ padding: 1.5rem; }
+
+  /* ── 사이드바: 오프캔버스로 전환 ── */
+  .sidebar {
+    width: 80vw;
+    max-width: 300px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 200;
+    /* 기존 fixed 유지 */
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  /* 사이드바 열렸을 때 오버레이 표시 */
+  .mob-overlay { display: block; pointer-events: none; }
+
+  /* ── 햄버거 버튼 표시 ── */
+  .mob-menu-btn { display: flex; }
+
+  /* ── 메인: 사이드바 없이 전체 너비, 가로 넘침 차단 ── */
+  .main { margin-left: 0; overflow-x: hidden; }
+  body  { overflow-x: hidden; }
+
+  /* ── 탑바 ── */
+  .topbar {
+    padding: 0 52px 0 1rem; /* 오른쪽 햄버거 버튼 공간 확보 */
+    gap: 0.75rem;
+  }
+  .topbar-meta { display: none; } /* 날짜 숨김 (공간 부족) */
+
+  /* ── 홈 히어로 ── */
+  .home-hero {
+    padding: 2rem 1.25rem 2rem;
+  }
+  .home-hero::before { font-size: 4.5rem; opacity: 0.5; }
+  .hero-title { font-size: 3rem; }
+  .hero-desc  { font-size: 0.85rem; }
+  .hero-chips { gap: 0.45rem; }
+  .chip { font-size: 0.58rem; padding: 0.35rem 0.7rem; }
+
+  /* ── 게시판 카드 ── */
+  .board-card { padding: 1.75rem 1.25rem; }
+  .board-num  { font-size: 2rem; }
+
+  /* ── 게시판 목록 ── */
+  .board-header {
+    padding: 1.5rem 1.25rem 1rem;
+  }
+  .board-header-title { font-size: 2.2rem; }
+  .post-list { padding: 0 1.25rem; }
+
+  /* 게시글 행: 번호 숨기고 2열 → 1열 */
+  .post-item {
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem;
+    padding: 1.25rem 0;
+  }
+  .post-num { display: none; }
+  .post-title { font-size: 0.95rem; }
+  .post-excerpt { font-size: 0.75rem; }
+  .post-date { font-size: 0.58rem; }
+
+  /* ── 게시글 상세 ── */
+  .post-detail {
+    padding: 1.5rem 1.25rem 4rem;
+    max-width: 100%;
+    /* 가로 넘침 차단 */
+    overflow-x: hidden;
+  }
+
+  .detail-back {
+    font-size: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .detail-category { font-size: 0.58rem; }
+
+  .detail-title {
+    font-size: 1.4rem;
+    line-height: 1.35;
+    word-break: keep-all;    /* 한글 단어 중간 안 끊김 */
+    overflow-wrap: break-word;
+  }
+
+  /* 메타 정보: 세로 스택 */
+  .detail-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .meta-dot { display: none; }   /* 점 구분자 숨김 */
+  .detail-tags {
+    margin-left: 0;
+    margin-top: 0.25rem;
+  }
+  .detail-tag { font-size: 0.52rem; }
+
+  /* 본문 */
+  .detail-content {
+    font-size: 0.84rem;
+    line-height: 1.85;
+    /* 긴 영단어·URL 줄바꿈 */
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .detail-content h2 {
+    font-size: 1rem;
+    margin: 2rem 0 0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  .detail-content h3 {
+    font-size: 0.9rem;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  .detail-content p { margin-bottom: 1rem; }
+
+  /* 인라인 코드 */
+  .detail-content code {
+    font-size: 0.7rem;
+    word-break: break-all;
+  }
+
+  /* 코드 블록: 컨테이너 안에서 가로 스크롤 */
+  .detail-content pre {
+    padding: 1rem;
+    margin: 1.25rem 0;
+    border-radius: 4px;
+    overflow-x: auto;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+  .detail-content pre code {
+    font-size: 0.68rem;
+    white-space: pre;
+    word-break: normal;
+  }
+
+  /* 수식 블록 */
+  .detail-content .formula {
+    font-size: 0.68rem;
+    padding: 0.9rem 0.75rem;
+    overflow-x: auto;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    white-space: pre;
+    text-align: left;
+    word-break: normal;
+  }
+
+  /* 하이라이트 박스 */
+  .detail-content .highlight-box {
+    padding: 1rem;
+    font-size: 0.82rem;
+  }
+
+  /* 인용문 */
+  .detail-content blockquote {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.82rem;
+    margin: 1.25rem 0;
+  }
+
+  /* 목록 */
+  .detail-content ul,
+  .detail-content ol {
+    padding-left: 1.2rem;
+  }
+  .detail-content li { margin-bottom: 0.35rem; }
+
+  /* 이미지 2열 그리드 → 1열 */
+  .detail-content .img-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── 소개 페이지 ── */
+  .about-page { padding: 1.5rem 1.25rem; }
+  .about-name { font-size: 3.5rem; }
+  .about-bio  { font-size: 0.82rem; }
+  .section-heading { font-size: 1.4rem; }
+  .career-item { padding: 1.2rem 1rem; }
+  .career-year { font-size: 1.2rem; }
+
+  /* ── 템플릿 페이지 ── */
+  .template-page { padding: 1.5rem 1.25rem; }
+  pre.template-code { font-size: 0.65rem; padding: 1rem; }
+}
+
+/* ═══════════════════════════════════════════════════
+   반응형 — 초소형 (≤ 380px, 구형 폰)
+═══════════════════════════════════════════════════ */
+@media (max-width: 380px) {
+  .hero-title  { font-size: 2.5rem; }
+  .detail-title{ font-size: 1.3rem; }
+  .board-header-title { font-size: 1.9rem; }
+  .post-tags   { display: none; } /* 태그 줄바꿈 방지 */
 }

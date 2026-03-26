@@ -127,6 +127,110 @@ def sigmoid(z):
 &lt;/html&gt;</pre>
 
     <!-- ─────────────────────────────────────── -->
+    <p class="template-section-label">// GitHub 링크 삽입 예시</p>
+    <pre class="template-code">
+<span class="code-comment">/* ① 버튼 하나 — 가장 기본 */</span>
+&lt;a class="github-link" href="https://github.com/username/repo" target="_blank"&gt;
+  &lt;svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"&gt;
+    &lt;path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/&gt;
+  &lt;/svg&gt;
+  GitHub — username/repo
+&lt;/a&gt;
+
+
+<span class="code-comment">/* ② 버튼 여러 개 나란히 — 레포 + 데모 + 논문 등 */</span>
+&lt;div class="link-row"&gt;
+
+  &lt;a class="github-link" href="https://github.com/username/repo" target="_blank"&gt;
+    &lt;svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"&gt;
+      &lt;path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/&gt;
+    &lt;/svg&gt;
+    GitHub — 소스코드
+  &lt;/a&gt;
+
+  <span class="code-comment">&lt;!-- 데모/배포 링크 (아이콘만 바꿔서 재사용) --&gt;</span>
+  &lt;a class="github-link" href="https://your-demo-url.vercel.app" target="_blank"&gt;
+    &lt;svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"&gt;
+      &lt;path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/&gt;
+      &lt;polyline points="15 3 21 3 21 9"/&gt;
+      &lt;line x1="10" y1="14" x2="21" y2="3"/&gt;
+    &lt;/svg&gt;
+    Live Demo
+  &lt;/a&gt;
+
+  <span class="code-comment">&lt;!-- 논문 / 발표자료 링크 --&gt;</span>
+  &lt;a class="github-link" href="https://arxiv.org/abs/xxxx.xxxxx" target="_blank"&gt;
+    &lt;svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"&gt;
+      &lt;path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/&gt;
+      &lt;polyline points="14 2 14 8 20 8"/&gt;
+      &lt;line x1="16" y1="13" x2="8" y2="13"/&gt;
+      &lt;line x1="16" y1="17" x2="8" y2="17"/&gt;
+    &lt;/svg&gt;
+    논문 (arXiv)
+  &lt;/a&gt;
+
+&lt;/div&gt;
+
+
+<span class="code-comment">/* ③ 본문 중간에 인라인으로 넣기 — 텍스트 흐름 안에서 */</span>
+&lt;p&gt;
+  전체 코드는 아래 레포에서 확인할 수 있습니다.
+&lt;/p&gt;
+&lt;a class="github-link" href="https://github.com/username/repo" target="_blank"&gt;
+  &lt;svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"&gt;
+    &lt;path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/&gt;
+  &lt;/svg&gt;
+  github.com/username/repo
+&lt;/a&gt;
+</pre>
+
+    <!-- ─────────────────────────────────────── -->
+    <p class="template-section-label">// 이미지 삽입 예시 (detail-content 안에서 사용)</p>
+    <pre class="template-code">
+<span class="code-comment">/* ① 기본 이미지 — 가장 단순한 형태 */</span>
+<span class="code-comment">&lt;!-- 이미지 파일은 posts/ 폴더 안에 함께 두면 편합니다 --&gt;</span>
+&lt;img src="my-image.png" alt="이미지 설명을 여기에" /&gt;
+
+
+<span class="code-comment">/* ② 캡션 있는 이미지 — figure + figcaption */</span>
+&lt;figure&gt;
+  &lt;img src="model-architecture.png" alt="모델 아키텍처 구조도" /&gt;
+  &lt;figcaption&gt;Fig 1. 전체 모델 아키텍처 — Encoder-Decoder 구조&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+<span class="code-comment">/* ③ 2열 나란히 — 비교 이미지, Before/After 등에 유용 */</span>
+&lt;div class="img-grid"&gt;
+  &lt;figure&gt;
+    &lt;img src="before.png" alt="처리 전" /&gt;
+    &lt;figcaption&gt;Before — 원본 이미지&lt;/figcaption&gt;
+  &lt;/figure&gt;
+  &lt;figure&gt;
+    &lt;img src="after.png" alt="처리 후" /&gt;
+    &lt;figcaption&gt;After — 노이즈 제거 결과&lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+<span class="code-comment">&lt;!-- 모바일에서는 자동으로 1열로 변환됩니다 --&gt;</span>
+
+
+<span class="code-comment">/* ④ 이미지 박스 — 이미지 + 설명 텍스트를 함께 묶을 때 */</span>
+&lt;div class="img-box"&gt;
+  &lt;img src="result-graph.png" alt="실험 결과 그래프" /&gt;
+  &lt;p&gt;EfficientNet-B3 기준 Top-1 Accuracy 84.2%, 앙상블 적용 후 88.7%로 향상.
+  x축은 epoch, y축은 validation accuracy를 나타냅니다.&lt;/p&gt;
+&lt;/div&gt;
+
+
+<span class="code-comment">/* ⑤ 외부 URL 이미지 (GitHub, 구글 드라이브 직접 링크 등) */</span>
+&lt;figure&gt;
+  &lt;img src="https://example.com/my-diagram.png" alt="외부 이미지" /&gt;
+  &lt;figcaption&gt;출처: 논문명 / GitHub 레포 등&lt;/figcaption&gt;
+&lt;/figure&gt;
+<span class="code-comment">&lt;!-- 구글 드라이브는 공유 링크를 직접 링크로 변환해야 합니다:
+     https://drive.google.com/uc?export=view&id=파일ID --&gt;</span>
+</pre>
+
+    <!-- ─────────────────────────────────────── -->
     <p class="template-section-label">// 프로젝트 리뷰 전용 추가 섹션</p>
     <pre class="template-code">
 <span class="code-comment">/* detail-content 안에 추가로 쓰면 좋은 섹션 */</span>
