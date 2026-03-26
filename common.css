@@ -265,6 +265,7 @@ body, .sidebar, .topbar, .board-card, .post-item, .detail-content,
   border-radius: 6px;
   padding: 0.5rem 0.85rem;
   transition: border-color 0.18s;
+  margin-bottom : 1rem;
 }
 .board-search-box:focus-within { border-color: var(--accent); }
 .board-search-icon { font-size: 0.75rem; color: var(--text-dim); flex-shrink: 0; }
@@ -304,7 +305,7 @@ body, .sidebar, .topbar, .board-card, .post-item, .detail-content,
 }
 .filter-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.54rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   color: var(--text-dim);
   text-transform: uppercase;
@@ -313,7 +314,7 @@ body, .sidebar, .topbar, .board-card, .post-item, .detail-content,
 }
 .filter-pill {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   padding: 0.22rem 0.65rem;
   border: 1px solid var(--border);
   border-radius: 20px;
