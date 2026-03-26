@@ -109,7 +109,6 @@ function renderLayout({ page, breadcrumb, root = '' }) {
         <div class="profile-role">// IPCG Lab Leader</div>
         <div class="profile-tags">
           <span class="tag accent">백석대학교</span>
-          <span class="tag">곽노윤 교수</span>
           <span class="tag">구름톤 2025</span>
           <span class="tag">폴라리스</span>
         </div>
