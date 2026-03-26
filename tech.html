@@ -29,20 +29,9 @@
 </div>
 
 <script src="components.js"></script>
+<script src="board-render.js"></script>
 <script>
-  /* ──────────────────────────────────────────────────────
-     게시글 목록 데이터
-     새 글 추가 시 배열 맨 앞에 객체를 추가하세요 (최신 글이 위로).
-  ────────────────────────────────────────────────────── */
   const posts = [
-    {
-      id: 'tech-004',
-      category: 'Tensorflow',
-      title: 'Tensor 자료구조',
-      excerpt: 'Tensorflow의 기초부터 다지기 위해 Tensor의 자료구조를 분석하였습니다.',
-      tags: ['Tensor'],
-      date: '2026.03.26',
-    },
     {
       id: 'tech-003',
       category: 'Transformer',
@@ -69,23 +58,8 @@
     },
   ];
 
-  /* 목록 렌더링 (수정 불필요) */
-  document.getElementById('post-list').innerHTML = posts.map((p, i) => `
-    <a class="post-item" href="posts/${p.id}.html">
-      <div class="post-num">0${posts.length - i}</div>
-      <div class="post-body">
-        <span class="post-cat">${p.category}</span>
-        <div class="post-title">${p.title}</div>
-        <div class="post-excerpt">${p.excerpt}</div>
-        <div class="post-tags">${p.tags.map(t => `<span class="post-tag">#${t}</span>`).join('')}</div>
-      </div>
-      <div class="post-meta">
-        <div class="post-date">${p.date}</div>
-      </div>
-    </a>
-  `).join('');
-
   renderLayout({ page: 'tech', breadcrumb: '기술 분석', root: '' });
+  initBoard(posts);
 </script>
 </body>
 </html>

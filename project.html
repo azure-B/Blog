@@ -16,12 +16,12 @@
     <div class="board-header-desc">직접 구현한 프로젝트의 설계, 구현, 회고를 담은 글 모음</div>
   </div>
 
-  <!-- ✏️ 새 글: posts 배열에 추가 + posts/project-NNN.html 생성 -->
   <div class="post-list" id="post-list"></div>
 
 </div>
 
 <script src="components.js"></script>
+<script src="board-render.js"></script>
 <script>
   const posts = [
     {
@@ -34,30 +34,16 @@
     },
     {
       id: 'project-001',
-      category: 'LLM Application',
-      title: '멍멍케어 - 챗봇 기반 Application',
-      excerpt: 'Exaone3.5을 Pinetuning하여 챗봇을 구현하였으며, 프론트 디자인에 참가하였습니다.',
-      tags: ['docker', 'TensorFlow', 'UI/UX'],
-      date: '2025.11.18',
+      category: 'Computer Vision',
+      title: '실시간 손 제스처 인식 시스템 개발기',
+      excerpt: 'MediaPipe + PyTorch로 실시간 손 제스처를 인식하는 경량 분류기를 만들었습니다. 데이터 수집부터 배포까지 전 과정을 기록합니다.',
+      tags: ['MediaPipe', 'PyTorch', 'Gesture Recognition', 'FastAPI', 'IPCG Lab'],
+      date: '2025.05.15',
     },
   ];
 
-  document.getElementById('post-list').innerHTML = posts.map((p, i) => `
-    <a class="post-item" href="posts/${p.id}.html">
-      <div class="post-num">0${posts.length - i}</div>
-      <div class="post-body">
-        <span class="post-cat">${p.category}</span>
-        <div class="post-title">${p.title}</div>
-        <div class="post-excerpt">${p.excerpt}</div>
-        <div class="post-tags">${p.tags.map(t => `<span class="post-tag">#${t}</span>`).join('')}</div>
-      </div>
-      <div class="post-meta">
-        <div class="post-date">${p.date}</div>
-      </div>
-    </a>
-  `).join('');
-
   renderLayout({ page: 'project', breadcrumb: '프로젝트 리뷰', root: '' });
+  initBoard(posts);
 </script>
 </body>
 </html>
