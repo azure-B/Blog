@@ -14,39 +14,146 @@
   <a class="detail-back" href="../campus.html">← 교내 활동으로 돌아가기</a>
 
   <div class="detail-category">IPCG Lab</div>
-  <h1 class="detail-title">IPCG 랩 정기 세미나 — Multi-Head Attention</h1>
+  <h1 class="detail-title">IPCG 랩 정기 세미나 — Self Attention</h1>
   <div class="detail-meta">
     <span class="detail-author">이승빈</span>
     <span class="meta-dot"></span>
     <span class="detail-date">2026.03.25</span>
     <div class="detail-tags">
       <span class="detail-tag">#IPCG Lab</span>
-      <span class="detail-tag">#Multi-head Attention</span>
+      <span class="detail-tag">#Self Attention</span>
     </div>
   </div>
 
   <div class="detail-content">
 
-    <p>IPCG 랩 격주 세미나에서 <strong>케라스 창시자에게 배우는 딥러닝</strong>의 Multi-head Attention 파트의 일부를 발표하였습니다.</p>
+    <p>IPCG 랩 격주 세미나에서 <strong>케라스 창시자에게 배우는 딥러닝</strong>의 Transformer 파트의 일부를 발표함.</p>
 
-    <h2>발표 내용 요약</h2>
-    <p>Ho et al. (2020) "Denoising Diffusion Probabilistic Models" 논문을 기반으로, Forward Process와 Reverse Process의 수식을 단계적으로 설명했습니다.</p>
+    <h2>셀프 어텐션 이해하기</h2>
 
-    <div class="formula">Forward:  q(xₜ|xₜ₋₁) = N(xₜ; √(1−βₜ)xₜ₋₁, βₜI)
-Reverse: pθ(xₜ₋₁|xₜ) = N(xₜ₋₁; μθ(xₜ,t), Σθ(xₜ,t))</div>
+    <p>문장에 있는 모든 단어에 대해 Q,K,V를 인코딩하는 예제 시퀀스를 알아보았다</p>
 
-    <h2>교수님 피드백</h2>
-    <p>곽노윤 교수님께서 "DDPM과 Score-based Model의 관계를 더 깊이 탐구해볼 것"을 제안해 주셨습니다. 또한 이미지 처리 관점에서 Diffusion을 노이즈 제거(Denoising) 문제로 해석하는 시각도 공유해 주셨습니다.</p>
+    <pre><code>
+        def self_attention(input_sequence):
+          output = np.zeros(shape=input_sequence.shape)
+          
+          for i, pivot_vector in enumerate(input_sequence):  
+            scores = np.zeros(shape=(len(input_sequence),))
+          
+            for j, vector in enumerate(input_sequence):
+              scores[j] = np.dot(pivot_vector, vector.T)  
+            
+            scores /= np.sqrt(input_sequence.shape[1])
+            scores = softmax(scores)
+            
+            new_pivot_representation = np.zeros(shape=pivot_vector.shape)
 
-    <h2>다음 계획</h2>
-    <ul>
-      <li>Score Matching과 DDPM의 수학적 동치 관계 추가 학습</li>
-      <li>Latent Diffusion Model(Stable Diffusion) 구조 분석 예정</li>
-      <li>IPCG 랩 프로젝트에 Diffusion 기반 이미지 복원 적용 검토</li>
-    </ul>
+            for j, vector in enumerate(input_sequence):
+              new_pivot_representation += vector * scores[j]  
+            
+
+          output[i] = new_pivot_representation  
+        
+        return output
+    </code></pre>
+
+    <h3> 코드 리뷰 </h3>
+
+    <p> 코드 리뷰는 최대한 세세하게 이유 하나하나 남겨가며 진행 할 예정이다.</p>
+
+    <pre><code>
+      output = np.zeros(shape=input_sequence.shape)
+    </code></pre>
+    <p>
+      결과 값을 저장하기 위해 0으로 채워진 빈 행렬을 만든다.
+    </p>
+
+    <pre><code>
+      for i, pivot_vector in enumerate(input_sequence):  
+          scores = np.zeros(shape=(len(input_sequence),))
+    </code></pre>
+    <p>
+      enumerate는 리스트의 요소와 인덱스를 같이 가지고 온다.<br/>
+      i는 인덱스 이며 pivot_vector는 문장 내 각 단어를 벡터로 변형한 것이다.
+      <br/><br/>
+      즉, 이 코드는 문장내 단어를 꺼내 다른 단어들과 비교하기 위함이며 <br/>
+      여기서 pivot_vector는 이전시간에서 배운 Q와 동일하다.
+    </p>
+
+    <pre><code>
+      for j, vector in enumerate(input_sequence):
+        scores[j] = np.dot(pivot_vector, vector.T)
+    </code></pre>
+    <p>
+      두번째 반복문에선 vector가 key로 나오게 된다. <br/>
+      결과적으로 중첩된 반복문은 Q와 K가 비교되는 과정을 의미한다.<br/><br/>
+
+      np.dot(a,b) 내적을 통해서단어 사이의 유사도를 계산하고,<br/>
+      여기서 vector.T 즉 전치행렬을 사용하는 이유는 <br/>
+      둘 모두 $(T \times d_{key})$의 shape를 가진 행렬이기 때문에 연산을 위해 사용한다.<br/>
+      $(T \times d_{key}) \times (d_{key} \times T) = \mathbf{T \times T}$
+    </p>
+
+    <pre><code>
+      scores /= np.sqrt(input_sequence.shape[1])
+      scores = softmax(scores)
+    </code></pre>
+    <p>
+      각각의 내적 값이 커지는 것을 방지하기 위해서 softmax 사용 이전에 값을 정규화한다. <br/>
+      $\sqrt{d_{key}}$로 나누는 이유는 $QK^T$의 평균은 0이지만 분산은 $d_k$가 되기 때문이다. <br/>
+      분산을 1로 만든 후 점수합을 1로 만드는 softmax를 사용하여 가중치를 결정한다.
+    </p>
+
+    <pre><code>
+      new_pivot_representation = np.zeros(shape=pivot_vector.shape)
+
+      for j, vector in enumerate(input_sequence):
+        new_pivot_representation += vector * scores[j]  
+    </code></pre>
+      가중치를 적용한 단어를 저장할 new_pivot_representation를 선언하고 각각의 결과를 저장한다.<br/>
+    </p>
+
+    <p>
+      다만 이 것은 이해를 하기 위해 작성한 코드이며 실전에선 벡터화된 구현을 사용하기 위해<br/>
+      케라스에서 지원하는 MultiHeadAttention층을 사용한다.
+    </p>
+    <pre><code>
+      num_head = 4
+      embed_dim = 256
+      layer = MultiHeadAttention(num_heads=num_head, key_dim=embed_dim)
+      output = layer(inputs,inputs,inputs)
+    </code></pre>
+
+    <p>
+      지금까지 하나의 입력 시퀀스만을 고려했었지만 번역의 예제로, <br/>
+      트랜스포머는 소스 시퀀스와 타겟 시퀀스라는 두개의 시퀀스를 다루는 시퀀스 - 투 - 시퀀스 모델이다.
+    </p>
+
+    <pre><code>
+      outputs = sum(inputs * pairwise_scores(inputs, inputs))
+    </code></pre>
+    <figure>
+      <img src="../image/campus-002.01.png" alt="Self Attention" />
+      <figcaption>[출처] FFighting - 딥러닝 핵심 개념</figcaption>
+    </figure>
+
+    <p>
+      앞의 순서부터 inputs의 네이밍을 $inputs_1, inputs_2, inputs_3$라고 하겠다.<br/>
+      이전 시간에 다루었던 Q, K, V를 떠올려 보면 <br/>
+      Q = $inputs_2$ <br/>
+      K = $inputs_3$ <br/>
+      V = $inputs_1$ <br/>
+      즉 쿼리 키 값 모델을 표헌 한 것으로 쿼리에 있는 모든 원소가 키의 모든 원소와 얼마나 관련 있는지<br/>
+      그리고 그 것을 계산하여 값에 있는 모든 원소들의 가중치를 구해 합을 하는 것 이다.
+    </p>
+
+    <p>
+      결과적으로 트랜스포머 스타일의 어텐션은 <br/>
+      찾고 있는 것을 설명하는 참조 시퀀스인 <strong>쿼리</strong>와, 정보를 추출할 본체인 <strong>값</strong>을 가지며<br/>
+      쿼리와 쉽게 비교 할 수 있는 <strong>키</strong>가 각 값에 할당되어 가중치의 합을 반홚한다.
+    </p>
 
   </div>
-
 </div>
 </div>
 
