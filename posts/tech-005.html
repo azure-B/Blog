@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tensor 자료구조</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../common.css" />
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../tech.html">← 기술 분석으로 돌아가기</a>
+
+  <div class="detail-category">Deep learning</div>
+  <h1 class="detail-title">RELU란 무엇인가?</h1>
+  <div class="detail-meta">
+    <span class="detail-author">이승빈</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2026.03.30</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#Deep learning</span>
+    </div>
+  </div>
+
+  <div class="detail-content">
+
+    <p>
+        평소 원리는 잘 모르지만 항상 신경망을 구성할 때 사용한 활성화 함수인
+        <br/>
+      <strong>RELU</strong>
+      에 대해 알아보자.
+    </p>
+
+    <h2>1. 의미와 이유</h2>
+    
+    <h3>1-1. RELU란?</h3>
+    <p>
+      RELU는 딥 러닝에서 가장 널리 사용되는 활성화 함수로, 비선형성을 부여하는 역할을 한다.<br/>
+      RELU라는 이름은 Rectified Linear Unit의 약자로 의미를 보면
+      <br/><br/>
+      Rectified는 반파 정류로 전기 회로에서 음의 전압을 0으로 모두 깎고 양의 전압만 통과시킨다.<br/>
+      Linear는 입력값이 0보다 클 때 $f(x) = x$라는 식을 따르는 선형 특징을 의미한다.<br/>
+      Unit은 뉴런 혹은 노드를 의미한다.
+    </p>
+    
+    <figure>
+      <img src="../image/tech-005.01.png" alt="RELU 함수" />
+      <figcaption>RELU 함수</figcaption>
+    </figure>
+
+    <p>
+      즉 RELU는 위의 함수와 같이 음수 입력에서는 0을<br/>
+      양수 입력에서는 선형적 특성을 띄게 만들어주는 함수이다.
+    </p>
+
+    <h3>1-2. 활성화 함수를 사용하는 이유</h3>
+    <p>
+      딥러닝 모델에서 활성화 함수를 사용하는 이유는 비선형성을 추가하기 위해서이다.
+    </p>
+
+    <div class="formula">
+        $y_1 = W_1x + b_1$
+        $y_2 = W_2y_1 + b_2$
+        ...
+        $y_i = W_iy_(i-1) + b_i$
+    </div>
+    <p>
+      만약 i개의 층에 대하여 위와 같은 수식을 가질 때, 이들을 아무리 합쳐도
+    </p>
+    
+    <div class="formula">
+      $b' = W_2b_1 + b_2$
+    </div>
+    <p>
+      위와 같은 하나의 거대한 선형층과 다를 바 없다.<br/>
+      하지만 해결 할 문제들은 데이터가 매우 복잡하고 비선형적이기에 데이터를 학습하기 부족함.
+    </p>
+
+    <h2>2. RELU의 원리</h3>
+    
+    <h3>2-1. 수식</h3>
+    <div class="formula">
+      $$f(x) = \max(0, x)$$
+    </div>
+    <p>
+      앞서 말했듯이 RELU의 수식은 입력이 0보다 작을때 항상 0이며 0보다 클 때 입력값과 같다.<br/>
+    </p>
+
+    <h3>2-2. 가중치 업데이트시 영향</h3>
+    <div class="formula">
+      $$\frac{\partial L}{\partial W} = \frac{\partial L}{\partial a} \cdot \frac{\partial a}{\partial z} \cdot \frac{\partial z}{\partial W}$$
+    </div>
+    <p>
+      해당 수식은 가중치 W에 대한 L의 기울기 이다.<br/>
+      z는 데이터를 어떻게 해석할지, a는 결과를 어떻게 전송할지 라고 하면,<br/>
+      $z = Wx + b$  $a = f(z)$로 a가 RELU의 역할을 하며 z가 가중치와 편향이 계산된 직선의 값이다.<br/>
+      여기서 활성화 함수의 미분값($\frac{\partial a}{\partial z}$)이 항상 1이므로 기울기 소실 없이 진행되는 것을 확인 할 수 있다.
+    </p>
+
+    <h2>3. 장점과 단점</h3>
+    <p>
+      RELU의 장점<br/><br/>
+      연산 효율이 뛰어나다.<br/>
+      $f(x) = \max(0, x)$라는 매우 간단한 수식은 다른 함수처럼 지수 함수 연산을 하지 않아 효율이 좋다.<br/><br/>
+      두번째로는 기울기 소실이 완화되었다.<br/>
+      Sigmoid와 Tanh 케이스의 경우엔 입력값이 커지거나 작아지면 기울기가 0에 수렴하나 RELU는 항상 1로 고정이다.<br/><br/>
+      마지막으로 음수 입력값일때 출력이 0이다.<br/>
+      이는 모델을 더 가볍고 중요한 특징에 집중하게 한다.
+    </p>
+
+    
+    <p>
+      RELU의 단점<br/><br/>
+      Dying RELU <br/>
+      가장 대표적인 단점으로 특정 뉴런의 값이 음수에 계속 머물게 되면 <br/>
+      해당 뉴런은 출력과 기울기가 모두 0이되어 학습에 악영향을 미친다. <br/><br/>
+      출력 값의 중심이 0이 아니다.<br/>
+      ReLu의 출력 값은 항상 0 또는 양수이므로 가중치 업데이트시 기울기 편향이 일어나 수렴이 늦어진다.<br/><br/>
+      출력 값의 상한선이 없다. <br/>
+      양수 범위에서 출력 값의 상한이 없어 학습률의 수치에 따라 활성화 값이 기하급수적으로 커질 수 있다.
+    </p>
+
+    <div class="highlight-box">
+      <strong>⚡ RELU </strong><br/>
+      RELU의 의미와 활성화 함수의 사용 이유, RELU의 수식 및 장단점에 대해 알아보았다.
+    </div>
+
+
+  </div>
+</div>
+</div>
+
+<script src="../components.js"></script>
+<script>
+  renderLayout({
+    page: 'tech',
+    breadcrumb: '기술 분석 / Tensorflow',
+    root: '../'
+  });
+</script>
+</body>
+</html>
