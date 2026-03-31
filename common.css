@@ -815,3 +815,46 @@ pre.template-code {
   .board-header-title { font-size: 1.9rem; }
   .post-tags   { display: none; } /* 태그 줄바꿈 방지 */
 }
+
+/* ═══════════════════════════════════════════════════
+   링크 (a 태그) 공통 스타일
+═══════════════════════════════════════════════════ */
+
+/* 기본 링크 */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.18s, opacity 0.18s;
+}
+a:hover { color: var(--accent2); }
+
+/* 본문 내 인라인 링크 — 밑줄 스타일 */
+.detail-content a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(107, 159, 255, 0.35);
+  padding-bottom: 1px;
+  transition: color 0.18s, border-color 0.18s;
+}
+.detail-content a:hover {
+  color: var(--accent2);
+  border-bottom-color: var(--accent2);
+}
+
+/* 외부 링크 — 아이콘 자동 표시 */
+.detail-content a[href^="http"]::after,
+.detail-content a[href^="https"]::after {
+  content: ' ↗';
+  font-size: 0.75em;
+  opacity: 0.55;
+  vertical-align: super;
+}
+
+/* 네비게이션 등 블록 링크 — 밑줄 없음 */
+.nav-item,
+.board-card,
+.post-item,
+.detail-back {
+  color: inherit;
+  text-decoration: none;
+}
