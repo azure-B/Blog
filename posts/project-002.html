@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>폴라리스 팀 관리 플랫폼 | 이승빈</title>
+  <title>DeepFake Scanner</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../common.css" />
 </head>
@@ -13,52 +13,78 @@
 
   <a class="detail-back" href="../project.html">← 프로젝트 리뷰로 돌아가기</a>
 
-  <div class="detail-category">Full Stack</div>
-  <h1 class="detail-title">폴라리스 창업동아리 팀 관리 플랫폼 제작기</h1>
+  <div class="detail-category">Deep Learning</div>
+  <h1 class="detail-title">DeepFake Scanner</h1>
+
+  <!-- 메타 정보: 태그에 링크 넣지 않고 분리 -->
   <div class="detail-meta">
     <span class="detail-author">이승빈</span>
     <span class="meta-dot"></span>
-    <span class="detail-date">2025.04.20</span>
+    <span class="detail-date">2026.04.01</span>
     <div class="detail-tags">
-      <span class="detail-tag">#Next.js</span>
-      <span class="detail-tag">#Supabase</span>
-      <span class="detail-tag">#Polaris</span>
+      <span class="detail-tag">#GAN</span>
+      <span class="detail-tag">#TensorFlow</span>
+      <span class="detail-tag">#MediaPipe</span>
     </div>
+  </div>
+
+  <!-- GitHub 링크는 메타 바로 아래 버튼으로 -->
+  <div class="link-row">
+    <a class="github-link" href="https://github.com/azure-B/DeepFake-scanner-with-AI" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      GitHub - DeepFake-scanner-with-AI | Azure_B
+    </a>
   </div>
 
   <div class="detail-content">
 
     <div class="highlight-box">
       <strong>프로젝트 개요</strong><br/>
-      <strong>기간:</strong> 2025.02 — 2025.04 (2개월)<br/>
-      <strong>팀:</strong> 1인 (개인 프로젝트)<br/>
-      <strong>스택:</strong> Next.js 14 · Supabase · Tailwind CSS · Vercel
+      <strong>기간:</strong> 2025.11 — 2025.11 (1개월)<br/>
+      <strong>팀:</strong> 3인 (본인: LLM 파인튜닝 + 프론트엔드 / 팀원: 백엔드 및 프론트엔드)<br/>
+      <strong>스택:</strong> Python · PyTorch · Exaone3.5 · React · Docker
     </div>
 
     <h2>문제 정의</h2>
-    <p>폴라리스 창업동아리를 대표로 맡게 되면서, 멤버 관리·회의록·프로젝트 현황을 한 곳에서 볼 수 있는 내부 툴이 필요했습니다. 기존에는 Notion과 카카오톡을 혼용해 정보가 분산되어 있었습니다.</p>
+    <p>백석대학교 Smart_it 출품작으로 반려견 케어 어플리케이션을 만들었습니다.</p>
 
     <h2>설계 및 구현</h2>
-    <p>Next.js 14 App Router + Supabase(PostgreSQL)로 빠르게 MVP를 구성했습니다. RLS(Row Level Security)를 적용해 멤버별 권한 분리를 구현했습니다.</p>
+    <p><strong>Exaone3.5</strong>를 파인튜닝하여 LLM 모델을 구축하였으며, 역번역을 통해 사용자의 Input을 늘려 정확한 답변을 하도록 개선하였습니다.</p>
 
-    <pre><code>-- Supabase RLS 정책 예시
-CREATE POLICY "멤버만 읽기 가능"
-ON meeting_notes FOR SELECT
-USING (
-  auth.uid() IN (
-    SELECT user_id FROM members
-    WHERE club_id = meeting_notes.club_id
-  )
-);</code></pre>
+    <pre><code># 1. 사용할 모델 이름
+LOCAL_MODEL_NAME = "exaone3.5"
 
-    <h2>결과</h2>
-    <p>동아리원 15명이 실제 사용 중이며, 회의록 작성 시간이 평균 30% 단축되었습니다. Vercel 무료 플랜으로 배포해 운영 비용 0원을 달성했습니다.</p>
+# 2. Ollama 주소 설정
+default_url = "http://localhost:11434/v1"
+OLLAMA_URL = os.getenv("OLLAMA_URL", default_url)
+
+# Ollama 클라이언트 초기화
+client = OpenAI(
+    base_url=OLLAMA_URL,
+    api_key="ollama"
+)
+
+# 3. 장치 자동 설정
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+if device == "cuda":
+    print(f"CUDA 사용 중 ({torch.cuda.get_device_name(0)})")
+else:
+    print("CPU 사용 중")
+
+EMBEDDING_FILE = config.EMBEDDING_FILE
+TEXT_DATA_FILE = config.TEXT_DATA_FILE</code></pre>
+
+    <h2>결과 및 성능</h2>
+    <p>한정된 데이터로 특정 답변에서 어려움을 보임. 예를 들어, 피부병 관련 검색을 하면 질문자의 견종은 말티즈여도 포메라니안에 대한 답변이 나오는 문제가 있었습니다.</p>
 
     <h2>회고</h2>
     <ul>
-      <li>✅ Supabase Realtime으로 실시간 협업 구현이 생각보다 간단했음</li>
-      <li>❌ 모바일 UX가 미흡 — 반응형 개선 필요</li>
-      <li>🔜 알림 기능(Slack 연동) 추가 예정</li>
+      <li>✅ 잘 된 점: Exaone3.5를 파인튜닝하는 과정에서 사용자의 Input을 증강하여 답변의 정확도 상승</li>
+      <li>❌ 아쉬운 점: 데이터셋 부족으로 인한 할루시네이션</li>
+      <li>🔜 개선 방향: 데이터셋 검토 및 증강 고려</li>
     </ul>
 
   </div>
@@ -70,7 +96,7 @@ USING (
 <script>
   renderLayout({
     page: 'project',
-    breadcrumb: '프로젝트 리뷰 / 폴라리스 플랫폼',
+    breadcrumb: '프로젝트 리뷰 / 멍멍케어',
     root: '../'
   });
 </script>
