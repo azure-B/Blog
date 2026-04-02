@@ -850,6 +850,15 @@ a:hover { color: var(--accent2); }
   vertical-align: super;
 }
 
+/* 내부 링크 (상대경로) — 내부 이동 표시 */
+.detail-content a[href^="./"]::after,
+.detail-content a[href^="../"]::after {
+  content: ' →';
+  font-size: 0.75em;
+  opacity: 0.55;
+  vertical-align: super;
+}
+
 /* 네비게이션 등 블록 링크 — 밑줄 없음 */
 .nav-item,
 .board-card,

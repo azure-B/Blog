@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GAN에 대하여</title>
+  <title>Log의 이유</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../common.css" />
 </head>
@@ -14,11 +14,11 @@
   <a class="detail-back" href="../tech.html">← 기술 분석으로 돌아가기</a>
 
   <div class="detail-category">Deep Learning</div>
-  <h1 class="detail-title">생성적 적대 신경망에(GAN) 대하여</h1>
+  <h1 class="detail-title">적대적 프레임워크의 수학적 공식에서<br/> Log를 쓰는 이유</h1>
   <div class="detail-meta">
     <span class="detail-author">이승빈</span>
     <span class="meta-dot"></span>
-    <span class="detail-date">2026.03.31</span>
+    <span class="detail-date">2026.04.02</span>
     <div class="detail-tags">
       <span class="detail-tag">#GAN</span>
       <span class="detail-tag">#Deep Learning</span>
@@ -30,7 +30,7 @@
     <p>
         <a href="https://proceedings.neurips.cc/paper_files/paper/2014/file/f033ed80deb0234979a61f95710dbe25-Paper.pdf">논문으로 이동하기</a>
     </p>
-
+    
     <p>딥러닝은 2014년 판별 모델 분야에서는 큰 성공을 거두었으나 생성모델은 성과를 내지 못했습니다. <br/>
     그 때 이안 굿펠로우(Ian Goodfellow)와 연구진은 복잡한 마르코프 체인이나 근사추론을 배제하고<br/>
     <strong>역전파와 드롭아웃</strong>만을 사용하여 데이터를 생성하는 GAN을 발표하였습니다.</p>
@@ -75,11 +75,11 @@
         확률 분포는 모델이 학습하여도 불변이며 그저 G에게 난수를 공급해주는 단순한 발생기이다.<br/><br/>
         왜 정규 분포나 균등 분포 등 규칙에 따르는 가 하면<br/>
         1. 계산의 효율성 <br/>
-        컴퓨터에서 난수 발생은 비용이 꽤 드는 작업인데 해당 분포에서 뽑는 것이 가장 효율적이다.<br/><br/>
+        컴퓨터에서 난수 발생은 비용이 꽤 드는 작업인데 해당 분포에서 뽑는 것이 가장 효율적이다.<br/>
         2. 연속성과 보간 <br/>
         만약 우리가 $z_1$에서 웃는 얼굴을 조금 다른 $z_2$에서 우는 얼굴을 만든다고 하면<br/>
         정규 분포는 연속적이기에 웃는 얼굴이 서서히 우는 얼굴로 변하는 과정을 관찰 할 수 있다.<br/>
-        논문에서도 잠재 공간 $z$의 좌표 사이를 보간**하여 숫자가 서서히 다른 숫자로 변하는 모습을 증명했다.<br/><br/>
+        논문에서도 잠재 공간 $z$의 좌표 사이를 보간하여 숫자가 서서히 다른 숫자로 변하는 모습을 증명했다.<br/>
         3. 인공 신경망의 활용<br/>
         G는 컴퓨터 입장에선 함수 근사기 이다. <br/>
         백지의 종이를 즉, 정규 분포 노이즈를 주더라도 신경망은 학습을 통해 백지를 지폐로 변환시킨다. <br/>
@@ -119,117 +119,7 @@
       가치 함수(Value Function) $V(G, D)$는 두 모델의 최적화 궤적을 지시하며 다음과 같이 정의된다.
     </p>
 
-    <div class="formula">$V(D, G) = \mathbb{E}_{x \sim p_{data}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]$</div>
-
-    <p>
-      $D$는 실제 표본과 $G$로 생성한 가짜에 올바른 레이블을 할당하는 확률[logD(x)]를 최대화하는 훈련을 한다.<br/>
-      $G$는 $D$와 반대로 $\log(1 - D(G(z)))$**를 최소화 하도록 훈련한다. <br/>
-      $\mathbb{E}_{x \sim p_{data}(x)}[\log D(x)]$는 실제 데이터 분포($p_{data}$)에서 뽑은 진짜 데이터($x$)에서 나오는 결과값들의 평균값이다.<br/>
-      $\mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]$는 임의의 노이즈 분포($p_{z}$)에서 나온 무작위 결과 값($z$)의 평균값이다.<br/><br/>
-      
-      즉 $\min_G \max_D$는 $G$는 값을 최대한 작게, $D$는 값을 최대한 크게 만드는 것을 목표한다.<br/>
-      $V(D, G)$는 점수판으로서 $\min_G \max_D$의 최소최대 게임의 결과가 나오는 것 이다.
-    </p>
-
-    <small>
-      <b>$\log(1 - D(G(z)))$</b>
-      $G(z)$는 노이즈 $z$를 입력받아 만들어낸 가짜 데이터 이며 $D()$는 진짜일 확률을 출력한 값이다.<br/>
-      즉,$1 - D(G(z))$는 판별자$D$가 가짜 데이터를 진짜라고 착각할 확률이며,<br/>
-      최대 우도 추정 및 교차 엔트로피의 수학적 특성때문에 $\log$를 취하였다.<br/>
-      <b>$\mathbb{E}$</b>
-      여러 진짜 데이터를 넣었을 때 나오는 결과값들의 평균을 구하라는 뜻이다.
-    </small>
-    <p>
-      이 경쟁 과정은 $G$가 진짜 같은 가짜를 만들어 내며 $D$가 그것을 판별하는 능력을 동시 향상한다.<br/><br/>
-    </p>
-
-    <h3>2-1. 비포화 손실</h3>
-
-    <p>
-      초기 $G$는 무작위 매개변수로 초기화되어 있어 실제 데이터 분포 $p_{data}$와는 먼 표본을 생성한다.<br/>
-      이 때 매개변수화된 $D$는 이런 표본들을 매우 높은 확신으로 거부할 수 있다.<br/>
-      $D(G(z))$가 0에 수렴 할 때 $\log(1 - D(G(z)))$ 가 포화 상태에 이르게 되며, <br/>
-      $G$의 기울기 소실 현상을 유도하여 학습을 완전히 중단시킨다.<br/><br/>
-
-      즉 학습 초기엔 $D(G(z)) \approx 0$이며, 목표는 $\min_G \log(1 - D(G(z)))$ 이며,<br/>
-      $\min_G \log(1 - D(G(z)))$를  $y = \log(1 - x)$로 가정하여 미분 하였을 때 $y' = -\frac{1}{1-x}$이며, <br/>
-      $x \approx 0$일 때, 기울기는 $-1$로 $G$에겐 오차가 커 큰 피드백이 필요하지만<br/>
-      역전파 되는 기울기가 -1과 같은 상수에 불과해 업데이트가 거의 되지 않는다.<br/>
-      즉, $\min_G \log(1 - D(G(z)))$ 에겐 큰 기울기가 필요하나, 업데이트 값이 작아 학습이 아예 멈춰버린다.
-    </p>
-
-    <figure>
-      <img src="../image/tech-006.02.png" alt="log(1-x)" />
-      <figcaption>log(1-x)</figcaption>
-    </figure>
-
-    <p>
-      여기서 $x$축은 $D(G(z))$ 즉, 판별자가 가짜 이미지를 진짜로 믿을 확률이다.<br/>
-      ($D(G(z)) \approx 0$)일때 $G$의 값이 최악이나, 위 그래프에서 보다시피 기울기가 완만하다.<br/>
-      이 것이 바로 포화상태이며 그래프가 너무 평평해 가중치를 업데이트 할 동력을 얻지 못하는 것 이다.<br/>
-    </p>
-
-    <h3>2-1-#. 비포화 손실 테스트</h3>
-    
-    <small>
-      <b>구현 환경</b>
-      Python == 3.10 <br/>
-      TensorFlow == 2.10.1 <br/>
-      numpy == 1.23.5
-    </small>
-
-    <a class="github-link" href="https://github.com/azure-B/BlogStudyPyFiles/blob/main/GAN/Original_Loss.py" target="_blank">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-      </svg>
-      GitHub — Azure_B / StudyBlogPyFiles
-    </a>
-    
-
-    <pre><code>
-      z_dim = 100
-      x_dim = 28 * 28
-    </code></pre>
-
-    <p>
-      기본 세팅으로 $G$의 입력으로 갈 노이즈 z_dim은 100,<br/>
-      최종적으로 다룰 실제 데이터의 크기는 x_dim으로 $28*28$로 가정한다.
-    </p>
-
-    <pre><code>
-      def build_generator():
-        model = tf.keras.Sequential([
-            # 입력 z를 받아 128개 노드의 은닉층으로 연결 (ReLU 활성화)
-            tf.keras.layers.Dense(128, activation='relu', input_shape=(z_dim,)),
-            # 784 픽셀의 이미지로 출력 (Sigmoid 활성화)
-            tf.keras.layers.Dense(x_dim, activation='sigmoid')
-        ])
-        return model
-
-      def build_discriminator():
-          model = tf.keras.Sequential([
-              # 784 픽셀 이미지를 받아 128개 노드의 은닉층으로 연결
-              tf.keras.layers.Dense(128, activation='relu', input_shape=(x_dim,)),
-              # 0~1 사이의 진짜일 확률 1개 출력 (Sigmoid 활성화)
-              tf.keras.layers.Dense(1, activation='sigmoid')
-          ])
-          return model
-
-      generator = build_generator()
-      discriminator = build_discriminator()
-    </code></pre>
-
-    <p>
-      딥러닝의 가중치 매개변수를 수동으로 만들었다.<br/>
-      W는 평균이 0이고 표준편차가 0.1인 정규분포에서 무작위 값을 뽑아 행렬을 만들고,<br/>
-      B는 모두 0으로 꽉채워 만들었다.
-    </p>
-
-    
-    <figure>
-      <img src="../image/tech-006.03.png" alt="기울기 소실 테스트" />
-      <figcaption>기울기 소실 테스트</figcaption>
-    </figure>
+    <div class="formula">$\min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{data}(x)} + \mathbb{E}_{z \sim p_z(z)}$</div>
 
     <p>
       
