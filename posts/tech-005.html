@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RELU란 무엇인가?</title>
+  <title>ReLU 무엇인가?</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../common.css" />
 </head>
@@ -14,7 +14,7 @@
   <a class="detail-back" href="../tech.html">← 기술 분석으로 돌아가기</a>
 
   <div class="detail-category">Deep learning</div>
-  <h1 class="detail-title">RELU란 무엇인가?</h1>
+  <h1 class="detail-title">ReLU 무엇인가?</h1>
   <div class="detail-meta">
     <span class="detail-author">이승빈</span>
     <span class="meta-dot"></span>
@@ -29,16 +29,16 @@
     <p>
         평소 원리는 잘 모르지만 항상 신경망을 구성할 때 사용한 활성화 함수인
         <br/>
-      <strong>RELU</strong>
+      <strong>ReLU</strong>
       에 대해 알아보자.
     </p>
 
     <h2>1. 의미와 이유</h2>
     
-    <h3>1-1. RELU란?</h3>
+    <h3>1-1. ReLU?</h3>
     <p>
-      RELU는 딥 러닝에서 가장 널리 사용되는 활성화 함수로, 비선형성을 부여하는 역할을 한다.<br/>
-      RELU라는 이름은 Rectified Linear Unit의 약자로 의미를 보면
+      ReLU 딥 러닝에서 가장 널리 사용되는 활성화 함수로, 비선형성을 부여하는 역할을 한다.<br/>
+      ReLU 이름은 Rectified Linear Unit의 약자로 의미를 보면
       <br/><br/>
       Rectified는 반파 정류로 전기 회로에서 음의 전압을 0으로 모두 깎고 양의 전압만 통과시킨다.<br/>
       Linear는 입력값이 0보다 클 때 $f(x) = x$라는 식을 따르는 선형 특징을 의미한다.<br/>
@@ -47,19 +47,21 @@
     
     <figure>
       <img src="../image/tech-005.01.png" alt="RELU 함수" />
-      <figcaption>RELU 함수</figcaption>
+      <figcaption>ReLU 함수</figcaption>
     </figure>
 
     <p>
-      즉 RELU는 위의 함수와 같이 음수 입력에서는 0을<br/>
+      즉 ReLU 위의 함수와 같이 음수 입력에서는 0을<br/>
       양수 입력에서는 선형적 특성을 띄게 만들어주는 함수이다.
     </p>
 
     <h3>1-2. 활성화 함수를 사용하는 이유</h3>
+
     <figure>
       <img src="../image/tech-005.02.png" alt="활성화 함수" />
       <figcaption>[출처] 외부 저장소 - 활성화 함수(Activation Function) - Sigmoid, Softmax, Tanh, ReLU, Leaky ReLU</figcaption>
     </figure>
+    
     <p>
       딥러닝 모델에서 활성화 함수를 사용하는 이유는 비선형성을 추가하기 위해서이다.
     </p>
@@ -82,53 +84,272 @@
       하지만 해결 할 문제들은 데이터가 매우 복잡하고 비선형적이기에 데이터를 학습하기 부족함.
     </p>
 
-    <h2>2. RELU의 원리</h3>
+    <h2>2. ReLU 원리</h3>
     
     <h3>2-1. 수식</h3>
     <div class="formula">
-      $$f(x) = \max(0, x)$$
+      $f(x) = \max(0, x)$
     </div>
     <p>
-      앞서 말했듯이 RELU의 수식은 입력이 0보다 작을때 항상 0이며 0보다 클 때 입력값과 같다.<br/>
+      앞서 말했듯이 ReLU 수식은 입력이 0보다 작을때 항상 0이며 0보다 클 때 입력값과 같다.<br/>
     </p>
 
     <h3>2-2. 가중치 업데이트시 영향</h3>
     <div class="formula">
-      $$\frac{\partial L}{\partial W} = \frac{\partial L}{\partial a} \cdot \frac{\partial a}{\partial z} \cdot \frac{\partial z}{\partial W}$$
+      $\frac{\partial L}{\partial W} = \frac{\partial L}{\partial a} \cdot \frac{\partial a}{\partial z} \cdot \frac{\partial z}{\partial W}$
     </div>
     <p>
       해당 수식은 가중치 W에 대한 L의 기울기 이다.<br/>
       z는 데이터를 어떻게 해석할지, a는 결과를 어떻게 전송할지 라고 하면,<br/>
-      $z = Wx + b$  $a = f(z)$로 a가 RELU의 역할을 하며 z가 가중치와 편향이 계산된 직선의 값이다.<br/>
-      여기서 활성화 함수의 미분값($\frac{\partial a}{\partial z}$)이 항상 1이므로 기울기 소실 없이 진행되는 것을 확인 할 수 있다.
+      $z = Wx + b$  $a = f(z)$로 a가 ReLU 역할을 하며 z가 가중치와 편향이 계산된 직선의 값이다.<br/>
+      여기서 활성화 함수의 미분값($\frac{\partial a}{\partial z}$)이 양수에서 항상 1이므로 기울기 소실 없이 진행되는 것을 확인 할 수 있다.
     </p>
 
-    <h2>3. 장점과 단점</h3>
+    <h3>3. 장점과 단점</h3>
     <p>
-      RELU의 장점<br/><br/>
+      ReLU 장점<br/><br/>
       연산 효율이 뛰어나다.<br/>
       $f(x) = \max(0, x)$라는 매우 간단한 수식은 다른 함수처럼 지수 함수 연산을 하지 않아 효율이 좋다.<br/><br/>
       두번째로는 기울기 소실이 완화되었다.<br/>
-      Sigmoid와 Tanh 케이스의 경우엔 입력값이 커지거나 작아지면 기울기가 0에 수렴하나 RELU는 항상 1로 고정이다.<br/><br/>
+      Sigmoid와 Tanh 케이스의 경우엔 입력값이 커지거나 작아지면 기울기가 0에 수렴하나 ReLU 항상 1로 고정이다.<br/><br/>
       마지막으로 음수 입력값일때 출력이 0이다.<br/>
       이는 모델을 더 가볍고 중요한 특징에 집중하게 한다.
     </p>
 
     
     <p>
-      RELU의 단점<br/><br/>
-      Dying RELU <br/>
+      ReLU 단점<br/><br/>
+      Dying ReLU <br/>
       가장 대표적인 단점으로 특정 뉴런의 값이 음수에 계속 머물게 되면 <br/>
       해당 뉴런은 출력과 기울기가 모두 0이되어 학습에 악영향을 미친다. <br/><br/>
       출력 값의 중심이 0이 아니다.<br/>
-      ReLu의 출력 값은 항상 0 또는 양수이므로 가중치 업데이트시 기울기 편향이 일어나 수렴이 늦어진다.<br/><br/>
+      ReLU 출력 값은 항상 0 또는 양수이므로 가중치 업데이트시 기울기 편향이 일어나 수렴이 늦어진다.<br/><br/>
       출력 값의 상한선이 없다. <br/>
       양수 범위에서 출력 값의 상한이 없어 학습률의 수치에 따라 활성화 값이 기하급수적으로 커질 수 있다.
     </p>
 
+    <h2>4. ReLU의 파생</h2>
+    
+    <h3>4-1. Leaky ReLU의 등장</h3>
+
+    <p>
+      ReLU함수 ($f(x) = \max(0, x)$)는 입력 값이 0 이하 일 때 출력과 기울기 모두 0이다.<br/>
+      이 때 학습 가중치가 잘못 업데이트 되어 음수 값인 경우에, 해당 뉴런의 기울기는 항상 0이 되어버린다.<br/>
+      결과 적으로 학습과정에서 해당 뉴런과 연결된 모든 뉴런의 가중치의 업데이트가 멈추어 학습이 되지 않는다.<br/>
+      앞에서 우리는 이를 Dying ReLU라 표기하였다.
+    </p>
+
+    <div class="formula">
+      $f(x) = \max(\alpha x, x)$
+      $\alpha = 0.01$과 같은 아주 작은 값을 사용한다.
+    </div>
+    
+    <p>
+      이 문제를 해결하기 위해 Leaky ReLU가 등장했다.<br/>
+      Leaky ReLU는 음수 영역에서 0이 아닌 아주 작은 기울기를 부여해주는 차이점이 있다.<br/>
+      이로 인해 입력 값이 음수라 할지라도 기울기가 작게나마 살아있게 하며,<br/>
+      이는 곧 작은 업데이트가 지속되어 다시 양수 영역으로 돌아올 기회를 얻게 된다.<br/><br/>
+      
+      하지만 이 역시 $\alpha$를 사용자가 직접 지정해야 하며, 최적의 수를 찾기 어렵고<br/>
+      프로젝트에 따라 ReLU보다 성능이 나오지 않아 일관성이 부족하다.
+    </p>
+
+    <h3>4-2. PReLU</h3>
+
+    <div class="formula">
+            $\max(\alpha x, x)$
+    </div>
+    <p>
+      수식은 $\max(\alpha x, x)$로 Leaky ReLU 수식과 동일하다.<br/>
+      하지만 $f(x) = \max(0, x) + a \min(0, x)$로 주로 표기한다.<br/>
+      $\alpha$의 값이 Leaky ReLU와 다르게 '학습 가능한 값'이기에 미분의 편의성을 가지기 위함이다.<br/>
+      이는 데이터의 특성에 따라 음수 신호를 얼마나 살릴지 모델이 직접 결정하여 Leaky ReLU보다 유연하고 성능이 좋다.<br/><br/>
+
+      하지만 학습해야 할 파라미터가 늘어나는 것이기에 데이터가 적은 경우 과적합이 올 수 있다.  
+    </p>
+
+    <small>
+      <b>과적합</b>
+      모델이 훈련 데이터의 사소한 노이즈까지 통째로 암기해버려, 실전에서는 성능이 나오지 않는 상태로<br/>
+      즉, 학습이 아닌 암기를 한 상태이다
+    </small>
+
+    <h3>4-3. ELU</h3>
+
+    <div class="formula">
+            $$f(x) = \begin{cases} x & \text{if } x > 0 \\ \alpha(e^x - 1) & \text{if } x \le 0 \end{cases}$$
+    </div>
+    <p>
+      ReLU계열의 선형을 부드러운 지수 함수 곡선으로 바꾼 모델이다.<br/>
+      음수에서 부드럽게 0으로 수렴하는 곡선을 그려 출력값을 0에 가깝게 유도하여 정규화 효과를 준다.<br/>
+      그리고 음수값이 매우 커지더라도 $-\alpha$로 수렴하여 부적절한 데이터에 대해 ReLU보다 더 견고하게 반응한다.<br/><br/>
+
+      하지만 $alpha(e^x -1)$과 같은 지수함수가 있어 연산량이 많고, 속도가 느리다.
+    </p>
+
+    <small>
+      <b>정규화</b>
+      데이터의 분포를 일정한 범위(주로 평균 0, 분산 1)로 강제하여 학습의 안정성과 속도를 비약적으로 높이는 현상을 말합니다.
+    </small>
+
+    <h2>5. 왜 ReLU?</h2>
+
+    <p>
+      ReLU 이전에는 Sigmoid와 Tanh를 주로 사용하였으나 ReLU 주목받게 된 것은 이유가 있다.
+    </p>
+
+      <div class="formula">
+          $f(x) = \sigma(x) = \frac{1}{1 + e^{-x}}$
+          $f(x) = \tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} = 2\sigma(2x) - 1$
+      </div>
+
+      <div>
+        <figure>
+          <img src="/image/tech-005.03.png" alt="Sigmoid/Tanh" />
+          <figcaption>Sigmoid/Tanh</figcaption>
+        </figure>
+      </div>
+
+    <h3>
+      5-1. 학습의 문제
+    </h3>
+
+    <p>
+      Sigmoid와 Tanh의 그래프를 보시면 양 끝단으로 갈수록 곡선이 평평해지는 것을 볼 수 있다.<br/>
+      입력값이 커지거나 작아질 수록 기울기 값이 0으로 수렴 한다는 것 이다.<br/>
+      Sigmoid의 미분값의 최대치는 0.25, Tanh의 최대치는 1로 기울기 소실이 발생하며<br/>
+      가중치 조절의 수정이 기울기에 비례하니 수천번의 학습 결과가 원점과 비슷하게된다.
+    </p>
+
+    <p>
+      또, 딥 러닝 학습 과정에서 역전파를 실행 할 때,<br/>
+      맨 뒤 출력층 부터 입력층 까지 정보를 전달하는데에 있어 Sigmoid는 좋지 않다.<br/>
+      신경망이 $L_1, L_2, L_3 ... L_n$ 이 있고 Sigmoid의 최대 기울기를 가정 했을 때, <br/>
+      $L_n$는 100%의 정보를 갖고 있다 하면 $L_n-1$ $L_n-2$..로 역전파를 진행 할 수록<br/>
+      $0.25^n$이 각각의 신경망에 곱해져 입력층에 가까울수록 정보의 손실이 커진다.
+    </p>
+
+    <h3>
+      5-2. 연산 효율성
+    </h3>
+
+    <p>
+      Sigmoid와 Tanh와 달리 ReLU ($\max(0, x)$)라는 지수 함수가 없는 간단한 수식을 갖는다.<br/>
+      이는 수 만번 작업을 반복해야 하는 GPU입장에선 꽤 무거운 작업으로 느껴진다.<br/><br/>
+      또, ReLU 비선형적이지만 부분적으로는 $y=x$인 선형 함수를 갖는다.<br/>
+      이 부분적 선형성이 최적화 도구들이 가중치를 찾기 수월하게 만들어 준다.
+    </p>
+
+    <small>
+      <b>1.최적화 도구</b>
+      최적화 도구(SGD, Adam 등)는 현재 위치에서 기울기를 보고 "어느 방향으로, 얼마나 갈지"를 결정한다.
+    </small>
+
+    <h2>
+      6. ReLU 구현해보기
+    </h2>
+    
+    <small>
+      <b>구현 환경</b>
+      Python == 3.10 <br/>
+      TensorFlow == 2.10.1 <br/>
+      numpy == 1.23.5
+    </small>
+
+    <pre><code>
+      class relu(layers.Layer):
+        def __init__(self, **kwargs):
+          super(relu, self).__init__(**kwargs)
+
+        def call(self, inputs):
+          # f(x) = max(0, x) 직접 구현
+          return tf.math.maximum(0.0, inputs)
+    </code></pre>
+
+    <p>
+      model.add()에 넣을 수 있도록 TensorFlow의 기본 레이어 클래스를 상속 받고,<br/>
+      생성자를 통해서 텐서플로우 레이어가 가져야 할 설정을 세팅 해 준다.<br/>
+      그 후 call 함수에서 ReLU 핵심 로직인 $f(x) = \max(0, x)$를 구현한다.
+    </p>
+
+    <pre><code>
+      input = np.random.standard_normal((2000, 32)).astype('float32')
+      output = np.random.standard_normal((2000, 1)).astype('float32')
+
+      model = models.Sequential()
+      model.add(layers.Dense(64, input_shape=(32,)))
+      model.add(layers.Activation.tanh, layers.Activation.sigmoid, relu()) * 여기선 셋 중 하나만 삽입해서 사용한다.
+      model.add(layers.Dense(1))
+    </code></pre>
+
+    <p>
+      여기선 input에 32차원의 특징을 가정하고 output에서 단일 결과값을 유추하도록 가정한다.<br/> 
+      models.Sequential()를 가정하고 가중치를 만들어 주기 위해 Dense층을 하나 삽입한다.<br/>
+      * 활성화 함수는 들어온 값을 조절하는 것이지, 가중치를 만들진 않는다.
+    </p>
+    
+    <p>
+
+      input부터 Shape를 쫓아가보면,<br/><br/>
+
+      input = np.random.standard_normal((2000, 32)).astype('float32')   <br/>- Shape(2000,32) <br/><br/>
+
+      model.add(layers.Dense(64, input_shape=(32,)))                    <br/>- Shape(2000,64) * 여기서 가중치 W의 Shape는 (32,64) 이다. <br/><br/>
+
+      model.add(활성화 함수)                                              <br/>- Shape(2000,64) * 비선형성을 주입하지 W생산 or Shape변형은 하지 않는다. <br/><br/>
+
+      model.add(layers.Dense(1))                                        <br/>- Shape(2000,1) * 결과 값을 압축 즉 우리가 원한 output의 형태가 나온다.
+
+    </p>
+
+    <figure>
+      <img src="../image/tech-005.04.png" alt="실행 결과" />
+      <figcaption>실행결과</figcaption>
+    </figure>
+
+    <p>
+      ReLU Loss값이 제일 적은 것을 확인 할 수 있다. <br/>
+      이는 앞서 말한 기울기 소실 때문이다.
+    </p>
+
+    <h2>7. Sigmoid, Tanh</h2>
+
+    <p>
+      ReLU 사용하고 Sigmoid, Tanh는 버려지는 것은 아니다. <br/>
+      학습에 유리한 ReLU Sigmoid, Tanh역시 전문 분야가 존재한다.<br/>
+    </p>
+
+    <h3>
+      7-1. 확률값을 나타내는 Sigmoid
+    </h3>
+
+    <p>
+      Sigmoid같은 경우엔 이전에서 살펴 보았듯이, 어떤 값이 들어오던 [0,1]사이로 압축한다.<br/>
+      이는 확률 값을 나타내는데에 최적화 되어있다. <br/>
+      사진이 하나 있을 때 이 사진에 있는 것이 고양이인지 아닌지 확률이 0.8이라면, <br/>
+      이 사진은 고양이야! (1) 이 사진은 고양이가 아니야! (0)와 같은 이진분류의 출력층에서 필수이다.
+    </p>
+
+    <h3>
+      7-2. 데이터의 평균을 맞추는 Tanh
+    </h3>
+
+    <p>
+      Tanh는 출력값의 중심이 0이다.<br/>
+      만약 이미지를 생성 할 때 픽셀 값을 [0,255]에서 [-1,1]로 정규화를 한다 하자<br/>
+      ReLU는 음수를 다 버리고, Sigmoid는 $[0, 1]$만 표현하기에 Tanh가 더 풍부한 색을 낼 수 있다.
+    </p>
+
+
+
     <div class="highlight-box">
-      <strong>⚡ RELU </strong><br/>
-      RELU의 의미와 활성화 함수의 사용 이유, RELU의 수식 및 장단점에 대해 알아보았다.
+      
+      <strong>⚡ ReLU </strong><br/>
+      ReLU 의미와 활성화 함수의 사용 이유, ReLU 수식 및 장단점에 대해 알아보았다.
+      
+      <strong>⚡ 다음학습 </strong><br/>
+      Dense층에 대해 공부할 예정
+
     </div>
 
 
