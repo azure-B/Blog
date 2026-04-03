@@ -1,37 +1,26 @@
 /* ═══════════════════════════════════════════════════
-   components.js — 사이드바 & 탑바 공통 컴포넌트
-   모든 페이지에서 <script src="components.js"></script> 로 불러옵니다.
-   (posts/ 하위 파일은 ../components.js)
-
-   사용법:
-     renderLayout({
-       page: 'tech',           // 현재 페이지 키 (nav 활성화에 사용)
-       breadcrumb: '기술 분석', // 탑바에 표시될 이름
-       root: '../'              // posts/ 하위 파일이면 '../', 루트면 ''
-     });
+   components.js
 ═══════════════════════════════════════════════════ */
 
 function renderLayout({ page, breadcrumb, root = '' }) {
   const r = root;
 
-  // ── CSS 동적 주입 (GitHub Pages 경로 문제 방지) ──
-  // 기존 <link href="...common.css"> 를 제거하고 정확한 경로로 재주입합니다.
   document.querySelectorAll('link[rel="stylesheet"]').forEach(el => el.remove());
   const cssLink = document.createElement('link');
   cssLink.rel  = 'stylesheet';
   cssLink.href = `${r}common.css`;
   document.head.appendChild(cssLink);
 
-  // ── KaTeX 수식 렌더링 ──
+  /* ── KaTeX ── */
   function renderMath() {
     if (typeof renderMathInElement === 'undefined') return;
     document.querySelectorAll('.detail-content, .formula').forEach(el => {
       renderMathInElement(el, {
         delimiters: [
-          { left: '$$',  right: '$$',  display: true  },  // $$...$$ 블록 수식
-          { left: '\\[', right: '\\]', display: true  },  // \[...\] 블록 수식
-          { left: '$',   right: '$',   display: false },  // $...$ 인라인 수식
-          { left: '\\(', right: '\\)', display: false },  // \(...\) 인라인 수식
+          { left: '$$',  right: '$$',  display: true  },
+          { left: '\\[', right: '\\]', display: true  },
+          { left: '$',   right: '$',   display: false },
+          { left: '\\(', right: '\\)', display: false },
         ],
         throwOnError: false,
       });
@@ -43,48 +32,45 @@ function renderLayout({ page, breadcrumb, root = '' }) {
     kCss.rel  = 'stylesheet';
     kCss.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css';
     document.head.appendChild(kCss);
-
     const kJs = document.createElement('script');
     kJs.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js';
     kJs.onload = () => {
-      const autoRender = document.createElement('script');
-      autoRender.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js';
-      autoRender.onload = renderMath;
-      document.head.appendChild(autoRender);
+      const ar = document.createElement('script');
+      ar.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js';
+      ar.onload = renderMath;
+      document.head.appendChild(ar);
     };
     document.head.appendChild(kJs);
   } else {
     setTimeout(renderMath, 0);
   }
 
-  // ── 테마 초기화 (저장된 설정 또는 시스템 설정 따름) ──
-  const savedTheme = localStorage.getItem('blog-theme');
+  /* ── 테마 초기화 ── */
+  const savedTheme  = localStorage.getItem('blog-theme');
   const preferLight = window.matchMedia('(prefers-color-scheme: light)').matches;
   if (savedTheme === 'light' || (!savedTheme && preferLight)) {
     document.documentElement.classList.add('light');
   }
 
-  // ── 탑바 날짜 ──
+  /* ── 날짜 ── */
   const now = new Date();
   const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
 
-  // ── 네비게이션 메뉴 정의 ──
+  /* ── 네비게이션 ── */
   const navItems = [
-    { key: 'home',     icon: '⌂', label: '홈',         sub: 'HOME',              href: `${r}index.html` },
-    { key: 'about',    icon: '◉', label: '소개',        sub: 'ABOUT',             href: `${r}about.html` },
+    { key: 'home',     icon: '⌂', label: '홈',           sub: 'HOME',              href: `${r}index.html` },
+    { key: 'about',    icon: '◉', label: '소개',          sub: 'ABOUT',             href: `${r}about.html` },
     { type: 'section', label: '게시판' },
-    { key: 'tech',     icon: '⎔', label: '기술 분석',   sub: 'TECH ANALYSIS',     href: `${r}tech.html` },
-    { key: 'project',  icon: '◈', label: '프로젝트 리뷰', sub: 'PROJECT REVIEW',  href: `${r}project.html` },
-    { key: 'external', icon: '◎', label: '대외 활동',   sub: 'EXTERNAL ACTIVITY', href: `${r}external.html` },
-    { key: 'campus',   icon: '◐', label: '교내 활동',   sub: 'CAMPUS ACTIVITY',   href: `${r}campus.html` },
+    { key: 'tech',     icon: '⎔', label: '기술 분석',     sub: 'TECH ANALYSIS',     href: `${r}tech.html` },
+    { key: 'project',  icon: '◈', label: '프로젝트 리뷰', sub: 'PROJECT REVIEW',    href: `${r}project.html` },
+    { key: 'external', icon: '◎', label: '대외 활동',     sub: 'EXTERNAL ACTIVITY', href: `${r}external.html` },
+    { key: 'campus',   icon: '◐', label: '교내 활동',     sub: 'CAMPUS ACTIVITY',   href: `${r}campus.html` },
     { type: 'section', label: '기타' },
-    { key: 'template', icon: '⊞', label: '글쓰기 템플릿', sub: 'TEMPLATE',        href: `${r}template.html` },
+    { key: 'template', icon: '⊞', label: '글쓰기 템플릿', sub: 'TEMPLATE',          href: `${r}template.html` },
   ];
 
   const navHTML = navItems.map(item => {
-    if (item.type === 'section') {
-      return `<div class="nav-section-label">${item.label}</div>`;
-    }
+    if (item.type === 'section') return `<div class="nav-section-label">${item.label}</div>`;
     const isActive = item.key === page ? 'active' : '';
     return `
       <a class="nav-item ${isActive}" href="${item.href}">
@@ -96,7 +82,7 @@ function renderLayout({ page, breadcrumb, root = '' }) {
       </a>`;
   }).join('');
 
-  // ── 사이드바 HTML ──
+  /* ── HTML 조립 ── */
   const sidebarHTML = `
     <aside class="sidebar">
       <div class="sidebar-header">
@@ -116,12 +102,9 @@ function renderLayout({ page, breadcrumb, root = '' }) {
       <nav class="sidebar-nav">${navHTML}</nav>
     </aside>`;
 
-  // ── 탑바 HTML ──
   const topbarHTML = `
     <div class="topbar">
-      <div class="topbar-breadcrumb">
-        이승빈 <span>/</span> ${breadcrumb}
-      </div>
+      <div class="topbar-breadcrumb">이승빈 <span>/</span> ${breadcrumb}</div>
       <div class="topbar-line"></div>
       <div class="topbar-meta">${dateStr}</div>
       <button class="theme-toggle" id="theme-toggle" title="다크/라이트 모드 전환" aria-label="테마 전환">
@@ -129,18 +112,16 @@ function renderLayout({ page, breadcrumb, root = '' }) {
       </button>
     </div>`;
 
-  // ── 모바일 햄버거 버튼 & 오버레이 ──
   const mobHTML = `
     <button class="mob-menu-btn" id="mob-menu-btn" aria-label="메뉴 열기">
       <span></span><span></span><span></span>
     </button>
     <div class="mob-overlay" id="mob-overlay"></div>`;
 
-  // ── #app 에 주입 ──
   const app = document.getElementById('app');
   app.innerHTML = sidebarHTML + `<main class="main">${topbarHTML}` + app.innerHTML + `</main>` + mobHTML;
 
-  // ── 테마 토글 이벤트 ──
+  /* ── 테마 토글 ── */
   const themeBtn = document.getElementById('theme-toggle');
   themeBtn.addEventListener('click', () => {
     const isLight = document.documentElement.classList.toggle('light');
@@ -148,12 +129,12 @@ function renderLayout({ page, breadcrumb, root = '' }) {
     localStorage.setItem('blog-theme', isLight ? 'light' : 'dark');
   });
 
-  // ── 햄버거 토글 동작 ──
+  /* ── 햄버거 ── */
   const btn     = document.getElementById('mob-menu-btn');
   const overlay = document.getElementById('mob-overlay');
   const sidebar = document.querySelector('.sidebar');
 
-  function openMenu() {
+  function openMenu()  {
     sidebar.classList.add('open');
     btn.classList.add('open');
     overlay.classList.add('visible');
@@ -166,15 +147,82 @@ function renderLayout({ page, breadcrumb, root = '' }) {
     document.body.style.overflow = '';
   }
 
-  btn.addEventListener('click', () => {
-    sidebar.classList.contains('open') ? closeMenu() : openMenu();
-  });
+  btn.addEventListener('click', () => sidebar.classList.contains('open') ? closeMenu() : openMenu());
   overlay.addEventListener('click', closeMenu);
-
-  // 사이드바 링크 클릭 시 모바일에서 메뉴 자동 닫기
   sidebar.querySelectorAll('a.nav-item').forEach(link => {
-    link.addEventListener('click', () => {
-      if (window.innerWidth <= 640) closeMenu();
-    });
+    link.addEventListener('click', () => { if (window.innerWidth <= 640) closeMenu(); });
   });
+
+  /* ════════════════════════════════════════════════
+     TOC — renderLayout 안에서 실행 (DOM 완성 후)
+  ════════════════════════════════════════════════ */
+  const content = document.querySelector('.detail-content');
+  if (!content) return;
+
+  // h2, h3, h4 모두 수집
+  const headings = [...content.querySelectorAll('h2, h3, h4')];
+  if (headings.length < 2) return;
+
+  // id 자동 부여
+  headings.forEach((h, i) => { if (!h.id) h.id = 'toc-' + i; });
+
+  // TOC 생성
+  const toc = document.createElement('nav');
+  toc.className = 'toc';
+  toc.innerHTML = '<div class="toc-label">목차</div>';
+
+  const ul = document.createElement('ul');
+  ul.className = 'toc-list';
+
+  headings.forEach(h => {
+    const depth = parseInt(h.tagName[1]); // 2, 3, 4
+    const li = document.createElement('li');
+    li.className = `toc-item depth-${depth}`;
+
+    const a = document.createElement('a');
+    a.className = 'toc-link';
+    a.href = '#' + h.id;
+    // h 태그 안에 링크가 있을 경우 아이콘 문자 제거
+    a.textContent = h.textContent.replace(/[↗→]/g, '').trim();
+
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      // 탑바(56px) 높이만큼 오프셋
+      const TOP_OFFSET = 72;
+      const top = h.getBoundingClientRect().top + window.scrollY - TOP_OFFSET;
+      window.scrollTo({ top, behavior: 'smooth' });
+      history.pushState(null, '', '#' + h.id);
+    });
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  toc.appendChild(ul);
+  document.body.appendChild(toc);
+
+  // 너비 체크
+  function checkWidth() {
+    toc.classList.toggle('visible', window.innerWidth >= 1300);
+  }
+  checkWidth();
+  window.addEventListener('resize', checkWidth);
+
+  // 현재 섹션 하이라이트
+  const links = [...toc.querySelectorAll('.toc-link')];
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = links.find(l => l.getAttribute('href') === '#' + entry.target.id);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, {
+    rootMargin: '-10% 0px -80% 0px',
+    threshold: 0
+  });
+
+  headings.forEach(h => observer.observe(h));
 }
