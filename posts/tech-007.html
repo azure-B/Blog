@@ -96,9 +96,7 @@
 
     <h3>2-1. 기호의 이해</h3>
 
-    <div class="formula">
-       $P(A \mid B)$
-    </div>
+    <div class="formula">$P(A \mid B)$</div>
 
     <p>
       시작 하기 전, 각각의 기호의 의미를 정확히 파악하고 넘어가야 한다. <br/>
@@ -108,12 +106,10 @@
 
     <h3>2-2. 확률</h3>
 
-    <div class="formula">
-      $P(X \mid \theta)$
-    </div>
+    <div class="formula">$P(X \mid \theta)$</div>
 
     <p>
-      위 수식은 모델의 파라미터 $\theta$가 고정 되어진 상태에서 관측될 $X$의 분포를 나타낸다.<br/><br/>
+      위 수식은 확률 $\theta$가 고정 되어진 상태에서 결과 $X$의 분포를 나타낸다.<br/><br/>
       
       $\theta$는 신경망의 관점에서 모든 가중치 및 편향의 집합을 통칭하는 기호가 된다.<br/>
       여기서 <strong>상수</strong>로 $\theta$를 칭했다는 것은, 이미 기 학습 완료되어진 상태로 <br/>
@@ -121,7 +117,7 @@
     </p>
 
     <small>
-      <b>TensorFlow 관점에서 $\theta$의 고정 상태</b>
+      <b>TensorFlow 관점에서 $\theta$의 상수 상태</b>
       1. <code>tf.GradientTape()</code>외부에서 역전파를 하지 않는 상태 <br/>
       2. <code>training=False</code>로 훈련을 하지 않는 상태
     </small>
@@ -144,9 +140,7 @@
 
       동전을 10번 던졌을 때, 만약 앞면이 7번 나왔다면 아래 식에 의거 앞면이 나올 확률은 11.7%이다.
       
-      <div class="formula">
-        $P(X=7 \mid \theta=0.5) = \binom{10}{7} (0.5)^7 (0.5)^3 \approx 0.117$
-      </div>
+      <div class="formula">$P(X=7 \mid \theta=0.5) = \binom{10}{7} (0.5)^7 (0.5)^3 \approx 0.117$</div>
       
       먼저 $(0.5)^7 (0.5)^3$는 단일 사건들의 확률로 $\theta^i \times 1-\theta^j$이며, 여기서 $i+j=10$이다.<br/>
       즉 앞면이 나올 확률 0.5가 7번, 뒷변이 나올 확률 0.5가 3번이 일어날 확률이다.<br/><br/>
@@ -160,25 +154,379 @@
 
     <h3>2-3. 우도</h3>
 
-    <div class="formula">
-      $L(\theta \mid X)$
+    <div class="formula">$L(\theta \mid X) = P(x_1, x_2, \dots, x_n \mid \theta)$</div>
+
+    <p>
+      우도는 $\theta$와 $X$의 위치가 바뀐 것으로, 결과를 토대로 확률을 역으로 추론 하는 것 이다.<br/>
+      
+      신경망의 관점에서 데이터 $X$가 고정된 상태에서,  <br/>
+      모델의 파라미터 $\theta$가 가질 수 있는 값들의 연속적인 척도이다.<br/>
+      결과적으로 데이터 $X$가 있을때 정답에 가장 가까운 $\theta$를 찾아 내는 것 이다.  
+    </p>
+
+    <small>
+      <b>TensorFlow 관점에서 $\theta$의 변수 상태</b>
+      <code>training=True</code>이며, <code>tf.GradientTape()</code>내부에서 우도를 측정하고 외부에서 $\theta$를 갱신 할 때이다. <br/>
+      결론적으로 <code>tf.GradientTape()</code>이후 <code>tape.gradient()</code>를 호출하여 $\theta$의 방향성을 추출하고, <code>optimizer.apply_gradients()</code>로  $\theta$를 업데이트 하는 과정이다.
+    </small>
+
+    <h4>2-3-1. 수학적 특징</h4>
+
+    <p>
+      우도는 확률의 제약에서 자유로워 총 합이 1이 아니다.<br/>
+      수식에서 $L(\theta)$자체는 큰 의미를 가지지 않고, 핵심은 서로 다른 $\theta$값 사이 크기 비교에 있다
+    </p>
+
+    <div class="formula">$R = \frac{L(\theta_1 \mid X)}{L(\theta_2 \mid X)}$</div>
+
+    <p>
+      이 수치를 <strong>우도비</strong>라고 하며, $\theta_1$이 $\theta_2$보다 얼마나 정답에 가까운지 수치화 한다.<br/>
+      이 수치가 가장 큰 지점을 찾는 것이 최대 우도 추정이다.
+    </p>
+
+    <h4>2-3-2. 동전던지기 가정</h4>
+
+    <div class="formula">$L(\theta) = \binom{10}{7} \theta^7 (1-\theta)^3$</div>
+
+      <figure>
+        <img src="../image/tech-007.01.png" alt="우도" />
+        <figcaption>우도</figcaption>
+      </figure>
+
+    <small>
+      *여기서 우도는 확률과 달리 정해진 값이 아니고, $\theta$에 대한 함수의 형태다
+    </small>
+    <p>
+      우도는 앞서 확률과 다르게, x가 7이며 $\theta$가 변수이다.
+      예를들어 위 공식에 따르면<br/>
+      $\theta = 0.5$ 일 때 우도: $0.117$<br/>
+      $\theta = 0.7$ 일 때 우도: $0.267$<br/>
+      $\theta = 0.9$ 일 때 우도: $0.057$<br/>
+      여기서 $\theta=0 \lor \theta=1$일 때, $L(\theta) = \binom{10}{7} \theta^7 (1-\theta)^3$에서 0이 나오는 것이 맞으며,<br/>
+      $\theta$는 $0<=\theta<=1$ 이다.<br/>
+      함수의 결과인 $L(\theta)$의 크기 보단 과정인 $\theta$에 집중하여 적합한 $\theta$를 구하는 것이 우도의 핵심이다.
+    </p>
+
+    <h3>2-4. 최대 우도 추정</h3>
+
+    <div class="formula">$L(\theta \mid X)$</div>
+
+    <p>
+      앞서 배운 우도이다.<br/>
+      다시 강조하자면, 이 수식에서 가장 지점에서 찾는 것이 최대 우도 추정이다.<br/>
+      아까 제시한 동전던지기 분류에 따라 그래프와 수식을 이용해 최대 우도 추정을 정리해보겠다.
+    </p>
+
+    <figure>
+      <img src="../image/tech-007.01.png" alt="우도" />
+      <figcaption>우도</figcaption>
+    </figure>
+
+    <div class="derivation">
+      <div class="deriv-step">
+        <span class="deriv-label">우도 함수 정의</span>
+        <div class="deriv-eq">$$L(\theta) = \binom{10}{7} \theta^7 (1-\theta)^3$$</div>
+      </div>
+
+      <div class="deriv-arrow">↓ $\log$를 취한다.</div>
+
+      <div class="deriv-step">
+        <span class="deriv-label">로그 우도로 변환</span>
+        <div class="deriv-eq">$$\ell(\theta) = \log \binom{10}{7} + 7 \log \theta + 3 \log(1-\theta)$$</div>
+      </div>
+
+      <div class="deriv-arrow">↓ $\theta$에 대해 미분한다.</div>
+
+      <div class="deriv-step">
+        <span class="deriv-label">로그 우도 미분( 여기서, 최대값을 찾기 위해 기울기가 0 인 지점을 찾는다. )</span>
+        <div class="deriv-eq">$$\frac{d\ell}{d\theta} = \frac{7}{\theta} - \frac{3}{1-\theta} = 0$$</div>
+      </div>
+
+      <div class="deriv-arrow">↓ 결과</div>
+
+      <div class="deriv-step">
+        <div class="deriv-eq">$$\therefore \theta = 0.7$$</div>
+      </div>
+    </div>
+
+    <br/>
+
+    <p>
+      그래프와 같이 $\theta = 0.7$일 때 우도 함수의 기울기가 0이 되는 것을 확인 할 수 있다.<br/>
+      만약 동전을 10번 던졌을 때 7번이 나왔다면 동전이 앞면이 나올 확률이 0.7이라는 것을 <br/>
+      주장하는 것이 현재의 결과를 가장 잘 설명한다는 뜻이다.<br/><br/>
+
+      즉 최대 우도 추정은 $L(\theta)$를 최대로 만드는 최적의 $\theta$를 찾아내는 것 이다.<br/>
+
+      텐서플로우에서는 <code>optimizer</code>가 미분값이 0이 되도록 $\theta$를 계속 조정한다.<br/>
+    </p>
+
+    <h4>2-4-1. 왜 Log를 쓰는가?</h4>
+
+    <p>
+      확률에서 여러 사건이 동시에 일어날 확률인 우도는 각 사건의 확률을 곱하는 것으로 정의된다.<br/>
+      이 때 $\log$를 씌우게 되면 덧셈의 형태로 바뀌게 되는데 이는 곱셈보다 다루기 쉬우며<br/>
+      미분을 하여 최적값을 찾을 때 계산량이 극적으로 줄어들게 된다.<br/><br/>
+
+      확률값 $P(x)$는 0과 1의 사잇값으로 데이터가 많아질수록 숫자가 작아져 언더플로우가 발생한다.<br/><br/>
+
+      결과적으로 우도를 최대화 하는 $\theta$값을 찾는 것이 목표이며 이 것은 <br/>
+      $\arg\max_{\theta} L(\theta \mid X) = \arg\max_{\theta} \log L(\theta \mid X)$로<br/>
+      $\log$를 씌우더라도 똑같은 값을 가지게 된다.
+    </p>
+    
+    <br/>
+
+    <small>
+      <b>Log를 씌우면 결과 값이 달라지는 것이 아닌가?</b>
+      맞다. 결과값 $L(\theta)$는 로그를 씌웠을 때 $\ell(\theta)$로 기재 하였듯이 달라진다.<br/>
+      하지만 계속해서 강조한 내용으로 우리는 결과값에 집중 하는 것이 아닌 $\theta$에 집중한다.<br/>
+    </small>
+
+
+
+    <h2>3. 교차 엔트로피란?</h2>
+    
+    <h3>3-1. 자기 정보량</h3>
+
+    <div class="formula">$I(x_i) = -\log P(x_i)$</div>
+
+    <figure>
+      <img src="../image/tech-007.02.png" alt="y = -log x" />
+      <figcaption>y = -log x</figcaption>
+    </figure>
+
+    <p>
+      확률 변수 $X$의 특정 사건 $x_i$가 발생했을 때의 정보량 $I(x_i)$는 다음과 같이 정의된다.<br/>
+      확률 $P(x_i)$가 낮을수록 정보량은 커지며, 확률이 $1$인 사건의 정보량은 $0$이다.<br/>
+      어떤 사건이 얼마나 예기치 못한 것인지 (놀라운 것인지)를 정량화한 수치로 이해하면 쉽다.<br/><br/>
+    </p>
+
+    <h4>3-1-1. 수식의 성질</h4>
+
+     <div class="derivation">
+
+      <div class="deriv-step">
+        <span class="deriv-label">단조 감소성</span>
+        <div class="deriv-eq">$P(x_1) < P(x_2) \implies I(x_1) > I(x_2)$</div>
+      </div>
+
+      <p>
+         확률 $P(x)$가 높을수록 정보량 $I(x)$는 작다.<br/>
+         즉, 자주 일어나는 사건일 수록 정보량은 작다는 것이다.
+      </p>
+
+      <br/>
+
+      <div class="deriv-step">
+        <span class="deriv-label">비부의성</span>
+        <div class="deriv-eq">$I(x) \ge 0$</div>
+      </div>
+      
+      <p>
+        정보의 양은 항상 0보다 크거나 같다.
+      </p>
+
+      <br/>
+
+      <div class="deriv-step">
+        <span class="deriv-label">확정적 사건</span>
+        <div class="deriv-eq">$I(1) = 0$</div>
+      </div>
+      
+      <p>
+        확정적으로 일어나는 사건의 정보량은 0이다.
+      </p>
+      
+      <br/>
+
+      <div class="deriv-step">
+        <span class="deriv-label">가법성</span>
+        <div class="deriv-eq">$I(x, y) = I(x) + I(y)$</div>
+      </div>
+      
+      <p>
+        독립적인 사건 $x, y$가 동시에 발생했을 때의 전체 정보량은 개별 정보량의 합과 같아야 한다.
+      </p>
+
+    </div>
+
+    <h4>3-1-2. 왜 log를 사용하는가?</h4>
+
+    <p>
+      우선 여러 사건이 동시에 일어날 확률을 알아보자.
+    </p>
+
+    <div class="derivation">  
+  
+      <div class="deriv-step">
+        <span class="deriv-label">결합 확률의 일반 곱셈 법칙</span>
+        <div class="deriv-eq">$P(x, y) = P(x) \cdot P(y \mid x)$</div>
+      </div>
+      
+      <div class="deriv-arrow">x,y가 동시에 일어날 확률</div>
+      <p>
+        이는 독립적인 사건 $P(x)$가 발생 했을 때, 그 상태에서 $y$가 일어날 확률 $P(y \mid x)$를 구하는 것 이다.  <br/>
+        두 사건이 독립일 때, $P(y \mid x) = P(y)$가 성립하므로 아래 수식이 성립한다.
+      </p>
+      <br/>
+
+      <div class="deriv-step">
+        <span class="deriv-label">특수화</span>
+        <div class="deriv-eq">$P(x, y) = P(x) \cdot P(y)$</div>
+      </div>
+      <div class="deriv-arrow">x,y가 동시에 일어날 확률 - 특수화</div>
+      <br/>
+
+      <div class="deriv-step">
+        <span class="deriv-label">n개의 사건이 동시에 일어날 확률</span>
+        <div class="deriv-eq">$\prod_{i=1}^{n} P(x_i)$</div>
+      </div>
+
+    </div>
+    
+    <small>
+      <b>$P(y \mid X)$</b>
+      $P$는 Probability로 확률 척도를 의미하며, 0과 1사이의 값을 가진다 <br/>
+      $y$는 우리가 관심에 두고 있는 결과 변수 혹은 사건이다.<br/>
+      $\mid$는 Conditioning Bar로 좌/우에 이미 일어난 사건과 일어나기 기대하는 사건을 배치한다.<br/>
+      $X$는 Evidence/Observation로 이미 알고 있거나 관측된 데이터 또는 환경이다. <br/><br/>
+
+      즉, $P(y \mid X)$는 $X$가 일어 났을 때 $y$가 일어날 확률이다.
+    </small>
+
+    <p> 여기서 가법성을 다시 한번 살펴보면,</p>
+    <div class="formula">$I(x, y) = I(x) + I(y)$</div>
+    <p>
+      두 개의 독립적인 사건 $x, y$가 동시에 발생했을 때의 전체 정보량은 개별 정보량의 합과 같아야 한다.<br/><br/>
+
+      이는 앞서 구한 $\prod_{i=1}^{n} P(x_i)$라는 확률은 곱해질 수록 작아지지만, <br/>
+      정보량은 결합될 수록 커져야 하기에 곱셈을 덧셈으로 바꾸어주어야 하는데<br/>
+      이 때 곱셈을 덧셈으로 바꾸는 유일한 함수가 $\log$이다.<br/><br/>
+
+      다시 두개의 사건 $x,y$로 가정하여 아래의 정리를 살펴보자.
+    </p>
+
+    <div class="formula">$f(P(x) \cdot P(y)) = f(P(x)) + f(P(y)) \implies f(P) = k \log P$</div>
+
+    <p>
+      $P(x,y)=P(x)⋅P(y)$를 $P(x,y)=P(x) + P(y)$의 형태로 바꾸기 위해 $P(i)$에 $f(x)$를 씌웠을 때,<br/>
+      $f(P(x,y)) = f(P(x))⋅f(P(y))$의 형태가 <br/>
+      $f(P(x) \cdot P(y)) = f(P(x)) + f(P(y))$를 만족하는 함수 $f(x)$는 $\log$뿐이라는 것 이다.<br/><br/>
+      쉽게 말하자면 곱셈을 덧셈으로 바꾸는 함수가 $\log$가 유일하다.<br/>
+      즉, $f(P(x)) + f(P(y))$는 $f(P) = k \log P$의 형태를 띄게 된다.
+    </p>
+
+    <div class="derivation">  
+  
+      <div class="deriv-step">
+        <span class="deriv-label">Log를 씌운 경우</span>
+        <div class="deriv-eq">$f(P) = k \log P$</div>
+      </div>
+      
+      <div class="deriv-arrow">↓ k < 0이라면,</div>
+
+      <div class="deriv-step">
+        <span class="deriv-label">자기 정보량의 공식</span>
+        <div class="deriv-eq">$I(x) = -\log P(x)$</div>
+      </div>
+
     </div>
 
     <p>
+      여기서 확률 $P(x)$는 항상 0과 1사이의 값을 가지므로 $f(P)$는 항상 -값을 가진다.<br/>
+      그러나, 정보량이라는 것은 -일 수 없기에 우리는 관례적으로 -를 붙혀준다.<br/>
+      그렇게 탄생한 것이 자기 정보량의 공식이다.<br/><br/>
 
+      이 수식은 사건이 일어날 확률 $P(x)$가 희박할 수록 정보량이 커지며<br/>
+      $P(x)$가 빈번하거나 반드시 일어 날 수록 정보량이 작아진다는 핵심을 가지고 있다.
     </p>
+
+    <h3>3-2. 엔트로피</h3>
+
+    <div class="formula">$H(P) = E_{x \sim P}[I(x)]$</div>
 
     <p>
+      $H(P)$는 확률분포 $P$에 대해서 사건 $x$ 하나를 뽑았을 때, 평균적으로 기대되는 정보의 양이다.<br/>
+      즉, 특정 사건 하나가 일어났을 때 얼마나 놀라운지 평균치로 이해하면 되며,<br/>
+      값이 높을 수록 예측하기 어렵고 골고루 퍼져있어 놀랍고,<br/>
+      낮을 수록 결과가 뻔하고 치우쳐져 지루한 것이다.<br/><br/>
 
+      결국 딥러닝 학습 모델은 엔트로피(불확실성)을 낮추는 과정이며,<br/>
+      엔트로피가 높을 때 데이터의 특징을 잡지 못해 얻는 특징의 정보가 크고,<br/>
+      엔트로피가 낮을 때 데이터의 특징을 잘 잡아 정보량이 적으며, <br/>
+      최대 우도 추정을 통해 좋은 성능을 낸다. 
     </p>
+
+    <small>
+      <b>$E_{x \sim P}[f(x)]$</b>
+      똑같이 주사위를 예제로,<br/><br/>
+
+      주사위를 굴렸을 때 어떤 숫자가 나올 사건 x의 확률을<br/>
+      주사위가 1,2,3,4,5,6이 있을 때 굴렸을때 어떠한 숫자가 나올 확률분포를 따른다는 것이며<br/>
+      이 때 $f(x)$들의 평균을 구하는 것이다.
+      <br/>
+      *확률 분포는 $P(x) = 1/6$ ($x \in \{1, 2, 3, 4, 5, 6\}$)이다.
+    </small>
+
+    <h3>3-3. 교차 엔트로피</h3>
+
+    <p>* 둘 모두 동일한 수식</p>
+    <div class="formula">$H(P, Q) = E_{x \sim P}[-\log Q(x)]$</div>
+    <div class="formula">$H(P, Q) = -\sum_{x} P(x) \log Q(x)$</div>
 
     <p>
-      AI적 관점
-      데이터 $X$가 고정된 상태에서,  모델의 파라미터 $\theta$가 가질 수 있는 값들의 연속적인 척도이다.
+      엔트로피가 얼마나 놀라운가? 라면, <br/>
+      교차 엔트로피는 정답$P$를 내 예측$Q$로 바라 보았을 때 얼마나 놀라운가? 이다.<br/><br/>
+      $P(x)$는 실제 정답 분포로 보통 정답은 하나이므로  $[0, 1, 0]$ 과 같은 원-핫 벡터이다.<br/>
+      $-\log Q(x)$은 모델이 예측한 확률 $Q(x)$에 대한 정보량(놀라움)이다.
     </p>
 
-    <h2>3. 교차 엔트로피란?</h2>
-    <h2>4. GAN - 젠슨-섀넌 발산</h2>
+    <small>
+      <b>왜 교차인가?</b>
+      수식을 보면 두개의 분포가 엇갈려 있다.<br/>
+      $P(x)$는 실제로 사건이 발생하는 빈도이며,$-\log Q(x)$는 예측한 확률에 기반해 정의된 정보량 이다.<br/>
+      즉, "사건은 $P$의 확률로 터지는데, 정작 점수는 내가 믿고 있는 $Q$의 로그값으로 매기겠다" 는 뜻이다.
+    </small>
+
+    <p>
+      여기서, $P$와 $Q$가 완벽히 일치 할 때 교차 엔트로피는 이론적 최소값인 엔트로피$H(P)$에 도달한다.<br/><br/>
+
+      실제로 일어난 값 $P$와 내가 예측한 값 $Q$가 가까울 수록 오차가 적어 정보량이 작아진다는 것이고<br/>
+      $Q$가 $P$가 다르면 다를 수록 오차가 크기에 정보량이 커진다는 것 이다.<br/><br/>
+
+      즉, $P$가 일어 났을 때 내가 $P$가 일어날 확률 $Q$를 0.9라고 생각했다면 정보량(놀람)을 적게 가져가며 <br/>
+      $P$가 일어 났을 때 내가 $Q$를 0.01이라고 생각했다면 정보량을 크게 가져간다.
+    </p>
+
+    <small>
+      <b>1. 왜 $Q \approx P$일 때, 엔트로피에 도달하는가?</b>
+      교차 엔트로피에서 Q에 P를 대입하면 엔트로피의 정의식과 일치하게 된다. <br/>
+      이는 실제 확률 $P$에 대해 가장 체계적인 정보를 갖췄음을 의미한다.
+    </small>
+
+    <h4>3-3-1. 왜 $-\log$를 쓰는가?</h4>
+
+    <p>
+      1. 앞서 다루었듯 $Q(x)$를 정보량으로 더하기 위해 $\log$를 씌웠다.<br/><br/>
+      2. 확률 $Q(x)$는 항상 0이상 1이하이다. 이 숫자에 $\log$를 취할 시 무조건 음수가 나오는데,<br/>
+      정보량은 항상 양수여야 하므로 -를 붙혀 양수로 바꾸어 주는 것 이다.<br/><br/>
+      3. $-\log Q(x)$는 $Q$가 0에 가까울 수록 값이 기하 급수적으로 커진다.<br/>
+      즉, 절대 정답이 아니라고 확신 했던 것이 정답이라면<br/>
+      모델에게 무한대에 가까운 정보를 주어 가중치를 강력하게 수정하도록 한다.<br/>
+      반대로 정답에 가까울 수록 가중치를 약하게 주도록 한다.
+    </p>
+
+    <h2>4. GAN에서 Log를 쓰는 이유</h2>
+
+    <div class="formula">$V(D, G) = \mathbb{E}_{x \sim p_{data}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]$</div>
+
+    <p>
+      결국 GAN의 수식도 교차 엔트로피와 최대 우도 추정의 확장이며, <br/>
+      판별자$D$와 생성자 $G$의 정보량을 조절하여 가중치를 조절한다.<br/>
+      그리고 $\log$를 통해 언더플로우를 방지하면서 모델이 값을 틀렸을 때 적절한 기울기 주기 위함이다.
+    </p>
+
   </div>
 
 </div>
@@ -188,7 +536,7 @@
 <script>
   renderLayout({
     page: 'tech',
-    breadcrumb: '기술 분석 / CNN 구조 분석',
+    breadcrumb: '기술 분석 /  Log를 쓰는 이유',
     root: '../'
   });
 </script>

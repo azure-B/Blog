@@ -4,6 +4,44 @@
    (posts/ 하위 파일은 ../common.css)
 ═══════════════════════════════════════════════════ */
 
+/* ── 라이트 모드 색상 보정 추가 ── */
+
+/* TOC 링크 */
+html.light .toc-label {
+  color: var(--text-muted);
+  border-left-color: var(--border);
+}
+
+html.light .toc-link {
+  color: var(--text-muted);
+}
+
+html.light .toc-item.depth-3 .toc-link,
+html.light .toc-item.depth-4 .toc-link {
+  color: var(--text-dim);
+}
+
+html.light .toc-link:hover,
+html.light .toc-link.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+}
+
+/* deriv-arrow */
+html.light .deriv-arrow {
+  color: var(--text-muted);        /* #44446a */
+}
+
+html.light .deriv-arrow::before,
+html.light .deriv-arrow::after {
+  background: var(--border);       /* #d0d0e8 */
+}
+
+/* deriv-label (기존 #0077aa → 더 진한 색으로) */
+html.light .deriv-label {
+  color: #005f8e;
+}
+
 /* ── CSS 변수 — 다크 모드 (기본) ── */
 :root {
   --bg:          #0a0a0f;
@@ -15,7 +53,7 @@
   --accent3:     #5bffb8;
   --text:        #f0f0f8;
   --text-muted:  #b0b0d0;
-  --text-dim:    #6a6a90;
+  --text-dim:    #8888aa;
   --card:        #14141e;
   --sidebar-w:   280px;
   --topbar-bg:   rgba(10,10,15,0.88);
@@ -33,7 +71,7 @@ html.light {
   --accent3:     #0a9e62;
   --text:        #18182e;
   --text-muted:  #44446a;
-  --text-dim:    #8888aa;
+  --text-dim:    #4a4a6a;
   --card:        #ffffff;
   --topbar-bg:   rgba(245,245,252,0.92);
   --noise:       0.15;
@@ -1004,3 +1042,65 @@ a:hover { color: var(--accent2); }
 .toc::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
 @media (max-width: 1300px) { .toc { display: none; } }
+
+/* ═══════════════════════════════════════════════════
+   수식 단계별 유도 블록
+═══════════════════════════════════════════════════ */
+.derivation {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.deriv-step {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.5rem 0.85rem;
+  position: relative;
+}
+
+.deriv-label {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent3);
+  margin-bottom: 0.5rem;
+}
+
+.deriv-eq {
+  text-align: center;
+  overflow-x: auto;
+  padding: 0.25rem 0;
+}
+
+/* 단계 사이 화살표 */
+.deriv-arrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 0.4rem 0;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+.deriv-arrow::before,
+.deriv-arrow::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: var(--border);
+}
+.deriv-arrow::before { left: 0; }
+.deriv-arrow::after  { right: 0; }
+
+/* 모바일 */
+@media (max-width: 640px) {
+  .deriv-step { padding: 0.85rem 1rem; }
+  .deriv-label { font-size: 0.57rem; }
+} 
