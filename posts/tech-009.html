@@ -66,10 +66,45 @@
 
     <h3>1-2. 오버라이딩</h3>
 
+    <pre><code>
+        __init__(self, **kwargs)
+    </code></pre>
+
     <p>
-        
+        레이어의 하이퍼파라미터 ( ex: 뉴런 수, 활성화 함수, 커널 크기)를 멤버 변수로 저장.<br/>
+        텐서 연산이나 가중치 생성은 이 곳에서 하지 않음 오직 설정만 함
     </p>
-      
+
+    <pre><code>
+        build(self, input_shape)
+    </code></pre>
+    
+    <p>
+        지연된 가중치 생성을 수행함.<br/>
+        레이어가 처음 호출되어 input_shape가 확정이 되는 시점에 단 한번만 실행 되어짐.<br/>
+        이때 add_weight를 이용하여 tf.Variable을 할당함.<br/>
+        플래그인 self.built가 True가 되면 다시 호출되지 않음.
+    </p>
+
+    <pre><code>
+        call(self, inputs, training=None)
+    </code></pre>
+
+    <p>
+        입력 텐서를 출력 텐서로 변환하는 수학적 연산을 정의<br/>
+        training 인자가 훈련/ 추론을 구분하는 불리언값.<br/>
+    </p>
+
+    <pre><code>
+        get_config(self)
+    </code></pre>
+
+    <p>
+        모델을 디스크에 저장 (model.save)하고 추후 메모리로 불러오도록<br/>
+        레이어의 현재 설정 상태를 딕셔너리로 변환.
+    </p>
+
+
     <h2>2. Keras.layers.Dense</h2>
       
     <figure>
