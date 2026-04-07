@@ -148,6 +148,8 @@
 
     <h3>2-1. 포화 손실</h3>
 
+    <h4>2-1-1. 포화 상태</h4>
+
     <p>
       초기 $G$는 무작위 매개변수로 초기화되어 있어 실제 데이터 분포 $p_{data}$와는 먼 표본을 생성한다.<br/>
       이 때 매개변수화된 $D$는 이런 표본들을 매우 높은 확신으로 거부할 수 있다.<br/>
@@ -172,7 +174,11 @@
       이 것이 바로 포화상태이며 그래프가 너무 평평해 가중치를 업데이트 할 동력을 얻지 못하는 것 이다.<br/>
     </p>
 
+<<<<<<< Updated upstream
     <h4>2-1-1. 포화 손실 테스트</h4>
+=======
+    <h3>2-1-2 . 비포화 손실 테스트</h3>
+>>>>>>> Stashed changes
     
     <small>
       <b>구현 환경</b>
@@ -229,22 +235,75 @@
       B는 모두 0으로 꽉채워 만들었다.
     </p>
 
+    <pre><code>
+      optimizer_G = tf.optimizers.Adam(learning_rate=0.0002)
+      optimizer_D = tf.optimizers.Adam(learning_rate=0.0002)
+      eps = 1e-7
+
+      @tf.function
+      def train_step_original(x_real, batch_size):
+          z = tf.random.normal([batch_size, z_dim])
+
+          with tf.GradientTape() as tape_G, tf.GradientTape() as tape_D:
+              # 가짜 데이터 생성
+              x_fake = generator(z, training=True)
+
+              # 판별자 평가
+              D_real = discriminator(x_real, training=True)
+              D_fake = discriminator(x_fake, training=True)
+
+              # ---------------------------------------------------------
+              # [판별자 손실 계산]
+              # 수식: -[log(D(x)) + log(1 - D(G(z)))]
+              # ---------------------------------------------------------
+              loss_D = -tf.reduce_mean(tf.math.log(D_real + eps) + tf.math.log(1.0 - D_fake + eps))
+
+              # ---------------------------------------------------------
+              # 수식: log(1 - D(G(z))) 최소화
+              # 여기서 생성자의 기울기 소실(Vanishing Gradient)이 발생함
+              # ---------------------------------------------------------
+              loss_G = tf.reduce_mean(tf.math.log(1.0 - D_fake + eps))
+
+          # 역전파 계산 (trainable_variables를 통해 가중치 리스트를 자동으로 가져옴)
+          grad_G = tape_G.gradient(loss_G, generator.trainable_variables)
+          grad_D = tape_D.gradient(loss_D, discriminator.trainable_variables)
+
+          # 가중치 업데이트
+          optimizer_G.apply_gradients(zip(grad_G, generator.trainable_variables))
+          optimizer_D.apply_gradients(zip(grad_D, discriminator.trainable_variables))
+
+          # Keras Sequential 내부의 첫 번째 Dense 레이어 가중치(W)의 기울기 절대값 평균 추출
+          # grad_G[0]은 모델의 가장 첫 번째 레이어(W_G1)의 기울기를 의미
+          grad_G_mean = tf.reduce_mean(tf.abs(grad_G[0]))
+
+          return loss_D, loss_G, grad_G_mean
+    </code></pre>
 
     <figure>
       <img src="../image/tech-006.03.png" alt="기울기 소실 테스트" />
       <figcaption>기울기 소실 테스트</figcaption>
     </figure>
 
-    <h3>2-2. 비포화 손실</h3>
+    <h4>2-1-2. 비포화 손실</h4>
 
+    <div class="formula">$\max_G \mathbb{E}_{z \sim p_z(z)}[\log D(G(z))]$</div>
+
+    <p>
+      이 때, 포화 손실을 해결하기 위해서 생성자가 $\log(1 - D(G(z)))$를 최소하 하는 대신<br/>
+      $\log D(G(z))$를 최대화 하도록 목적 함수를 변경한다.
+    </p>
+    
     <figure>
-      <img src="../image/tech-006.04.png" alt="log(1-x)" />
-      <figcaption>log(1-x)</figcaption>
+      <img src="../image/tech-006.04.png" alt="log(x)" />
+      <figcaption>log(x)</figcaption>
     </figure>
 
     <p>
-      포화손실 문제는 $\log(1 - D(G(z)))$대신 $\log D(G(z))$를 최대화 하도록 목적을 변경하여 해결하였다. <br/>
-      학습 초기에 생성자에게 막대한 크기의 기울기를 제공하여 가중치를 업데이트 하도록 만들었다.
+      $\log(x)$는 x가 0에 가까울 때 기울기가 매우 가파른 특성을 지닌다.<br/>
+      따라서 학습 초기 $D(G(z)) \approx 0$인 상황에도 $\log(D(G(z)))$는 생성자에게 큰 기울기를 제공한다.<br/><br/>
+
+      따라서 비포화 손실은 생성자의 초기 학습 속도를 높이기 위해 $\log(1-x)$에서 발생하는 문제를<br/>
+      $\log(x)$의 가파른 기울기를 통해 대체하였다.
     </p>
     
     <small>
