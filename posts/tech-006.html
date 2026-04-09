@@ -298,8 +298,8 @@
       $\log(x)$는 x가 0에 가까울 때 기울기가 매우 가파른 특성을 지닌다.<br/>
       따라서 학습 초기 $D(G(z)) \approx 0$인 상황에도 $\log(D(G(z)))$는 생성자에게 큰 기울기를 제공한다.<br/><br/>
 
-      따라서 비포화 손실은 생성자의 초기 학습 속도를 높이기 위해 $\log(1-x)$에서 발생하는 문제를<br/>
-      $\log(x)$의 가파른 기울기를 통해 대체하였다.
+      따라서 비포화 손실은 생성자의 초기 학습 속도를 높이기 위해 $\log(1-x)를 최소화 하는 대신<br/>
+      $\log(x)$를 최대화 하도록 훈련한다.
     </p>
     
     <small>
@@ -308,6 +308,151 @@
       생성자가 다양한 데이터를 만들지 못하고, 판별자를 속이기 쉬운 하나의 데이터만 반복해서 생성한다.<br/><br/>
       기술한 위 두 문제는 GAN의 새로운 모델이 출시되었는데, 추후 리뷰 할 수 있도록 하겠다.
     </small>
+
+    <h2>전역 최저점 및 정보 이론 발산</h2>    
+
+    <div class="formula">$D^*_G(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}$</div>
+
+    <p>적대적 프레임워크의 가장 큰 성과는 전역 최저점의 존재와 도달 가능성에 대한 증명이다.</p>
+    
+    <div class="derivation">
+
+      <div class="deriv-step">
+        <span class="deriv-label">1. 목적 함수의 정의</span>
+        <div class="deriv-eq">$V(G, D) = \mathbb{E}_{x \sim p_{data}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]$</div>
+      </div>
+
+      <div class="deriv-arrow"> G와 D의 최소최대 게임 </div><br/>
+
+      <div class="deriv-step">
+        <span class="deriv-label">$D^*_G$ 유도</span>
+        <div class="deriv-eq">$V(G, D) = \int_x p_{data}(x) \log(D(x)) dx + \int_z p_z(z) \log(1 - D(G(z))) dz$</div>
+      </div>
+      <br/>
+
+      <p> 
+        생성자 G가 고정되어 있다고 가정 할 때, $D$는 $V(G, D)$를 최대화 하려한다.<br/>
+        이를 위해 기댓값 형태의 식을 적분 형태로 변환한다.<br/><br/>
+
+        먼저 $\int_x p_{data}(x) \log(D(x)) dx$는 실제 데이터$x$를 보고 진짜라고 잘 맞추는가? 를 의미한다.<br/>
+        $D(x)$가 진짜라고 판단할 확률이므로, log(1)이 0에 가까워져 전체 값이 최대화가 된다.<br/><br/>
+
+        그다음 $\int_z p_z(z) \log(1 - D(G(z))) dz$는 가짜 보고 가짜라고 맞출 이다.<br/>
+        $D(G(z))$는 가짜를 진짜라고 믿을 확률이며, D의 성능이 좋을 수록 $D(G(z))$는 0에 가까워진다.<br/>
+        하지만 2번째 수식은 가짜데이터$z$를 기준으로 적분을 하여 아래와 같이 변수변환을 해준다.
+      </p>
+
+      <small>
+        <b>적분을 하는 이유</b>
+        1.<br/>
+        기댓값의 수학적 정의에서 어떤 사건의 평균적인 결과인 기댓값을 구할 때<br/>
+        사건의 값 X 그 사건이 일어날 확률을 모두 더하게 된다.<br/>
+        이 때 데이터가 이산형일 경우 $\sum (\text{값} \times \text{확률})$이며, 연속형일 경우 $\int (\text{값}(x) \times \text{확률 밀도}(p(x))) \, dx$를 쓴다.<br/><br/>
+
+        2.<br/>
+        기댓값($\mathbb{E}$)의 정의 <br/>
+        실제 데이터 x가 나타날 확률 ($p_{data}(x)$)에 그 $x$를 진짜라고 판단 할 점수$(\log(D(x)))$를 곱해서 모두 더하라.<br/>
+        ↓ <br/>
+        실제 데이터($p_{data}$)는 이미 세상에 일어난 존재.<br/>
+        $D$의 목표는 이 진짜로 일어난 데이터에게 높은 점수를 주는 것.<br/>
+        따라서 적분식은 감별자가 실제하는 데이터들을 얼마나 진짜라고 잘 판단하는 것인가?의 성능 지표가 되어짐.
+      </small>
+
+      <div class="deriv-step">
+        <span class="deriv-label">$x = G(z)$라 가정한 변수 변환</span>
+        <div class="deriv-eq">$V(G, D) = \int_x [p_{data}(x) \log(D(x)) + p_g(x) \log(1 - D(x))] dx$</div>
+      </div>
+      <br/>
+
+      <p>
+        $G$가 노이즈 $z$를 입력받아 가짜 데이터 $x$를 만들어내므로, <br/>
+        생성된 가짜 데이터들도 결국 $x$라는 공간 위에 분포를 형성하게 된다.<br/>
+        이렇게 해야만 $D$가 각 데이터 마다 어떤 결과를 내릴 때 $x$하나만으로 최선인지 판단 할 수 있다.
+      </p>
+      
+      <p>
+        이제 함수의 값을 최대화 하는 $D(x)$를 찾으면 된다.<br/>
+        해당 수식은 결국 $f(y) = a \log(y) + b \log(1-y)$와 같으며,<br/>
+        <strong>(여기서 $a = p_{data}(x)$, $b = p_g(x)$이며, $y \in (0, 1)$, $a, b > 0$인 양의 실수이다.)</strong><br/>
+        즉 감별자가 정답을 100% 맞추는 확률을 찾는 것이다. 
+      </p>
+      <br/><br/>
+      
+      <div class="deriv-step">
+        <span class="deriv-label">$V(G, D) = \int_x [p_{data}(x) \log(D(x)) + p_g(x) \log(1 - D(x))] dx$의 변환</span>
+        <div class="deriv-eq">$f(y) = a \log(y) + b \log(1-y)$</div>
+      </div>
+
+      <br/>
+      <p> 여기서, a는 $p_{data}(x)$이며, b는 $p_g(x)$, y는 $D(x)$이다.</p>
+
+      <div class="deriv-arrow"> ↓ 최댓값을 구하기 위한 미분 </div><br/>
+
+      <div class="deriv-step">
+        <span class="deriv-label">미분값</span>
+        <div class="deriv-eq">$\frac{df}{dy} = \frac{a}{y} - \frac{b}{1 - y} = 0$</div>
+      </div>
+      <br/>
+      
+      <p>
+        해당 식을 정리하면 $y = \frac{a}{a + b}$이므로,  $D$가 가장 학습이 잘된 상태이다.<br/>
+        이 값을 다시 원상태로 표현하면
+      </p>
+
+      <div class="formula">$D^*_G(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}$</div>
+      <p>
+        이 방정식은 $D$가 실제인지 가짜인지 판단한 확률을 나타내는 것 이며, 만약 ($p_g = p_{data}$)라면<br/>
+        $D$는 모든 입력에 대해 $D^*_G(x) = \frac{1}{2}$를 출력 할 것 이다. 
+      </p>
+
+      <p>
+        $D^*_G(x)$를 최소최대 가치 함수에 대입하여 $G$의 훈련 목적을 $C(G)$로 재구성 될 수 있다<br/>
+      </p>
+
+      <div class="deriv-step">
+        <span class="deriv-label">$C(G)$</span>
+        <div class="deriv-eq">$C(G) = \int_x p_{data}(x) \log\left(\frac{p_{data}(x)}{p_{data}(x) + p_g(x)}\right) dx + \int_x p_g(x) \log\left(\frac{p_g(x)}{p_{data}(x) + p_g(x)}\right) dx$</div>
+      </div>
+      <div class="deriv-arrow"> 최소 최대 가치 함수에 대입 </div><br/>
+
+      <div class="deriv-step">
+        <span class="deriv-label">$C(G)$</span>
+        <div class="deriv-eq">$\int_x p_{data}(x) \log\left(\frac{p_{data}(x)}{(p_{data}(x) + p_g(x))/2} \cdot \frac{1}{2}\right) dx$</div>
+      </div>
+      <div class="deriv-arrow"> ↓ KL </div>
+      <div class="deriv-step">
+        <span class="deriv-label">$C(G)$</span>
+        <div class="deriv-eq">$ dx = KL\left(p_{data} \parallel \frac{p_{data} + p_g}{2}\right) - \log 2 $</div>
+      </div>
+
+      <small>
+        <b>KL Divergence</b>
+        해당사항 정의 될 때 까지 중단
+      </small>
+      
+
+    </div>
+
+
+
+
+     <div class="derivation">
+
+      <div class="deriv-step">
+        <span class="deriv-label">최대 최소 가치 함수</span>
+        <div class="deriv-eq">$C(G) = \max_D V(G, D) = V(G, D^*_G)$</div>
+      </div>
+
+      <div class="deriv-arrow">↓ ... </div>
+
+      <div class="deriv-step">
+        <span class="deriv-label">GAN - $\log$제거</span>
+        <div class="deriv-eq">$C(G) = \mathbb{E}_{x \sim p_{data}} \left[ \log \frac{p_{data}(x)}{p_{data}(x) + p_g(x)} \right] + \mathbb{E}_{x \sim p_g} \left[ \log \frac{p_g(x)}{p_{data}(x) + p_g(x)} \right]$</div>
+      </div>
+
+    </div>
+
+
 
   </div>
 

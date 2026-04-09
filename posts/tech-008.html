@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KL Divergence</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../common.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="post-detail">
+        <a class="detail-back" href="../tech.html">← 기술 분석으로 돌아가기</a>
+
+        <div class="detail-category">Deep learning</div>
+        <h1 class="detail-title">KL Divergence</h1>
+        <div class="detail-meta">
+          <span class="detail-author">이승빈</span>
+          <span class="meta-dot"></span>
+          <span class="detail-date">2026.04.09</span>
+          <div class="detail-tags">
+            <span class="detail-tag">#Deep learning</span>
+          </div>
+        </div>
+
+        <div class="detail-content">
+          <h2><a href="./tech-006.html">GAN에 대하여 일부 발췌</a></h2>
+
+          <div class="formula">
+            $D^*_G(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}$
+          </div>
+          <p>
+            이 방정식은 $D$가 실제인지 가짜인지 판단한 확률을 나타내는 것이며,
+            만약 ($p_g = p_{data}$)라면<br />
+            $D$는 모든 입력에 대해 $D^*_G(x) = \frac{1}{2}$를 출력할 것이다.
+          </p>
+
+          <p>
+            $D^*_G(x)$를 최소최대 가치 함수에 대입하여 $G$의 훈련 목적을
+            $C(G)$로 재구성할 수 있다<br />
+          </p>
+
+          <div class="deriv-step">
+            <span class="deriv-label">$C(G)$</span>
+            <div class="deriv-eq">
+              $C(G) = \int_x p_{data}(x) \log\left(\frac{p_{data}(x)}{p_{data}(x) + p_g(x)}\right) dx +
+              \int_x p_g(x) \log\left(\frac{p_g(x)}{p_{data}(x) + p_g(x)}\right) dx$
+            </div>
+          </div>
+          <div class="deriv-arrow">최소 최대 가치 함수에 대입</div>
+          <br />
+
+          <div class="deriv-step">
+            <span class="deriv-label">$C(G)$</span>
+            <div class="deriv-eq">
+              $\int_x p_{data}(x) \log\left(\frac{p_{data}(x)}{(p_{data}(x) + p_g(x))/2} \cdot \frac{1}{2}\right) dx$
+            </div>
+          </div>
+          <div class="deriv-arrow">↓ KL</div>
+          <div class="deriv-step">
+            <span class="deriv-label">$C(G)$</span>
+            <div class="deriv-eq">
+              $ dx = KL\left(p_{data} \parallel \frac{p_{data} + p_g}{2}\right) - \log 2 $
+            </div>
+          </div>
+
+          <h2>1. KL Divergence</h2>
+
+          <p>
+            KL Divergence 이전 Entropy 사전지식 필수<br />
+            <a href="./tech-007.html">엔트로피와 최대우도추정</a><br /><br />
+
+            이제 두 개의 분포 실제 분포$P$와 예측 분포$Q$가 있다고 가정한다.
+          </p>
+
+          <div class="derivation">
+            <div class="deriv-step">
+              <span class="deriv-label">교차 엔트로피</span>
+              <div class="deriv-eq">
+                $H(P, Q) = \mathbb{E}_{x \sim P} [-\log Q(x)] = -\sum_x P(x) \log Q(x)$
+              </div>
+            </div>
+
+            <div class="deriv-step">
+              <span class="deriv-label">엔트로피</span>
+              <div class="deriv-eq">$H(P) = E_{x \sim P}[I(x)]$</div>
+            </div>
+
+            <div class="deriv-arrow">↓ 교차 엔트로피 - 엔트로피</div>
+
+            <div class="deriv-step">
+              <span class="deriv-label">KL Divergence</span>
+              <div class="deriv-eq">$D_{KL}(P \parallel Q) = H(P, Q) - H(P)$</div>
+            </div>
+
+            <div class="deriv-arrow">↓</div>
+
+            <div class="deriv-step">
+              <span class="deriv-label">KL Divergence</span>
+              <div class="deriv-eq">
+                $= \left( -\sum P(x) \log Q(x) \right) - \left( -\sum P(x) \log P(x) \right)$
+              </div>
+            </div>
+
+            <div class="deriv-arrow">↓</div>
+
+            <div class="deriv-step">
+              <span class="deriv-label">KL Divergence</span>
+              <div class="deriv-eq">
+                $= \sum_x P(x) \left( \log P(x) - \log Q(x) \right)$
+              </div>
+            </div>
+
+            <div class="deriv-arrow">↓</div>
+
+            <div class="deriv-step">
+              <span class="deriv-label">KL Divergence</span>
+              <div class="deriv-eq">$= \sum_x P(x) \log \frac{P(x)}{Q(x)}$</div>
+            </div>
+            <br />
+          </div>
+
+          <p>
+            KL Divergence는 교차 엔트로피 - 엔트로피 이며 <br />
+            잘못된 분포 $Q$를 사용해서 발생하는 추가적인 정보량이다.<br /><br />
+
+            결론은 두 확률 분포간의 차이를 의미하며 <br />
+            수식을 설명하면, 내가 P대신 Q를 선택했기 때문에 낭비된 정보량이다.
+          </p>
+
+          <h3>1-1 성질</h3>
+
+          <h4>1-1-1 왜 거리가 아닌가?</h4>
+
+          <p>
+            수학에서 거리 즉 Distance라고 하려면 대칭성이 있어야 한다. ($A \to B$ = $B \to A$)
+          </p>
+          <br />
+
+          <div class="deriv-step">
+            <span class="deriv-label">KL Divergence -> Q(x)에 대해 미분</span>
+            <div class="deriv-eq">
+              $\frac{\partial KL}{\partial Q(x)} = \frac{\partial}{\partial Q(x)} \left[ -P(x) \log Q(x) \right] = - \frac{P(x)}{Q(x)}$
+            </div>
+          </div>
+
+          <br />
+
+          <p>
+            하지만, $KL(P \parallel Q)$에서 P가 있는 곳은 반드시 Q가 있어야 한다. <br />
+            그리고 $KL(Q \parallel P)$에서 Q가 있는 곳은 반드시 P가 있어야 한다. <br /><br />
+
+            만약 $P$가 0보다 클 때 $Q$가 0에 가까워 진다면, 값이 무한대로 발산한다.<br />
+            즉 실제로 일어날 확률 $P$가 0이 아닌데, $Q$가 0에 가까워진다면, 
+            $- \frac{P(x)}{Q(x)} \to -\infty$ 가 되어<br />
+            모델이 $Q = 0$이 되어지는 상황을 피하려 큰 기울기 값을 갖게 된다.<br /><br />
+
+            반대로 $Q$가 0보다 클 때 $P$가 0에 가까워 진다면, 값이 무한대로 발산한다.<br />
+            즉 예측한 확률 $Q$가 0이 아닌데, 실제 확률$P$가 0에 가까워진다면, 
+            $-\frac{P(x)}{Q(x)} \to \infty$ 가 되어<br />
+            모델이 $Q = 0$이 되어지려 큰 기울기 값을 갖게 된다.<br /><br />
+
+            $P_1, P_2$가 있다면, $Q$가 $P_1=P_2=0$이라는 중간 지점을 건드리지 않으려 <br />
+            $P_1, P_2$중 하나의 값만을 참조하게 되므로 모드붕괴가 일어난다.
+          </p>
+
+          <small>
+            <b>$\log(x)$를 미분하는데 왜 $\ln(x)$가 아닌가?</b>
+            최대 우도함수, 엔트로피, 교차 엔트로피 모두 밑이 $e$인 $\log$이다.
+          </small>
+
+          <h3>1-2. KL Divergence는 왜 항상 0 이상인가?</h3>
+
+          <br/>
+
+          <div class="deriv-step">
+            <span class="deriv-label">$-D_{KL}$의 형태</span>
+            <div class="deriv-eq">
+              $-D_{KL}(P \parallel Q) = -\sum_x P(x) \log \frac{P(x)}{Q(x)} = \sum_x P(x) \log \frac{Q(x)}{P(x)}$
+            </div>
+          </div>
+          <div class="deriv-arrow">↓ 기댓값의 정의 적용</div>
+          <div class="deriv-step">
+            <span class="deriv-label">기댓값의 정의</span>
+            <div class="deriv-eq">
+              $\sum_x P(x) \log \frac{Q(x)}{P(x)} = \mathbb{E}_{x \sim P} \left[ \log \frac{Q(x)}{P(x)} \right]$
+            </div>
+          </div>
+          <div class="deriv-arrow">↓ 젠센의 부등식 적용</div>
+          <div class="deriv-step">
+            <span class="deriv-label">젠센의 부등식</span>
+            <div class="deriv-eq">
+                $\mathbb{E} \left[ \log \frac{Q(x)}{P(x)} \right] \le \log \left( \mathbb{E} \left[ \frac{Q(x)}{P(x)} \right] \right)$
+            </div>
+          </div>
+          <div class="deriv-arrow">↓ 기댓값을 풀어 정리</div>
+          <div class="deriv-step">
+            <span class="deriv-label">정리</span>
+            <div class="deriv-eq">
+                $\log \left( \sum_x P(x) \frac{Q(x)}{P(x)} \right) = \log \left( \sum_x Q(x) \right)$   
+            </div>
+          </div>
+          <div class="deriv-arrow">↓ 확률의 총합은 1이므로</div>
+            <div class="deriv-step">
+                <span class="deriv-label">정리</span>
+                <div class="deriv-eq">
+                    $\log(1) = 0$
+                </div>
+          </div>
+          
+          <br/>
+
+          <p>따라서, $-D_{KL} \le 0$ 이므로 $D_{KL}(P \parallel Q) \ge 0$ 임이 증명된다.</p>
+
+          <small>
+            <b>젠센의 부등식</b>
+            아래로 볼록한 함수 일 때<br/>
+            $f(\mathbb{E}[X]) \le \mathbb{E}[f(X)]$<br/>
+            평균을 먼저 구해서 함수에 넣은 값보다, 함수에 먼저 넣고 그 결과들을 평균 낸 값이 더 크거나 같다.<br/><br/>
+            위로 오목한 함수 일 때 <br/>
+            $f(\mathbb{E}[X]) \ge \mathbb{E}[f(X)]$<br/>
+            평균의 함수값이 함수값의 평균보다 크거나 같다.
+          </small>
+
+          
+        <p>
+            결론적으로 KL Divergence는 $Q$가 $P$를 얼마나 효율적으로 설명하는가를 측정하는 지표이다. <br/>
+            단순히 오차를 줄이는 것을 넘어, 모델의 학습 방향을 결정짓는 나침반 역할을 한다.
+        </p>
+
+        
+        </div>
+
+
+      </div>
+    </div>
+
+    <script src="../components.js"></script>
+    <script>
+      renderLayout({
+        page: "tech",
+        breadcrumb: "기술 분석 / KL divergence",
+        root: "../",
+      });
+    </script>
+  </body>
+</html>
