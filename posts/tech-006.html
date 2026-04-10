@@ -309,7 +309,7 @@
       기술한 위 두 문제는 GAN의 새로운 모델이 출시되었는데, 추후 리뷰 할 수 있도록 하겠다.
     </small>
 
-    <h2>전역 최저점 및 정보 이론 발산</h2>    
+    <h2>2. 전역 최저점 및 정보 이론</h2>    
 
     <div class="formula">$D^*_G(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}$</div>
 
@@ -435,39 +435,67 @@
         <div class="deriv-eq">$ dx = KL\left(p_g \parallel \frac{p_{data} + p_g}{2}\right) - \log 2$</div>
       </div>
 
+      <div class="deriv-arrow"> ↓ 둘을 합쳐 JSD 적용</div>
+      <div class="deriv-step">
+        <span class="deriv-label">JSD</span>
+        <div class="deriv-eq">$C(G) = KL\left(p_{data} \parallel \frac{p_{data} + p_g}{2}\right) - \log 2  + KL\left(p_g \parallel \frac{p_{data} + p_g}{2}\right) - \log 2 $</div>
+      </div>
+      <div class="deriv-step">
+        <span class="deriv-label">JSD</span>
+        <div class="deriv-eq">$C(G) = -\log 4 + 2 \cdot JSD(p_{data} \parallel p_g)$</div>
+      </div>
+
       <br/>
 
-      
+      <p>
+        <a href="./tech-008.html">KL Divergence에 대해</a><br/>
+        <a href="./tech-010.html">JSD에 대해</a>
+      </p>
+
+      <p>
+        이 훈련 기준이 정보 이론의 근본적 발산 측정 지표와 내재적으로 연결되있음을 증명한다.<br/>
+        방정식에서 $\log(2)$를 분리하고 결합함으로써 쿨백-라이블러 발산으로 변경하고,<br/>
+        이 두개의 발산은 젠슨-섀넌 발산으로 정의된다.
+      </p>
+
+      <p>
+        $C(G)$의 전역 최솟값이 오직 $p_g = p_{data}$일 때만 달성된다는 논문의 정리에 따르면,<br/>
+         $p_g = p_{data}$인 경우: 최적의 판별자 $D^*_G(x) = \frac{1}{2}$이 된다<br/>
+         이를 $C(G)$에 대입시 $C(G) = \log \frac{1}{2} + \log \frac{1}{2} = -\log 4$ 이며,<br/>
+      </p>
 
       <small>
-        <b>KL Divergence</b>
-        해당사항 정의 될 때 까지 중단
+        * 여기서 $C(G)$는 $\int_x p_{data}(x) \log\left(\frac{p_{data}(x)}{p_{data}(x) + p_g(x)}\right) dx + \int_x p_g(x) \log\left(\frac{p_g(x)}{p_{data}(x) + p_g(x)}\right) dx$
       </small>
+
+      <p>
+        $C(G) = V(D^*_G, G)$에서 $-\log(4)$를 빼면 다음과 같은 형태이다.
+      </p>
+
+      <div class="deriv-step">
+        <div class="deriv-eq">$C(G) = -\log(4) + KL \left( p_{data} \parallel \frac{p_{data} + p_g}{2} \right) + KL \left( p_g \parallel \frac{p_{data} + p_g}{2} \right) \quad $</div>
+      </div>
+
+      <div class="deriv-arrow"> ↓ 변환</div>
       
-
-    </div>
-
-
-
-
-     <div class="derivation">
-
       <div class="deriv-step">
-        <span class="deriv-label">최대 최소 가치 함수</span>
-        <div class="deriv-eq">$C(G) = \max_D V(G, D) = V(G, D^*_G)$</div>
+        <div class="deriv-eq">$C(G) = -\log(4) + 2 \cdot JSD(p_{data} \parallel p_g) \quad$</div>
       </div>
 
-      <div class="deriv-arrow">↓ ... </div>
+      <p>
+        이 식은 $p_(g), p_(data)$ 사이의 JSD임을 알 수 있다.<br/>
+        JSD는 항상 0 이상이며, 두 분포가 일치할 때만 0이 되므로, <br/>
+        $C^* = -\log 4$가 $C(G)$의 전역 최솟값임을 증명했으니<br/>
+        생성 모델이 데이터 분포를 완벽하게 복제하는 $p_g = p_{data}$뿐이다.
+      </p>
+      
+      <h2>3. 알고리즘 구현</h2>
 
-      <div class="deriv-step">
-        <span class="deriv-label">GAN - $\log$제거</span>
-        <div class="deriv-eq">$C(G) = \mathbb{E}_{x \sim p_{data}} \left[ \log \frac{p_{data}(x)}{p_{data}(x) + p_g(x)} \right] + \mathbb{E}_{x \sim p_g} \left[ \log \frac{p_g(x)}{p_{data}(x) + p_g(x)} \right]$</div>
-      </div>
+
+
+
 
     </div>
-
-
-
   </div>
 
 </div>
