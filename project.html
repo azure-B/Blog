@@ -9,41 +9,19 @@
 </head>
 <body>
 <div id="app">
-
   <div class="board-header">
     <div class="board-header-eng">// 02 · Project Review</div>
     <div class="board-header-title">프로젝트 리뷰</div>
     <div class="board-header-desc">직접 구현한 프로젝트의 설계, 구현, 회고를 담은 글 모음</div>
   </div>
-
   <div class="post-list" id="post-list"></div>
-
 </div>
-
+<script src="data/posts.js"></script>
 <script src="components.js"></script>
 <script src="board-render.js"></script>
 <script>
-  const posts = [
-    {
-      id: 'project-002',
-      category: 'Deep Learning',
-      title: 'DeepFake Scanner',
-      excerpt: '딥러닝에 공부하기 위해 파인 튜닝이 아닌 처음부터 전체 파이프라인을 설계하였습니다.',
-      tags: ['Deep Learning', "TensorFlow", "MediaPipe"],
-      date: '2025.04.20',
-    },
-    {
-      id: 'project-001',
-      category: 'LLM',
-      title: '멍멍케어',
-      excerpt: 'PyTorch로 Exaone3.5를 파인튜닝하여 어플리케이션을 만든 프로젝트 입니다.',
-      tags: ['Exaone3.5', 'Pytorch'],
-      date: '2025.11.15',
-    },
-  ];
-
   renderLayout({ page: 'project', breadcrumb: '프로젝트 리뷰', root: '' });
-  initBoard(posts);
+  initBoard(window.POSTS_DATA.project, 'project');
 </script>
 </body>
 </html>

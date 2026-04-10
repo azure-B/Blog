@@ -28,8 +28,7 @@ function renderLayout({ page, breadcrumb, root = '' }) {
   }
   if (!document.getElementById('katex-css')) {
     const kCss = document.createElement('link');
-    kCss.id   = 'katex-css';
-    kCss.rel  = 'stylesheet';
+    kCss.id = 'katex-css'; kCss.rel = 'stylesheet';
     kCss.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css';
     document.head.appendChild(kCss);
     const kJs = document.createElement('script');
@@ -56,15 +55,25 @@ function renderLayout({ page, breadcrumb, root = '' }) {
   const now = new Date();
   const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
 
+  /* ── 게시글 카운트 ── */
+  const pd = window.POSTS_DATA || {};
+  const counts = {
+    tech:     (pd.tech     || []).length,
+    project:  (pd.project  || []).length,
+    external: (pd.external || []).length,
+    campus:   (pd.campus   || []).length,
+  };
+  const totalCount = Object.values(counts).reduce((s, n) => s + n, 0);
+
   /* ── 네비게이션 ── */
   const navItems = [
     { key: 'home',     icon: '⌂', label: '홈',           sub: 'HOME',              href: `${r}index.html` },
     { key: 'about',    icon: '◉', label: '소개',          sub: 'ABOUT',             href: `${r}about.html` },
     { type: 'section', label: '게시판' },
-    { key: 'tech',     icon: '⎔', label: '기술 분석',     sub: 'TECH ANALYSIS',     href: `${r}tech.html` },
-    { key: 'project',  icon: '◈', label: '프로젝트 리뷰', sub: 'PROJECT REVIEW',    href: `${r}project.html` },
-    { key: 'external', icon: '◎', label: '대외 활동',     sub: 'EXTERNAL ACTIVITY', href: `${r}external.html` },
-    { key: 'campus',   icon: '◐', label: '교내 활동',     sub: 'CAMPUS ACTIVITY',   href: `${r}campus.html` },
+    { key: 'tech',     icon: '⎔', label: '기술 분석',     sub: 'TECH ANALYSIS',     href: `${r}tech.html`,     count: counts.tech },
+    { key: 'project',  icon: '◈', label: '프로젝트 리뷰', sub: 'PROJECT REVIEW',    href: `${r}project.html`,  count: counts.project },
+    { key: 'external', icon: '◎', label: '대외 활동',     sub: 'EXTERNAL ACTIVITY', href: `${r}external.html`, count: counts.external },
+    { key: 'campus',   icon: '◐', label: '교내 활동',     sub: 'CAMPUS ACTIVITY',   href: `${r}campus.html`,   count: counts.campus },
     { type: 'section', label: '기타' },
     { key: 'template', icon: '⊞', label: '글쓰기 템플릿', sub: 'TEMPLATE',          href: `${r}template.html` },
   ];
@@ -72,6 +81,9 @@ function renderLayout({ page, breadcrumb, root = '' }) {
   const navHTML = navItems.map(item => {
     if (item.type === 'section') return `<div class="nav-section-label">${item.label}</div>`;
     const isActive = item.key === page ? 'active' : '';
+    const countBadge = item.count != null
+      ? `<span class="nav-count">${item.count}</span>`
+      : '';
     return `
       <a class="nav-item ${isActive}" href="${item.href}">
         <span class="nav-icon">${item.icon}</span>
@@ -79,8 +91,17 @@ function renderLayout({ page, breadcrumb, root = '' }) {
           <span class="nav-text-main">${item.label}</span>
           <span class="nav-text-sub">${item.sub}</span>
         </div>
+        ${countBadge}
       </a>`;
   }).join('');
+
+  /* ── 총 게시글 수 ── */
+  const totalBadge = totalCount > 0
+    ? `<div class="profile-post-count">
+         <span class="profile-post-num">${totalCount}</span>
+         <span class="profile-post-label">POSTS</span>
+       </div>`
+    : '';
 
   /* ── HTML 조립 ── */
   const sidebarHTML = `
@@ -98,6 +119,7 @@ function renderLayout({ page, breadcrumb, root = '' }) {
           <span class="tag">구름톤 2025</span>
           <span class="tag">폴라리스</span>
         </div>
+        ${totalBadge}
       </div>
       <nav class="sidebar-nav">${navHTML}</nav>
     </aside>`;
@@ -134,18 +156,8 @@ function renderLayout({ page, breadcrumb, root = '' }) {
   const overlay = document.getElementById('mob-overlay');
   const sidebar = document.querySelector('.sidebar');
 
-  function openMenu()  {
-    sidebar.classList.add('open');
-    btn.classList.add('open');
-    overlay.classList.add('visible');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu() {
-    sidebar.classList.remove('open');
-    btn.classList.remove('open');
-    overlay.classList.remove('visible');
-    document.body.style.overflow = '';
-  }
+  function openMenu()  { sidebar.classList.add('open'); btn.classList.add('open'); overlay.classList.add('visible'); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { sidebar.classList.remove('open'); btn.classList.remove('open'); overlay.classList.remove('visible'); document.body.style.overflow = ''; }
 
   btn.addEventListener('click', () => sidebar.classList.contains('open') ? closeMenu() : openMenu());
   overlay.addEventListener('click', closeMenu);
@@ -153,47 +165,35 @@ function renderLayout({ page, breadcrumb, root = '' }) {
     link.addEventListener('click', () => { if (window.innerWidth <= 640) closeMenu(); });
   });
 
-  /* ════════════════════════════════════════════════
-     TOC — renderLayout 안에서 실행 (DOM 완성 후)
-  ════════════════════════════════════════════════ */
+  /* ── TOC ── */
   const content = document.querySelector('.detail-content');
   if (!content) return;
 
-  // h2, h3, h4 모두 수집
   const headings = [...content.querySelectorAll('h2, h3, h4')];
   if (headings.length < 2) return;
 
-  // id 자동 부여
   headings.forEach((h, i) => { if (!h.id) h.id = 'toc-' + i; });
 
-  // TOC 생성
   const toc = document.createElement('nav');
   toc.className = 'toc';
   toc.innerHTML = '<div class="toc-label">목차</div>';
-
   const ul = document.createElement('ul');
   ul.className = 'toc-list';
 
   headings.forEach(h => {
-    const depth = parseInt(h.tagName[1]); // 2, 3, 4
+    const depth = parseInt(h.tagName[1]);
     const li = document.createElement('li');
     li.className = `toc-item depth-${depth}`;
-
     const a = document.createElement('a');
     a.className = 'toc-link';
     a.href = '#' + h.id;
-    // h 태그 안에 링크가 있을 경우 아이콘 문자 제거
     a.textContent = h.textContent.replace(/[↗→]/g, '').trim();
-
     a.addEventListener('click', e => {
       e.preventDefault();
-      // 탑바(56px) 높이만큼 오프셋
-      const TOP_OFFSET = 72;
-      const top = h.getBoundingClientRect().top + window.scrollY - TOP_OFFSET;
+      const top = h.getBoundingClientRect().top + window.scrollY - 72;
       window.scrollTo({ top, behavior: 'smooth' });
       history.pushState(null, '', '#' + h.id);
     });
-
     li.appendChild(a);
     ul.appendChild(li);
   });
@@ -201,16 +201,11 @@ function renderLayout({ page, breadcrumb, root = '' }) {
   toc.appendChild(ul);
   document.body.appendChild(toc);
 
-  // 너비 체크
-  function checkWidth() {
-    toc.classList.toggle('visible', window.innerWidth >= 1300);
-  }
+  function checkWidth() { toc.classList.toggle('visible', window.innerWidth >= 1300); }
   checkWidth();
   window.addEventListener('resize', checkWidth);
 
-  // 현재 섹션 하이라이트
   const links = [...toc.querySelectorAll('.toc-link')];
-
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -219,10 +214,7 @@ function renderLayout({ page, breadcrumb, root = '' }) {
         if (active) active.classList.add('active');
       }
     });
-  }, {
-    rootMargin: '-10% 0px -80% 0px',
-    threshold: 0
-  });
+  }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
 
   headings.forEach(h => observer.observe(h));
 }

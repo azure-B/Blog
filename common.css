@@ -1104,3 +1104,27 @@ a:hover { color: var(--accent2); }
   .deriv-step { padding: 0.85rem 1rem; }
   .deriv-label { font-size: 0.57rem; }
 } 
+/* ── common.css에 추가 — .profile-card 블록 아래에 붙여넣기 ── */
+
+.profile-post-count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.profile-post-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+.profile-post-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}

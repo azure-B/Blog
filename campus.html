@@ -9,49 +9,19 @@
 </head>
 <body>
 <div id="app">
-
   <div class="board-header">
     <div class="board-header-eng">// 04 · Campus Activity</div>
     <div class="board-header-title">교내 활동</div>
     <div class="board-header-desc">동아리, 랩 활동, 교내 행사 참여 기록</div>
   </div>
-
   <div class="post-list" id="post-list"></div>
-
 </div>
-
+<script src="data/posts.js"></script>
 <script src="components.js"></script>
 <script src="board-render.js"></script>
 <script>
-  const posts = [
-    {
-      id: 'campus-003',
-      category: 'IPCG Lab',
-      title: 'IPCG 랩 정기 세미나 — seq to seq',
-      excerpt: '랩 세미나에서 케라스 창시자에게 배우는 딥러닝의 transformer architecture 파트의 일부를 발표하였습니다.',
-      tags: ['IPCG Lab', 'Tensorflow', 'Lab Seminar'],
-      date: '2026.04.01',
-    },
-    {
-      id: 'campus-002',
-      category: 'IPCG Lab',
-      title: 'IPCG 랩 정기 세미나 — Self Attention',
-      excerpt: '랩 세미나에서 케라스 창시자에게 배우는 딥러닝의 transformer architecture 파트의 일부를 발표하였습니다.',
-      tags: ['IPCG Lab', 'Tensorflow', 'Lab Seminar'],
-      date: '2026.03.25',
-    },
-    {
-      id: 'campus-001',
-      category: 'IPCG Lab',
-      title: 'IPCG 랩 정기 세미나 — Transformer',
-      excerpt: '랩 세미나에서 케라스 창시자에게 배우는 딥러닝의 transformer architecture 파트의 일부를 발표하였습니다.',
-      tags: ['IPCG Lab', 'Tensorflow', 'Lab Seminar'],
-      date: '2026.03.24',
-    },
-  ];
-
   renderLayout({ page: 'campus', breadcrumb: '교내 활동', root: '' });
-  initBoard(posts);
+  initBoard(window.POSTS_DATA.campus, 'campus');
 </script>
 </body>
 </html>

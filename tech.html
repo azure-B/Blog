@@ -9,121 +9,19 @@
 </head>
 <body>
 <div id="app">
-
-  <!-- ── 게시판 헤더 ── -->
   <div class="board-header">
     <div class="board-header-eng">// 01 · Tech Analysis</div>
     <div class="board-header-title">기술 분석</div>
     <div class="board-header-desc">머신러닝, 딥러닝, 컴퓨터 비전 기법을 직접 분석·정리한 글 모음</div>
   </div>
-
-  <!-- ════════════════════════════════════════════════════
-       ✏️  새 글을 추가할 때는 아래 posts 배열에
-           객체 하나를 추가하고,
-           posts/ 폴더에 해당 HTML 파일을 생성하세요.
-           파일명은 id 값과 동일하게 맞춰주세요.
-           예) id: 'tech-004'  →  posts/tech-004.html
-  ════════════════════════════════════════════════════ -->
   <div class="post-list" id="post-list"></div>
-
 </div>
-
+<script src="data/posts.js"></script>
 <script src="components.js"></script>
 <script src="board-render.js"></script>
 <script>
-  const posts = [
-     {
-      id: 'tech-011',
-      category: 'Deep Learning',
-      title: 'Mini-Batch Gradient Descent',
-      excerpt: 'GAN에서 나오는 Mini-Batch Gradient Descent에 대해 알아보았습니다.',
-      tags: ['Keras', 'TensorFlow'],
-      date: '2026.04.10',
-    },
-    {
-      id: 'tech-010',
-      category: 'Deep Learning',
-      title: 'Jensen-Shannon Divergence',
-      excerpt: 'GAN에서 나오는 Jensen-Shannon Divergence에 대해 알아보았습니다.',
-      tags: ['Keras', 'TensorFlow'],
-      date: '2026.04.07',
-    },
-    {
-      id: 'tech-009',
-      category: 'Deep Learning',
-      title: 'tf.keras.layers.Layer',
-      excerpt: 'tf.keras.layers.Layer에 대해 심도있게 다루어 보았습니다.',
-      tags: ['Keras', 'TensorFlow'],
-      date: '2026.04.07',
-    },
-    {
-      id: 'tech-008',
-      category: 'Deep Learning',
-      title: 'KL Divergence',
-      excerpt: 'GAN에서 나오는 KL Divergence에 대해 알아보았습니다.',
-      tags: ['Deep Learning'],
-      date: '2026.04.09',
-    },
-    {
-      id: 'tech-007',
-      category: 'Deep Learning',
-      title: '교차 엔트로피와 최대 우도 추정',
-      excerpt: '적대적 프레임워크의 수학적 공식에서 Log를 쓰는 이유를 모르기에 알아보았습니다.',
-      tags: ['Deep Learning'],
-      date: '2026.04.02',
-    },
-     {
-      id: 'tech-006',
-      category: 'Deep Learning',
-      title: '생성적 적대 신경망에 대하여',
-      excerpt: '역전파와 드롭아웃만을 사용하여 발생시킨 혁신.',
-      tags: ['Deep Learning'],
-      date: '2026.03.31',
-    },  
-    {
-      id: 'tech-005',
-      category: 'Deep Learning',
-      title: 'RELU에 대하여',
-      excerpt: '평소 원리는 잘 모르지만 항상 신경망을 구성할 때 사용한 활성화 함수인 RELU에 대해 알아보았습니다.',
-      tags: ['Deep Learning'],
-      date: '2026.03.30',
-    },
-      {
-      id: 'tech-004',
-      category: 'TensorFlow',
-      title: 'Tensor 자료구조',
-      excerpt: 'TensorFlow를 공부하고 있으나, 정작 Tensor에 대해 아는 것은 없는 것 같아 Tensor의 자료구조 를 처음부터 공부해보려고 합니다.',
-      tags: ['TensorFlow'],
-      date: '2026.03.27',
-    },
-    {
-      id: 'tech-003',
-      category: 'Transformer',
-      title: 'Self-Attention 메커니즘 수식 완전 분해',
-      excerpt: 'Query, Key, Value의 역할과 Scaled Dot-Product Attention을 수식부터 코드까지 단계별로 분석합니다.',
-      tags: ['Deep Learning'],
-      date: '2025.07.01',
-    },
-    {
-      id: 'tech-002',
-      category: 'Deep Learning',
-      title: 'CNN(합성곱 신경망) 구조 분석 — 필터부터 풀링까지',
-      excerpt: '합성곱 연산, 패딩, 스트라이드, 풀링의 작동 방식을 직접 계산 예시와 함께 정리합니다.',
-      tags: ['Deep Learning'],
-      date: '2025.06.20',
-    },
-    {
-      id: 'tech-001',
-      category: 'Machine Learning',
-      title: '로지스틱 회귀(Logistic Regression) 완전 분석',
-      excerpt: '시그모이드 함수부터 최대 우도 추정, 경사하강법까지 로지스틱 회귀의 수학적 기반을 정리했습니다.',
-      tags: ['Deep Learning'],
-      date: '2025.06.10',
-    },
-  ];
-
   renderLayout({ page: 'tech', breadcrumb: '기술 분석', root: '' });
-  initBoard(posts);
+  initBoard(window.POSTS_DATA.tech, 'tech');
 </script>
 </body>
 </html>
