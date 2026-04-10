@@ -280,6 +280,11 @@
       <figcaption>기울기 소실 테스트</figcaption>
     </figure>
 
+    <p>
+      Epoch 600까지의 진행 상황을 보면 판별자 $D$가 생성자 $G$의 생성물을 잘 검수하고 있지만,<br/>
+      $G Gradient$ 즉 G의 기울기가 학습을 시키기엔 현저히 떨어져 있는 것을 볼 수 있다.
+    </p>
+
     <h4>2-1-2. 비포화 손실</h4>
 
     <div class="formula">$\max_G \mathbb{E}_{z \sim p_z(z)}[\log D(G(z))]$</div>
