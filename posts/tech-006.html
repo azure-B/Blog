@@ -413,17 +413,31 @@
         <span class="deriv-label">$C(G)$</span>
         <div class="deriv-eq">$C(G) = \int_x p_{data}(x) \log\left(\frac{p_{data}(x)}{p_{data}(x) + p_g(x)}\right) dx + \int_x p_g(x) \log\left(\frac{p_g(x)}{p_{data}(x) + p_g(x)}\right) dx$</div>
       </div>
-      <div class="deriv-arrow"> 최소 최대 가치 함수에 대입 </div><br/>
+      <div class="deriv-arrow"> 최소  최대 가치 함수에 대입 </div><br/>
 
       <div class="deriv-step">
-        <span class="deriv-label">$C(G)$</span>
+        <span class="deriv-label">$C(G)$ - 첫번째 항</span>
         <div class="deriv-eq">$\int_x p_{data}(x) \log\left(\frac{p_{data}(x)}{(p_{data}(x) + p_g(x))/2} \cdot \frac{1}{2}\right) dx$</div>
       </div>
-      <div class="deriv-arrow"> ↓ KL </div>
+      <div class="deriv-arrow"> ↓ KL Divegence 적용</div>
       <div class="deriv-step">
-        <span class="deriv-label">$C(G)$</span>
+        <span class="deriv-label">$C(G)$ - 첫번째 항</span>
         <div class="deriv-eq">$ dx = KL\left(p_{data} \parallel \frac{p_{data} + p_g}{2}\right) - \log 2 $</div>
       </div>
+      <div class="deriv-arrow">-</div>
+      <div class="deriv-step">
+        <span class="deriv-label">$C(G)$ - 두번째 항</span>
+        <div class="deriv-eq">$\int_x p_g(x) \log\left(\frac{p_g(x)}{(p_{data}(x) + p_g(x))/2} \cdot \frac{1}{2}\right)$</div>
+      </div>
+      <div class="deriv-arrow"> ↓ KL Divergence 적용</div>
+      <div class="deriv-step">
+        <span class="deriv-label">$C(G)$ - 두번째 항</span>
+        <div class="deriv-eq">$ dx = KL\left(p_g \parallel \frac{p_{data} + p_g}{2}\right) - \log 2$</div>
+      </div>
+
+      <br/>
+
+      
 
       <small>
         <b>KL Divergence</b>
