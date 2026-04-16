@@ -1128,3 +1128,284 @@ a:hover { color: var(--accent2); }
   color: var(--text-dim);
   text-transform: uppercase;
 }
+
+/* ═══════════════════════════════════════════════════
+   비교 도표 컴포넌트 — 가독성 전면 개선
+   (common.css 기존 도표 섹션을 이 내용으로 교체)
+═══════════════════════════════════════════════════ */
+
+/* ── 공통: 타이틀 줄 ── */
+.ct-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.ct-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text);          /* 다크: #f0f0f8 / 라이트: #18182e */
+}
+.ct-eng {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--accent3);
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────────────
+   ① compare-table
+───────────────────────────────────────────────── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+  margin: 0 0 2rem;
+}
+.compare-table thead tr {
+  background: var(--bg3);
+}
+.compare-table thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);          /* ★ text-dim → text (훨씬 밝게) */
+  padding: 0.9rem 1rem;
+  font-weight: 600;            /* 400 → 600 */
+  border-bottom: 2px solid var(--border);
+  text-align: left;
+}
+.compare-table thead th:first-child {
+  width: 30%;
+}
+.compare-table thead th.col-highlight {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.compare-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.compare-table tbody tr:hover {
+  background: var(--bg2);
+}
+.compare-table tbody td {
+  padding: 0.85rem 1rem;
+  color: var(--text);          /* ★ text-muted → text */
+  vertical-align: middle;
+  font-size: 1rem;
+}
+.compare-table tbody td:first-child {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-muted);    /* ★ text-dim → text-muted */
+  letter-spacing: 0.03em;
+  font-weight: 600;
+}
+.compare-table tbody td.col-highlight {
+  color: var(--accent);
+  font-weight: 700;
+}
+.compare-table tfoot td {
+  padding: 0.7rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);    /* ★ text-dim → text-muted */
+  border-top: 2px solid var(--border);
+  letter-spacing: 0.03em;
+}
+
+/* 배지 */
+.ct-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;          /* 0.52 → 0.72 */
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+  font-weight: 600;
+
+  -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+.ct-badge.good    { border: 1px solid var(--accent3); color: var(--accent3); background: rgba(91,255,184,0.10); }
+.ct-badge.warn    { border: 1px solid var(--accent2); color: var(--accent2); background: rgba(255,107,157,0.10); }
+.ct-badge.neutral { border: 1px solid var(--border);  color: var(--text-muted); background: var(--bg3); }
+
+/* 라이트 모드 보정 */
+html.light .compare-table thead tr   { background: var(--bg3); }
+html.light .compare-table thead th   { color: var(--text); }
+html.light .compare-table tbody td   { color: var(--text); }
+html.light .compare-table tbody tr:hover { background: var(--bg2); }
+
+/* 모바일 */
+@media (max-width: 640px) {
+  .compare-table { font-size: 0.92rem; }
+  .compare-table thead th { font-size: 0.72rem; padding: 0.7rem 0.65rem; }
+  .compare-table tbody td { font-size: 0.92rem; padding: 0.7rem 0.65rem; }
+  .compare-table tbody td:first-child { font-size: 0.78rem; }
+}
+
+/* ─────────────────────────────────────────────────
+   ② feature-matrix
+───────────────────────────────────────────────── */
+.feature-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 2rem;
+}
+.feature-matrix thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);          /* ★ text-dim → text */
+  padding: 0.8rem 0.9rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.feature-matrix thead th:first-child {
+  text-align: left;
+  width: 35%;
+}
+.feature-matrix thead th.fm-highlight {
+  color: var(--accent);
+}
+.feature-matrix .fm-col-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.fm-winner-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;          /* 0.48 → 0.65 */
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.feature-matrix tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.feature-matrix tbody tr:hover {
+  background: var(--bg2);
+}
+.feature-matrix tbody td {
+  padding: 0.7rem 0.9rem;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text);          /* ★ text-muted → text */
+}
+.feature-matrix tbody td:first-child {
+  text-align: left;
+  font-size: 0.95rem;          /* 0.78 → 0.95 */
+  color: var(--text);
+}
+.feature-matrix .fm-section-row td {
+  background: var(--bg3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;          /* 0.55 → 0.72 */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);    /* ★ text-dim → text-muted */
+  padding: 0.5rem 0.9rem;
+  text-align: left;
+  font-weight: 600;
+}
+.fm-check   { color: var(--accent3); font-weight: 700; font-size: 1.05rem; }
+.fm-cross   { color: var(--text-muted); font-size: 1.05rem; opacity: 0.7; } /* ★ opacity 0.5 → 0.7 */
+.fm-partial { color: var(--accent);  font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
+
+/* 라이트 모드 보정 */
+html.light .feature-matrix thead th  { color: var(--text); }
+html.light .feature-matrix tbody td  { color: var(--text); }
+html.light .feature-matrix .fm-section-row td { color: var(--text-muted); }
+html.light .fm-cross { color: var(--text-dim); opacity: 0.8; }
+
+/* 모바일 */
+@media (max-width: 640px) {
+  .feature-matrix thead th  { font-size: 0.72rem; padding: 0.6rem 0.55rem; }
+  .feature-matrix tbody td  { font-size: 0.88rem; padding: 0.6rem 0.55rem; }
+  .feature-matrix tbody td:first-child { font-size: 0.85rem; }
+}
+
+/* ─────────────────────────────────────────────────
+   ③ stat-bar-table
+───────────────────────────────────────────────── */
+.stat-bar-table { width: 100%; margin: 0 0 2rem; }
+.stat-bar-table .sb-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 64px; /* 넓혀서 레이블 안 잘림 */
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.stat-bar-table .sb-row:last-child { border-bottom: none; }
+.stat-bar-table .sb-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;          /* 0.65 → 0.88 */
+  color: var(--text);          /* ★ text-muted → text */
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+.stat-bar-table .sb-track {
+  height: 8px;                 /* 6 → 8 */
+  background: var(--bg3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.stat-bar-table .sb-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stat-bar-table .sb-fill.accent  { background: var(--accent); }
+.stat-bar-table .sb-fill.accent2 { background: var(--accent2); }
+.stat-bar-table .sb-fill.accent3 { background: var(--accent3); }
+.stat-bar-table .sb-fill.dim     { background: var(--border); }
+.stat-bar-table .sb-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;          /* 0.65 → 0.85 */
+  color: var(--text-muted);    /* ★ text-dim → text-muted */
+  text-align: right;
+  font-weight: 600;
+}
+.stat-bar-table .sb-group-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;          /* 0.55 → 0.72 */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 1.2rem 0 0.4rem;
+  font-weight: 600;
+}
+.stat-bar-table .sb-group-label:first-child { margin-top: 0; }
+
+/* 라이트 모드 보정 */
+html.light .stat-bar-table .sb-label { color: var(--text); }
+html.light .stat-bar-table .sb-val   { color: var(--text-muted); }
+
+/* 모바일 */
+@media (max-width: 640px) {
+  .stat-bar-table .sb-row {
+    grid-template-columns: 110px 1fr 52px;
+    gap: 0.65rem;
+  }
+  .stat-bar-table .sb-label { font-size: 0.8rem; }
+  .stat-bar-table .sb-val   { font-size: 0.78rem; }
+}

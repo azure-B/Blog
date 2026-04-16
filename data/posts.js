@@ -12,6 +12,14 @@ window.POSTS_DATA = {
   /* ── 기술 분석 ── */
   tech: [
     {
+      id: 'tech-012',
+      category: 'Data Structure',
+      title: 'Data Structure - Stack, Queue, Tree',
+      excerpt: '스택과 큐, 트리',
+      tags: ['Data Structure'],
+      date: '2026.04.16',
+    },
+    {
       id: 'tech-011',
       category: 'Deep Learning',
       title: 'Mini-Batch Gradient Descent',

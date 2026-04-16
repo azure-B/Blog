@@ -48,6 +48,16 @@
       <strong>스택:</strong> TensorFlow · GAN · EfficientNetB4 · MediaPipe
     </div>
 
+    <div class="highlight-box">
+      <strong>Top-Down 학습 현황</strong><br/>
+      <strong>GAN : </strong> <a href="../tech/tech-006.html">GAN에 대하여 (진행중)</a><br/>
+      <strong>최대우도추정/교차엔트로피 : </strong> <a href="../tech/tech-007.html">교차 엔트로피와 최대우도추정</a><br/>
+      <strong>KLD : </strong> <a href="../tech/tech-008.html">KL Divergence</a><br/>
+      <strong>Keras.Layer : </strong> <a href="../tech/tech-009.html">tf.keras.layers.Layer</a><br/>
+      <strong>JSD : </strong> <a href="../tech/tech-010.html">Jensen-Shannon Divergence</a><br/>
+      <strong>Mini-Batch Gradient Descent : </strong> <a href="../tech/tech-011.html">Mini-Batch Gradient Descent (진행중)</a>
+    </div>
+    
     <h2>1. 문제 정의</h2>
     <p>
       현재 딥페이크의 기술은 끊임없이 진화하고 있다. <br/>
@@ -55,16 +65,106 @@
       이러한 것들을 빠르게 스캔하고 진위를 가려내어 디지털 신뢰성을 회복할 수 있도록 하려 한다.
     </p>
 
-    <h2>2. 딥페이크는 어떻게 만들어 지는가</h2>
+    <h2>2. Experiments </h2>
+
+    <h3>2-1. DataSet</h3>
 
     <p>
-        <a href="./tech-006.html">GAN에 대하여 알아보기</a>
+      훈련 데이터: FaceForensics++ (c23, c40), DFF, HiDF <br/>
+      평가 데이터: CelebDF-v2, RedFace
     </p>
+
+    <div class="ct-title-row">
+      <span class="ct-title">훈련 데이터셋</span>
+      <span class="ct-eng">Train Dataset</span>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>항목</th><th>FF++</th><th>DFF</th><th>HiDF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>위조 방법</td>
+          <td><span class="ct-badge">
+            Face2Face<br/>
+            FaceSwap<br/>
+            DeepFakes<br/>
+            NeuralTextures
+          </span></td>
+          <td><span class="ct-badge">
+            AutoEncoder<br/>
+            GAN
+          </span></td>
+          <td><span class="ct-badge">
+            GAN<br/>
+            Diffusion
+          </span></td>
+        </tr>
+        <tr>
+          <td>특징 및 규모</td>
+          <td><span class="ct-badge">
+            원본에 대해 4종류 변형
+          </span></td>
+          <td><span class="ct-badge">
+            실존 인물 활용 <br/>
+            고해상도 이미지
+          </span></td>
+          <td><span class="ct-badge">
+            실제 환경<br/>
+            노이즈 포함
+          </span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="ct-title-row">
+      <span class="ct-title">평가 데이터셋</span>
+      <span class="ct-eng">Validation Dataset</span>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>항목</th><th>CelebDF-v2</th><th>RedFace</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>위조 방법</td>
+          <td><span class="ct-badge">
+            AutoEncoder<br/>
+            색상불일치, 깜빡임 최소화<br/>
+          </span></td>
+          <td><span class="ct-badge">
+            Face Swap<br/>
+            Face Reenactment
+          </span></td>
+        </tr>
+        <tr>
+          <td>특징 및 규모</td>
+          <td><span class="ct-badge">
+            FF++대비 월등한 품질
+          </span></td>
+          <td><span class="ct-badge">
+            미공개된 위조기술 일반화
+          </span></td>
+        </tr>
+      </tbody>
+    </table>
 
     <p>
-      DeepFake의 핵심은 적대적 신경 생성망 즉 GAN 이다. <br/>
+      본 파이프라인의 학습 및 검증/테스트 데이터 세트는 영상 단위 분할 원칙을 따릅니다.<br/>
+      단순 프레임 단위 추출시 동일한 원본 영상에서 추출된 데이터가 검증/테스트에 동시에 누수됩니다.<br/>
+      이는 모델의 과적합을 야기하므로 Source Video ID기준으로 완전히 분리하였습니다.
     </p>
 
+    <h3>2-2. Implementation Details</h3>
+
+    <p>
+      Computing Environment & FrameWork<br/>
+      RTX 4060 // TensorFlow 2.10.0<br/><br/>
+    </p>
     
   </div>
 </div>
@@ -74,7 +174,7 @@
 <script>
   renderLayout({
     page: 'project',
-    breadcrumb: '프로젝트 리뷰 / 멍멍케어',
+    breadcrumb: '프로젝트 리뷰 / DeepFakeScanner',
     root: "../../",
   });
 </script>

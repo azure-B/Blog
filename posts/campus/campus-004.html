@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPCG 랩 세미나 | 2026.03.24</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../common.css" />
+  <script src="../../data/posts.js"></script>
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../../campus.html">← 교내 활동으로 돌아가기</a>
+
+  <div class="detail-category">IPCG Lab</div>
+  <h1 class="detail-title">IPCG 랩 정기 세미나 — Transformer</h1>
+  <div class="detail-meta">
+    <span class="detail-author">이승빈</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2026.03.24</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#IPCG Lab</span>
+      <span class="detail-tag">#Transformer</span>
+    </div>
+  </div>
+
+  <div class="detail-content">
+
+    <p>IPCG 랩 격주 세미나에서 <strong>케라스 창시자에게 배우는 딥러닝</strong>의 Transformer 파트의 일부를 발표함.</p>
+
+
+    <h2>1. 초기의 자기 주목 연구 : Non-local 신경망</h2>
+
+    <p>
+     Non-local 신경망은 자기 주목을 컴퓨터 비전에 최초 도입한 논문임.
+    </p>
+
+    <p>
+      $$y_i = \frac{1}{\mathcal{C}(x)} \sum_{\forall j} f(x_i, x_j) g(x_j)$$
+    </p>
+
+    <p>
+      $x_i$가 $x_j$에 얼마나 주목해야 하는지 나타 낸 값인 $a(x_i,x_j)$가 확인 되어짐.
+    </p>
+
+    <h2>2. Self Attention</h2>
+
+    <figure>
+      <img src="../image/campus-001.03.png" alt="Self Attention" />
+      <figcaption>Self Attention</figcaption>
+    </figure>
+
+    <p> Transformer 가 등장 이전  기계 독해 혹은 자연어 추론에서 자기 주목개념이 등장 하기 시작함 <br/>
+        입력과 출력을 비교하는 것이 아닌 문장 내 단어들이 얼마나 연관되어 있는지 파악 함</p>
+    <p> 이때까지는 자기 주목이 메인이 아니라 <br/> 기존의 RNN 혹은 CNN 아키텍쳐 위에 얹어서 사용하는 보조장치 였음 <br/>
+        그러나 2017년에 Transformer가 나오며<br/>
+         병목 현상이 생기던 RNN과 CNN이 빠지고 '자기 주목'이 주가 되었음
+    </p>
+
+    <h2>3. Transformer</h2>
+
+    <figure>
+      <img src="../../image/campus-001.01.png" alt="Transformer" />
+      <figcaption>Transformer</figcaption>
+    </figure>
+
+    <h3>3-1. 자기 주목의 존재 이유</h3>
+
+    <pre><code>
+      "I went to the bank to deposit money." (은행)
+      "I sat on the bank of the river." (강둑)
+    </code></pre>
+
+    <p>
+      Self-Attention의 목적은 시퀀스에 있는 관련된 토큰의 표현을 사용, <br/>
+      한 토큰의 표현을 조절하여 문맥에 고려한 토큰 표현을 만듬.
+    </p>
+
+    <h3>3-2. 세 가지 핵심</h3>
+
+    <pre><code>
+      Query : 현재 위치의 단어가 다른 단어들에게 던지는 질문 
+      Key   : 각 단어가 제공할 수 있는 정보
+      Value : 단어가 실제로 보유한 정보
+    </code></pre>
+
+    <p>
+      이 과정을 수학적으로 풀어내기 위해 문장의 모든 단어를 세 가지로 나눔 
+    </p>
+    <p>
+      "The cat sat on the mat."를 예제로
+    </p>
+    <p>
+      Q : "cat"이 Q로서 시작하면 문장 속에서 자신과 관련된 정보를 찾고자 함 <br/>
+      K : "The", "sat".. 등이 "cat"의 Q와 나머지 단어들의 Key들을 비교하여 관계 평가 <br/>
+      V : Query가 연관된 Key를 찾아내면 그 단어의 정보가 강조되거나 약화되어짐
+    </p>
+    <p>
+      Q와 K를 비교 할 때 내적을 사용함<br/>
+      수학적으로 두 벡터를 내적한다는 것은 두 값이 얼마나 유사한 가를 측정하기 때문임
+    </p>
+
+    <h3>3-3. 수식</h3>
+    <p>
+      $$ C = \text{softmax}\left(\frac{QK^T}{\sqrt{d_{key}}}\right)V $$
+    </p>
+    <p>
+      이때 $ Q = XW^Q, K = XW^K, V = XW^V $ 이며, <br/>
+      Q와 K는 $T*d_{key}$ 이고 V는 $T*d_{value}$ <br/>
+      $d$는 Dimension(차원)의 약자로 벡터가 몇개의 숫자로 이루어 져있는가를 의미
+    </p>
+    <p>
+      1. 입력 데이터 X<br/>
+      우선 X의 차원은 $T*d_{model}$인 것을 확인 할 수 있음.<br/>
+      T는 문장의 길이 이며 $d_{model}$은 각 단어 혹은 픽셀/프레임을 표현하는 벡터의 크기(임베딩 차원)임
+    </p>
+    
+    <p>
+      2. Q, K<br/>
+      Q와 K는 $T*d_{key}$인 것을 확인 할 수 있으며 이는 내적을 위해 동일한 길이를 갖기 위함<br/>
+      그러기에 $d_{value}$ 없이 $d_{key}$라는 같은 값을 지니게 되었음<br/>
+      여기서 $d_{key}$는 벡터의 차원(크기)를 의미함.<br/>
+      즉, 특징의 개수를 의미 ( 여기선 $d_{value}$와 다르게 검색 조건의 디테일 이라고 생각하면 편함 )
+    </p>
+
+    <p>
+      3. V<br/>
+      V는 $T*d_{value}$인 것을 확인.
+      Q, K와 달리 서로 비교하지 않고 가중치가 정해지면 곱해질 실제 정보 <br/>
+      $d_{value}$는 전달할 핵심 정보의 특징
+    </p>
+
+    <p>
+      4. 수식계산<br/><br/>
+
+      $\mathbf{Q}\mathbf{K}^T$ : 어텐션 스코어 계산 <br/>
+      $\mathbf{K}^T$는  $\mathbf{K}$와 $Q$를 연산하기 위한 $K$의 전치행렬<br/>
+      $(T \times d_{key}) \times (d_{key} \times T) = \mathbf{T \times T}$의 행렬이 나옴 <br/>
+    </p>
+    
+    <figure>
+      <img src="../../image/campus-001.03.png" alt="Attention" />
+      <figcaption>Attention</figcaption>
+    </figure>
+
+    <p>
+      $\sqrt{d_{key}}$ : 스케일링<br/>
+      Attention Score의 모든 원소를 나누어 계산된 점수들의 크기를 억누름<br/><br/>
+
+      $softmax$ : 소프트 맥스 <br/>
+      각 행에 대해 $softmax$를 적용하여 총 합이 1이 되는 확률로 변경시킴<br/>
+      이로인해 가중치 지도가 완성이 되어짐<br/><br/>
+
+      $\times \mathbf{V}$ : 진짜 정보와 섞기<br/>
+      가중치 지도의 차원 :  $T \times T$<br/>
+      $\mathbf{V}$의 차원 : $T \times d_{value}$<br/>
+      곱셈 결과로 $(T \times T) \times (T \times d_{value}) = \mathbf{T \times d_{value}}$가 나오며 이는 문맥이 반영된 단어 벡터임
+    </p>
+  </div>
+
+</div>
+</div>
+
+<script src="../../components.js"></script>
+<script>
+  renderLayout({
+    page: 'campus',
+    breadcrumb: '교내 활동 / IPCG 랩 세미나',
+    root: "../../",
+  });
+</script>
+</body>
+</html>

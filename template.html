@@ -268,6 +268,179 @@ def sigmoid(z):
 </pre>
 
     <!-- ─────────────────────────────────────── -->
+    <p class="template-section-label">// 비교 도표 — compare-table / feature-matrix / stat-bar-table</p>
+    <pre class="template-code">
+<span class="code-comment">/* common.css에 비교 도표 스타일이 포함되어 있어야 합니다. */</span>
+
+<span class="code-comment">/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ① compare-table — 항목별 수치·텍스트 비교
+   강조 열: col-highlight  /  배지: ct-badge good|warn|neutral
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */</span>
+
+&lt;!-- 선택: 제목 줄 --&gt;
+&lt;div class="ct-title-row"&gt;
+  &lt;span class="ct-title"&gt;프레임워크 비교&lt;/span&gt;
+  &lt;span class="ct-eng"&gt;Framework Benchmark&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;table class="compare-table"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;항목&lt;/th&gt;
+      &lt;th&gt;React 18&lt;/th&gt;
+      &lt;th class="col-highlight"&gt;Next.js 14 ★&lt;/th&gt;  <span class="code-comment">&lt;!-- 강조 열 --&gt;</span>
+      &lt;th&gt;SvelteKit&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;초기 번들&lt;/td&gt;
+      &lt;td&gt;42 KB&lt;/td&gt;
+      &lt;td class="col-highlight"&gt;38 KB&lt;/td&gt;
+      &lt;td&gt;12 KB&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;SSR 지원&lt;/td&gt;
+      &lt;td&gt;&lt;span class="ct-badge neutral"&gt;별도&lt;/span&gt;&lt;/td&gt;
+      &lt;td class="col-highlight"&gt;&lt;span class="ct-badge good"&gt;내장&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;span class="ct-badge good"&gt;내장&lt;/span&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;학습 곡선&lt;/td&gt;
+      &lt;td&gt;&lt;span class="ct-badge warn"&gt;중간&lt;/span&gt;&lt;/td&gt;
+      &lt;td class="col-highlight"&gt;&lt;span class="ct-badge warn"&gt;중간&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;span class="ct-badge good"&gt;낮음&lt;/span&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;&lt;td colspan="4"&gt;★ 추천 — 생태계·성능·DX 균형&lt;/td&gt;&lt;/tr&gt;  <span class="code-comment">&lt;!-- 선택 --&gt;</span>
+  &lt;/tfoot&gt;
+&lt;/table&gt;
+
+<span class="code-comment">/* 배지 종류
+   good    → 초록 테두리  (긍정적 평가)
+   warn    → 분홍 테두리  (주의 / 제한)
+   neutral → 회색 테두리  (중립)        */</span>
+
+
+<span class="code-comment">/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ② feature-matrix — 기능 지원 여부 (✓ / ✕)
+   강조 열: fm-highlight  /  섹션 구분: fm-section-row
+   추천 뱃지: fm-winner-badge  /  부분 지원: fm-partial
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */</span>
+
+&lt;table class="feature-matrix"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;Free&lt;/th&gt;
+      &lt;th&gt;Pro&lt;/th&gt;
+      &lt;th class="fm-highlight"&gt;
+        &lt;div class="fm-col-header"&gt;
+          &lt;span&gt;Team&lt;/span&gt;
+          &lt;span class="fm-winner-badge"&gt;추천&lt;/span&gt;  <span class="code-comment">&lt;!-- 선택 --&gt;</span>
+        &lt;/div&gt;
+      &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr class="fm-section-row"&gt;&lt;td colspan="4"&gt;핵심 기능&lt;/td&gt;&lt;/tr&gt;  <span class="code-comment">&lt;!-- 섹션 구분 행 --&gt;</span>
+    &lt;tr&gt;
+      &lt;td&gt;API 접근&lt;/td&gt;
+      &lt;td&gt;&lt;span class="fm-cross"&gt;✕&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;span class="fm-check"&gt;✓&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;span class="fm-check"&gt;✓&lt;/span&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;월 요청 한도&lt;/td&gt;
+      &lt;td&gt;1,000&lt;/td&gt;
+      &lt;td&gt;50,000&lt;/td&gt;
+      &lt;td&gt;무제한&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;우선 처리&lt;/td&gt;
+      &lt;td&gt;&lt;span class="fm-cross"&gt;✕&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;span class="fm-partial"&gt;베타&lt;/span&gt;&lt;/td&gt;  <span class="code-comment">&lt;!-- 부분 지원 --&gt;</span>
+      &lt;td&gt;&lt;span class="fm-check"&gt;✓&lt;/span&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr class="fm-section-row"&gt;&lt;td colspan="4"&gt;협업&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;팀 워크스페이스&lt;/td&gt;
+      &lt;td&gt;&lt;span class="fm-cross"&gt;✕&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;span class="fm-cross"&gt;✕&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;span class="fm-check"&gt;✓&lt;/span&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+<span class="code-comment">/* 지원 여부 클래스
+   fm-check   → 초록 ✓  (지원)
+   fm-cross   → 회색 ✕  (미지원)
+   fm-partial → 파란 텍스트 (부분/베타 지원) */</span>
+
+
+<span class="code-comment">/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ③ stat-bar-table — 수평 막대 비교
+   막대 색상: sb-fill + accent | accent2 | accent3 | dim
+   그룹 구분: sb-group-label
+   막대 너비: style="width: XX%"  (0~100)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */</span>
+
+&lt;!-- 선택: 제목 줄 --&gt;
+&lt;div class="ct-title-row"&gt;
+  &lt;span class="ct-title"&gt;모델 성능 비교&lt;/span&gt;
+  &lt;span class="ct-eng"&gt;Benchmark Scores&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;div class="stat-bar-table"&gt;
+
+  &lt;!-- 그룹 구분 레이블 (선택) --&gt;
+  &lt;span class="sb-group-label"&gt;추론 능력&lt;/span&gt;
+
+  &lt;div class="sb-row"&gt;
+    &lt;span class="sb-label"&gt;GPT-4o&lt;/span&gt;
+    &lt;div class="sb-track"&gt;
+      &lt;div class="sb-fill accent" style="width: 82%"&gt;&lt;/div&gt;   <span class="code-comment">&lt;!-- accent: 파란색 --&gt;</span>
+    &lt;/div&gt;
+    &lt;span class="sb-val"&gt;82&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class="sb-row"&gt;
+    &lt;span class="sb-label"&gt;Claude 3.5&lt;/span&gt;
+    &lt;div class="sb-track"&gt;
+      &lt;div class="sb-fill accent3" style="width: 90%"&gt;&lt;/div&gt;  <span class="code-comment">&lt;!-- accent3: 민트색 --&gt;</span>
+    &lt;/div&gt;
+    &lt;span class="sb-val"&gt;90&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class="sb-row"&gt;
+    &lt;span class="sb-label"&gt;Gemini 1.5&lt;/span&gt;
+    &lt;div class="sb-track"&gt;
+      &lt;div class="sb-fill dim" style="width: 76%"&gt;&lt;/div&gt;      <span class="code-comment">&lt;!-- dim: 회색 --&gt;</span>
+    &lt;/div&gt;
+    &lt;span class="sb-val"&gt;76&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;span class="sb-group-label"&gt;코딩 능력&lt;/span&gt;
+
+  &lt;div class="sb-row"&gt;
+    &lt;span class="sb-label"&gt;GPT-4o&lt;/span&gt;
+    &lt;div class="sb-track"&gt;
+      &lt;div class="sb-fill accent2" style="width: 79%"&gt;&lt;/div&gt;  <span class="code-comment">&lt;!-- accent2: 분홍색 --&gt;</span>
+    &lt;/div&gt;
+    &lt;span class="sb-val"&gt;79&lt;/span&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+
+<span class="code-comment">/* 막대 색상 클래스
+   accent  → 파란색 (기본 포인트)
+   accent2 → 분홍색
+   accent3 → 민트/초록색
+   dim     → 회색 (보조 항목)    */</span>
+</pre>
+
+    <!-- ─────────────────────────────────────── -->
     <p class="template-section-label">// 프로젝트 리뷰 전용 추가 섹션</p>
     <pre class="template-code">
 <span class="code-comment">/* detail-content 안에 추가로 쓰면 좋은 섹션 */</span>
