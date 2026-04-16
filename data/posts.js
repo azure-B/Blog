@@ -12,6 +12,14 @@ window.POSTS_DATA = {
   /* ── 기술 분석 ── */
   tech: [
     {
+      id: 'tech-013',
+      category: 'Data Structure',
+      title: 'Algorithm',
+      excerpt: 'Algorithm이란 무엇인가?',
+      tags: ['Algorithm'],
+      date: '2026.04.16',
+    },
+    {
       id: 'tech-012',
       category: 'Data Structure',
       title: 'Data Structure - Stack, Queue, Tree',
