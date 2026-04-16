@@ -205,25 +205,135 @@
 
     <h2>2. Queue - 큐</h2>
 
-    <figure>
-      <img src="../../image/tech-012.06.png" alt="Queue" />
-      <figcaption>Queue</figcaption>
-    </figure>
-
     <p>
       큐는 데이터의 순서를 엄격하게 보존하는 FIFO구조의 자료 구조이다.<br/>
       가장 먼저 들어온 데이터가 먼저 나간다는 원리지만,<br/>
       이를 성능 손실 없이 구현하고 분산, 탐색에 적용하는 아주 정교한 기법들을 가지고있다.
     </p>
 
-    <h3>2-#. 구현 예시</h3>
+    <h3>2-1. 메모리 관리 매커니즘</h3>
 
-    <a class="github-link" href="https://github.com/azure-B/BlogStudyPyFiles/blob/main/DataStructure/Stack.py" target="_blank">
+    <p>
+      큐는 데이터를 뺄 때 마다 모든 데이터를 한칸 앞으로 당겨와야 하는 연산 비용 문제 $O(n)$가 있다.<br/>
+      이 문제를 어떻게 극복했는지 그 원리를 이해하는 것이 중요하다.
+    </p>
+
+    <h4>2-1-1. 원형 큐 ( Circular Queue )</h4>
+
+    <figure>
+      <img src="../../image/tech-012.07.png" alt="Queue" />
+      <figcaption>Queue</figcaption>
+    </figure>
+
+    <p>
+      메모리 공간을 일직선이 아닌, 끝과 시작이 이어진 원으로 취급한다.<br/>
+      데이터를 꺼내서 앞부분에 빈 공간이 생기면,<br/>
+      뒤에서 자료를 밀어넣는 Rear 포인터가 배열의 끝에 도달 했을 때 멈추지 않고 순환한다.<br/>
+      데이터를 물리적으로 이동시키는 대신, 포인터의 시선만을 이동시켜 완벽한 효율 $O(1)$을 달성했다.
+    </p>
+
+    <h4>2-1-2. 연결 리스트 큐 ( Linked List Queue ) </h4>
+
+    <figure>
+      <img src="../../image/tech-012.08.png" alt="Queue" />
+      <figcaption>Queue</figcaption>
+    </figure>
+
+    <p>
+      데이터를 연속된 공간에 넣는 것을 포기하고,<br/>
+      메모리 곳곳에 흩어진 데이터들이 서로 앞뒤의 주소만 서로 기억하게 한다.<br/>
+      맨 앞의 데이터를 꺼내면, 두번째 데이터를 포인터로 연결시켜 갱신만 하면 끝이다.<br/>
+      메모리 단편화는 존재하지만, 크기의 한계와 삽입/삭제의 지연을 완벽히 없앤 구조이다.
+    </p>
+
+    <h3>2-2. 큐의 알고리즘 응용</h3>
+
+    <p>
+      들어온 순서를 보존하는 큐는 상태공간 탐색등에 대체 불가능한 도구이다.
+    </p>
+
+    <h4>2-2-1. 너비 우선 탐색</h4>
+
+    <figure>
+      <img src="../../image/tech-012.09.png" alt="Queue" />
+      <figcaption>Queue</figcaption>
+    </figure>
+
+    <p>
+      스택이 DFS 방식에 유용하다면, 큐는 Root에서 시작점이 같은 노드를 확장하며 탐색한다.<br/><br/>
+
+      큐에 현재 노드를 넣고, 노드를 꺼내면서 연결된 미방문 노드들을 줄지어 세워 탐색하는 구조이다.
+    </p>
+    
+    <p>
+      가중치가 없는 그래프에서 최단 경로를 찾는 유일하고 완벽한 해법이다.<br/>
+    </p>
+
+    <h3>2-3. 시스템 아키텍쳐에서 큐</h3>
+
+    <h4>2-3-1. 메세지 큐</h4>
+
+    <figure>
+      <img src="../../image/tech-012.10.png" alt="Queue" />
+      <figcaption>Queue</figcaption>
+    </figure>
+
+    <p>
+      사용자의 요청 즉 Traffic이 쏟아질 때, 서버가 이를 모두 처리하려 들면 데이터베이스가 다운된다.<br/>
+      이 때 요청들을 Queue에 차곡차곡 담아 서버의 처리능력에 맞게 하나하나씩 꺼내어 처리한다.
+    </p>
+
+    <h4>2-3-2. AI Pipeline의 Data Prefetch</h4>
+
+    <p>
+      <strong>Data Prefetch</strong> <br/>
+      시스템이 필요할 것으로 예측되는 데이터를 미리 가져와 캐시에 저장하는 최적화 기법이다.
+    </p>
+
+    <p>
+      GAN이나 Diffusion과 같은 무거운 딥러닝 모델을 훈련 할 때,<br/>
+      GPU의 행렬 연산은 디스크에서 데이터를 읽어오는 IO속도보다 압도적으로 빠르다.<br/>
+      GPU가 연산을 마칠 때 마다 다음 데이터를 기다리게 하면, 치명적인 자원 낭비가 생기게 된다.<br/>
+      CPU는 다음 학습에 쓰일 미니 배치들을 미리 전처리하여 메모리 상의 큐에 끊임없이 적재해 둔다.<br/>
+      GPU는 연산이 끝나는 즉시 큐의 맨 앞에서 다음 데이터를 꺼내어 쉬지 않고 학습을 이어갈 수 있다.
+    </p>
+    
+    <p>
+      코드 구현은 아래와 같다.
+    </p>
+
+    <pre><code>
+      import tensorflow as tf
+
+      # 1. 최대 10개의 정수(int32)를 담을 수 있는 선입선출(FIFO) 큐 생성
+      fifo_queue = tf.queue.FIFOQueue(capacity=10, dtypes=tf.int32)
+
+      # 2. 생산자 (Producer): 큐의 뒤(Rear)에 데이터를 밀어 넣습니다. (Enqueue)
+      fifo_queue.enqueue(1)
+      fifo_queue.enqueue(2)
+      fifo_queue.enqueue_many([3, 4, 5]) # 여러 개를 한 번에 넣을 수도 있습니다.
+
+      print(f"현재 큐에 쌓인 데이터 개수: {fifo_queue.size().numpy()}개")
+
+      # 3. 소비자 (Consumer): 큐의 앞(Front)에서 데이터를 꺼냅니다. (Dequeue)
+      # 가장 먼저 넣었던 '1'이 가장 먼저 나옵니다.
+      print(f"첫 번째 Dequeue: {fifo_queue.dequeue().numpy()}")
+      print(f"두 번째 Dequeue: {fifo_queue.dequeue().numpy()}")
+    </code></pre>
+
+    <h3>2-4. 구현 예시</h3>
+
+    <a class="github-link" href="https://github.com/azure-B/BlogStudyPyFiles/blob/main/DataStructure/Queue_data_prefetch.py" target="_blank">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
       </svg>
-      GitHub — Stack
+      GitHub — Queue
     </a>  
+
+    <p>
+      Python list 이용하여 Queue 구현시 성능 문제가 발생하기에,<br/>
+      원형 큐 기법이나, 이중 연결 리스트 사용
+    </p>
 
     <pre><code>
       from collections import deque
