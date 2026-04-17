@@ -11,9 +11,17 @@ window.POSTS_DATA = {
 
   /* ── 기술 분석 ── */
   tech: [
+      {
+      id: 'tech-014',
+      category: 'Algorithm',
+      title: '시간 복잡도 / 점근적 표기법',
+      excerpt: '시간 복잡도 / 점근적 표기법에 대해 알아보았다.',
+      tags: ['Algorithm'],
+      date: '2026.04.16',
+    },
     {
       id: 'tech-013',
-      category: 'Data Structure',
+      category: 'Algorithm',
       title: 'Algorithm',
       excerpt: 'Algorithm이란 무엇인가?',
       tags: ['Algorithm'],

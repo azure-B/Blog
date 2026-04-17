@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>시간 복잡도 / 점근적 표기법</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../common.css" />
+  <script src="../../data/posts.js"></script>
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../../tech.html">← 기술 분석으로 돌아가기</a>
+
+  <div class="detail-category">Algorithm</div>
+  <h1 class="detail-title">시간 복잡도 / 점근적 표기법</h1>
+  <div class="detail-meta">
+    <span class="detail-author">이승빈</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2026.04.16</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#Algorithm</span>
+    </div>
+  </div>
+
+    <div class="detail-content">
+
+        <h2>1. 수행 시간 측정</h2>
+
+        <p>
+            가장 원초적이고 직관적인 방법은 말 그대로 시간을 재는 것 이다.<br/>
+            프로그램이 시작될 때의 시간을 기록하고, 끝났을 때의 시간을 기록해서 그 차이를 구하는 방식이다.
+        </p>
+
+        <pre><code>
+            import time
+
+            def sum_n(n):
+                result = 0
+                for i in range(1, n + 1):
+                    result += i
+                return result
+
+            # 측정 시작
+            start_time = time.time()
+
+            sum_n(10000000) # 천만 번 반복
+
+            # 측정 종료
+            end_time = time.time()
+
+            print("실행 시간:", end_time - start_time, "초")
+        </code></pre>
+
+        <p>
+            위 코드를 실행하면 실행 시간 : 0.452초와 같이 결과가 나온다.<br/>
+            하드웨어, 소프트웨어, 언어의 차이 때문에 이 알고리즘이 객관적으로 좋은가? 답은 할 수 없다.
+        </p>
+
+        <h2>2. 점근적 표기법</h2>
+
+        <p>
+            알고리즘의 성능 (연산 횟수)를 측정 할 때,<br/>
+            입력의 크기 $N$이 무한대로 커진다고 가장하고 최고차항의 추세만을 수학적으로 표현하는 것이다.<br/>
+        </p>
+
+        <h3>2-1. 빅-오메가 Big-$\Omega$</h3>
+
+        <p>
+            Big-$\Omega$ 알고리즘은 "아무리 빨리 끝나도 이 정도 시간은 걸린다."로,<br/>
+            가장 운이 좋은 하한선을 얘기한다.<br/><br/>
+
+            $f(N) \ge c \cdot g(N)$<br/>
+            수학적 의미는 다음과 같다.
+        </p>
+
+        <h3>2-2. 빅-오 Big-$O$</h3>
+
+        <p>
+            Big-$O$ 알고리즘은 "아무리 늦게 끝나도 이 시간 내로는 끝난다"로,<br/>
+            가장 운이 나쁜 상한선을 얘기한다.<br/><br/>
+
+            $f(N) \le c \cdot g(N)$<br/>
+            수학적 의미는 다음과 같다.
+        </p>
+
+        <h3>2-3. 빅-세타 Big-$\Theta$</h3>
+
+        <p>
+            Big-$\Theta$ 알고리즘은 "평균적으로 딱 이정도 걸린다."<br/>
+             $c_1 \cdot g(N) \le f(N) \le c_2 \cdot g(N)$<br/>
+             수학적 의미는 다음과 같다.
+        </p>
+
+        <h3>2-4. 예시</h3>
+
+        <p>
+            만약 100개의 데이터를 선형탐색 한다면,<br/>
+            운이 가장 좋은케이스는 1번만에, 가장 안좋은 케이스는 마지막에 나오게 된다.<br/>
+            이 경우의 시간 복잡도는 각각 $\Omega(1)$, $O(N)$이 된다.<br/>
+        </p>
+
+        <p>
+            평균적으로는 중간쯤에서 데이터를 찾게 되므로 약 $N/2$번을 탐색하게 될 것이다.<br/>
+            하지만 점근적 표기법에서는 $1/2$이나 $2$ 같은 <strong>상수(계수)를 무시</strong>하고 최고차항만 남기는 규칙이 있다.<br/>
+            따라서 평균적인 경우의 시간 복잡도는 $\Theta(N/2)$가 아니라 상수를 떼어낸 <strong>$\Theta(N)$</strong>으로 표기한다.
+        </p>
+
+        <h3>2-5. 정리</h3>
+
+        <p>
+            Big-$\Omega$는 현실에서 '최선의 경우'에 기대는 케이스로, 잘 사용하지 않는다.<br/>
+            Big-$O$는 최악의 경우로 알고리즘의 성과를 평과할 때 Big-$O$를 사용한다.<br/>
+            Big-$\Theta$는 학술적으로 이상적인 표기법이지만, 복잡한 알고리즘에선 계산이 까다로워 Big-$O$를 쓴다.
+        </p>
+
+        <h2>3. 시간 복잡도</h2>
+
+        <figure>
+            <img src="../../image/tech-014.01.jpg" alt="시간 복잡도" />
+            <figcaption>시간 복잡도</figcaption>
+        </figure>
+
+        <p>
+            데이터가 늘어 날 때 우리 코드는 어떻게 반응하는가?<br/>
+            시간 복잡도는 단순히 몇 초가 걸리는가 를 말하는 것이 아니다.<br/>
+            입력 데이터의 크기($n$)이 커짐에 따라 <br/>
+            연산횟수가 얼마나 가파르게 증가하는지를 나타낸 지도이다.
+        </p>
+
+        <h3>3-1. $O(1)$ 상수시간</h3>
+
+        <p>
+            가장 이상적인 경우로, 데이터가 1개든 100개든 처리 시간이 똑같다.<br/>
+            $arr[5]$ 와 같이, 배열에서 인덱스로 값을 가져오거나 변수에 값을 대입하는 것이 대표적인 예제이다.
+        </p>
+
+        <h3>3-2. $O(\log n)$ 로그시간</h3>
+
+        <p>
+            매우 효율적인 알고리즘으로 데이터가 2배로 늘어 날 때 연산은 1번만 더 늘어난다.<br/>
+            업다운 게임을 예제로 1~100 사이의 숫자를 맞출 때 매번 중간값을 부르면 후보군이 절반이 된다.<br/>
+            이 것이 이진 탐색의 핵심이다.
+        </p>
+
+        <h3>3-3. $O(n)$ 선형 시간</h3>
+
+        <p>
+            가장 흔히 볼 수 있는 형태로 데이터에 양에 비례해서 시간이 늘어난다.<br/>
+            배열을 for문으로 모든 요소를 print한다 생각하면 된다.
+        </p>
+
+        <h4>3-4. $O(n \log n)$ 선형 로그 시간</h4>
+
+        <p>
+            많은 효율적인 정렬 알고리즘이 이 복잡도를 가진다.<br/>
+            $O(n)$보다는 약간 느리지만, $O(n^2)$보다는 압도적으로 빠르다.<br/>
+            데이터를 반으로 쪼개서 정렬한 뒤 합치는 병합정렬이 대표적인 예이다.
+        </p>
+
+        <h4>3-5. $O(n^i)$ i차 시간</h4>
+
+        <p>
+            보통 중첩 반복문에서 나타나며, 데이터가 늘어날 수록 성능이 나빠진다.<br/>
+            2중배열의 모든 요소를 for문을 2번 호출하여 조회하는 과정이다.
+        </p>
+
+        <h4>3-6. 왜 이것을 알아야 할까?</h4>
+
+        <p>
+            우리가 다룰 데이터는 수백만, 수천만 건에 달할 수 있다.<br/>
+            만약 $O(n^i)$알고리즘을 쓴다면 속도가 느려지거나, 데이터가 늘어나면 시스템이 멈출 것이다.<br/>
+            항상 내 코드는 데이터가 100배 늘어나도 버틸 수 있는가? 생각하며 코딩해야 한다.
+        </p>
+
+    </div>
+
+</div>
+</div>
+
+<script src="../../components.js"></script>
+<script>
+  renderLayout({
+    page: 'tech',
+    breadcrumb: '기술 분석 / 시간 복잡도 / 점근적 표기법',
+    root: "../../",
+  });
+</script>
+</body>
+</html>
