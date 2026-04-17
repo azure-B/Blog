@@ -12,6 +12,14 @@ window.POSTS_DATA = {
   /* ── 기술 분석 ── */
   tech: [
       {
+      id: 'tech-015',
+      category: 'Algorithm',
+      title: '점화식 / 반복 대치, 마스터 정리',
+      excerpt: '점화식 / 반복 대치, 마스터 정리에 대해 알아보았다.',
+      tags: ['Algorithm'],
+      date: '2026.04.17',
+    },
+      {
       id: 'tech-014',
       category: 'Algorithm',
       title: '시간 복잡도 / 점근적 표기법',

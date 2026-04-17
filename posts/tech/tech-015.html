@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>점화식 / 반복 대치, 마스터 정리</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../common.css" />
+  <script src="../../data/posts.js"></script>
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../../tech.html">← 기술 분석으로 돌아가기</a>
+
+  <div class="detail-category">Algorithm</div>
+  <h1 class="detail-title">점화식 / 반복 대치, 마스터 정리</h1>
+  <div class="detail-meta">
+    <span class="detail-author">이승빈</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2026.04.16</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#Algorithm</span>
+    </div>
+  </div>
+
+    <div class="detail-content">
+
+        <h2>1. 점화식</h2>
+
+        <h3>1-1. 점화식 이란?</h3>
+
+        <p>
+            어떤 수열이나 함수의 현재 상태를, 그 이전의 상태들을 이용해 정의하는 관계식이다.<br/>
+            재귀 호출을 사용하는 알고리즘의 시간 복잡도를 계산하는 표준 언어이다.<br/><br/>
+
+            즉, 우리가 코드로 작성한 재귀 함수가 내부적으로 연산을 몇 번이나 수행하지는지<br/>
+            수학적인 방정식으로 번역해주는 역할을 한다.
+        </p>
+
+        <div class="deriv-step">
+            <span class="deriv-label">피보나치 수열</span>
+            <div class="deriv-eq">$F_n = F_{n-1} + F_{n-2}$</div>
+        </div>
+
+        <p>
+            가장 유명한 점화식의 형태로 앞의 두 숫자를 더해 현재 숫자를 만든다.
+        </p>
+
+        
+        <div class="deriv-step">
+            <span class="deriv-label">병합정렬의 시간복잡도</span>
+            <div class="deriv-eq">$T(N) = 2T(N/2) + O(N)$</div>
+        </div>
+
+        <p>
+            데이터 $N$개를 정렬하는 데 걸리는 시간을 $T(N)$이라고 하자.<br/>
+            병합정렬은 데이터를 반으로 ($N/2$) 쪼개고, 각각 정렬한 뒤 다시 합친다.<br/>
+            이를 점화식으로 세우면 다음과 같다.<br/><br/>
+
+            <a href="./tech-014.html">Divide and Conquer</a><br/>
+            앞서 배운 Divide and Conquer와도 일맥 상통한다.<br/>
+            $2T(N/2)$ : 문제를 절반 크기로 나누어 2번 푼다 (분할 & 정복)<br/>
+            $O(N)$ : 해결된 두 부분 배열을 하나로 합친다 (통합)
+        </p>
+
+        <h3>1-2. 점화식의 점근적 분석 방법</h3>
+
+        <p>
+            알고리즘의 뼈대인 점화식을 가지고 있지만 컴퓨터는 이 식만 보고 시간 복잡도를 구할 수 없다.<br/>
+            효율적인 알고리즘을 위해 식을 풀어서 Big-O 형태의 정답을 찾아내야 한다.<br/>
+            아래의 3가지 방법은 이 점화식을 Big-O 형태로 바꾸는 핵심이다.
+        </p>
+
+        <h4>1-2-1. 반복 대치 </h4>
+
+        <p>
+            이 방법은 점화식의 가장 본질적이고 직관적인 풀이법이다.<br/>
+            점화식 우변에 있는 자기 자신을 계속해서 더 작은 풀어서 패턴을 찾는다.<br/>
+            즉, 재귀 호출의 Base Case가 나올 때 까지 파고드는 것 이다.
+        </p>
+
+        <div class="deriv-step">
+            <span class="deriv-label">1. 초기상태</span>
+            <div class="deriv-eq">$T(N) = 2T(N/2) + N$</div>
+        </div>
+
+        <div class="deriv-arrow">↓ $N$ 대신 $N/2$를 대입</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">2. 1번 대치</span>
+            <div class="deriv-eq">$T(N) = 2(2T(N/4) + N/2) + N$</div>
+        </div>
+
+        <div class="deriv-arrow">↓ 정리</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">2. 1번 대치</span>
+            <div class="deriv-eq">$T(N) = 4T(N/4) + 2N$</div>
+        </div>
+
+        <div class="deriv-arrow">↓ 이 과정을 $k$번 반복</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">3. $k$번 대치</span>
+            <div class="deriv-eq">$T(N) = 2^k T(N/2^k) + k N$</div>
+        </div>
+
+        <div class="deriv-arrow">Base Case = $N/2^k = 1$</div>
+        <div class="deriv-arrow">Base Case = $N = 2^k$</div>
+        <div class="deriv-arrow">Base Case = $k = \log_2 N$</div>
+        <div class="deriv-arrow">↓ Base Case의 조건은 $k = \log_2 N$</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">3. $k$번 대치 ( 여기서 $T(1) = 1$이라 가정 )</span>
+            <div class="deriv-eq">$T(N) = N \cdot T(1) + N \log_2 N$</div>
+        </div>
+        
+        <div class="deriv-arrow">↓ 최고 차항만 남긴다면</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">4. 시간 복잡도에 의거 최고차항만 남김</span>
+            <div class="deriv-eq">$O(N \log N)$</div>
+        </div>
+
+        <p>
+            복잡해 보이지만, 컴퓨터가 재귀를 도는 과정을 그대로 수학으로 옮겨 적은 논리적인 방법이다.
+        </p>
+
+
+        <h4>1-2-2. 추정 후 증명</h4>
+
+        <p>
+            초기 추정이 틀리면 증명이 불가능 해진다는 치명적인 단점 존재.<br/>
+            추 후 리뷰 추가 예정
+        </p>
+
+        <h4>1-2-3. 마스터 정리 </h4>
+
+        <p>
+            점근적 분석을 할 때 가장 널리 쓰이며, 유용한 공식이다.<br/>
+            복잡한 수식의 전개 없이 점화식의 모양만 보고 공식에 대입해 정답을 도출해낸다.
+        </p>
+
+        <div class="deriv-step">
+            <span class="deriv-label">1. 점화식의 표준적 형태</span>
+            <div class="deriv-eq">$T(N) = aT(N/b) + f(N)$</div>
+        </div>
+
+        <p>
+            점화식이 다음과 같은 표준적인 형태를 가질 때 사용할 수 있으며, 기호는 아래와 같다.<br/><br/>
+
+            $a$ (분할 횟수): 하나의 문제를 몇 개의 작은 문제로 쪼개는가?<br/>
+            $b$ (크기 감소율): 문제를 쪼갤 때, 크기가 몇 분의 1로 줄어드는가?<br/>
+            $f(N)$ (결합 비용): 쪼개진 문제들을 다시 합치거나, 쪼개는 데 드는 추가적인 작업(연산) 시간.<br/><br/>
+
+            마스터 정리는 말단 노드를 처리하는 비용과 노드를 합치는 비용 중 어느쪽이 무거운지 비교한다.
+        </p>
+
+        <p><strong>1. $N^{\log_b a} > f(N)$ 일 때,</strong></p>
+
+        <div class="deriv-step">
+            <span class="deriv-label">1. 말단 노드가 무거울 때.</span>
+            <div class="deriv-eq">$T(N) = 4T(N/2) + N$</div>
+        </div>
+
+        <p>
+            문제를 반으로 쪼개는데 ($b=2$) 무려 4번이나 재귀호출을 한다. ($a=4$)<br/>
+            병합 비용은 $N$이다.<br/>
+            전체 시간 복잡도는 $O(N^{\log_b a})$가 된다.<br/><br/>
+
+            $\log_2 4 = 2$ 이고, $f(N) = N^1$이므로, $1$. ($2 > 1$)<br/>
+            병합보다 쪼개진 문제 푸는 게 훨씬 무거우므로 $O(N^2)$ 가 된다.
+        </p>
+
+        <br/>
+        <p><strong>2. $N^{\log_b a} = f(N)$ 일 때,</strong></p>
+
+        <div class="deriv-step">
+            <span class="deriv-label">2. 두 비용이 비슷할 때.</span>
+            <div class="deriv-eq">$T(N) = 2T(N/2) + N$</div>
+        </div>
+
+        <p>
+            가장 이상적이고 완벽한 밸런스로, 말단 노드와 병합 노드의 작업량이 동일하다.<br/>
+            전체 시간 복잡도는 $O(f(N) \log N)$이 된다.<br/><br/>
+
+            반으로 쪼개고($b=2$), 2번 호출하며($a=2$), 병합에 $N$이 든다($c=1$). <br/>
+            $\log_2 2 = 1$ 이고, $c$ = $1$ 이다. ($1 = 1$)<br/>
+            완벽한 밸런스이므로 $O(N \log N)$ 이 된다.
+        </p>
+
+        <br/>
+        <p><strong>3. $N^{\log_b a} < f(N)$ 일 때,</strong></p>
+        
+        <div class="deriv-step">
+            <span class="deriv-label">2. 두 비용이 비슷할 때.</span>
+            <div class="deriv-eq">$T(N) = 2T(N/2) + N^2$</div>
+        </div>
+
+
+        <p>
+            재귀로 문제를 쪼개서 얻는 이득보다, 다시 합치는데 드는 비용이 큰 경우이다.<br/>
+            전체 시간 복잡도가 $O(f(N))$가 된다.<br/><br/>
+
+            반으로 쪼개서 2번 호출 하지만,($a=b=2$) 병합시 $N^2$의 연산이 든다. ($c=2$)<br/>
+            $\log_2 2 = 1$ 이며, $c = 2$이니 $1 < 2$이므로 $O(N^2)$가 된다.
+        </p>
+
+    </div>
+
+</div>
+</div>
+
+<script src="../../components.js"></script>
+<script>
+  renderLayout({
+    page: 'tech',
+    breadcrumb: '기술 분석 / 반복 대치, 마스터 정리',
+    root: "../../",
+  });
+</script>
+</body>
+</html>
