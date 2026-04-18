@@ -11,7 +11,15 @@ window.POSTS_DATA = {
 
   /* ── 기술 분석 ── */
   tech: [
-      {
+    {
+      id: 'tech-016',
+      category: 'Algorithm',
+      title: '정렬 알고리즘',
+      excerpt: '선택 / 버블 / 삽입 정렬부터 퀵정렬까지.',
+      tags: ['Algorithm'],
+      date: '2026.04.18',
+    },  
+    {
       id: 'tech-015',
       category: 'Algorithm',
       title: '점화식 / 반복 대치, 마스터 정리',
