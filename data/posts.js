@@ -183,6 +183,30 @@ window.POSTS_DATA = {
 
   /* ── 교내 활동 ── */
   campus: [
+     {
+      id: 'campus-006',
+      category: 'DeepLearning Programming',
+      title: 'DeepLearning Programming - Open Book Test - 3',
+      excerpt: 'DeepLearning Programming 교과의 Open Book test를 위한 정리본',
+      tags: ['DeepLearning Programming'],
+      date: '2026.04.01',
+    },
+    {
+      id: 'campus-004',
+      category: 'DeepLearning Programming',
+      title: 'DeepLearning Programming - Open Book Test - 2',
+      excerpt: 'DeepLearning Programming 교과의 Open Book test를 위한 정리본',
+      tags: ['DeepLearning Programming'],
+      date: '2026.04.01',
+    },
+    {
+      id: 'campus-005',
+      category: 'DeepLearning Programming',
+      title: 'DeepLearning Programming - Open Book Test',
+      excerpt: 'DeepLearning Programming 교과의 Open Book test를 위한 정리본',
+      tags: ['DeepLearning Programming'],
+      date: '2026.04.01',
+    },
     {
       id: 'campus-003',
       category: 'IPCG Lab',

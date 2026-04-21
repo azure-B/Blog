@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep Neural Nets & Tensor Manipulation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── 공통 CSS 인라인 (블로그 구조 유지) ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Serif KR', serif; background: #0f0f0f; color: #e8e4dc; line-height: 1.8; }
+    a { color: #c9a96e; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .post-detail { max-width: 860px; margin: 0 auto; padding: 60px 24px 120px; }
+
+    .detail-back { display: inline-block; font-size: 0.82rem; color: #888; letter-spacing: 0.04em; margin-bottom: 32px; }
+    .detail-back:hover { color: #c9a96e; }
+
+    .detail-category {
+      display: inline-block; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: #c9a96e; border: 1px solid #c9a96e33; padding: 4px 10px;
+      border-radius: 2px; margin-bottom: 18px;
+    }
+
+    .detail-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.2rem, 6vw, 3.8rem);
+      letter-spacing: 0.04em; line-height: 1.1; color: #f0ece2; margin-bottom: 20px;
+    }
+
+    .detail-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+      font-size: 0.8rem; color: #888; margin-bottom: 48px; padding-bottom: 24px;
+      border-bottom: 1px solid #2a2a2a; }
+    .meta-dot { width: 3px; height: 3px; background: #555; border-radius: 50%; }
+    .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .detail-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+      color: #666; background: #1a1a1a; padding: 2px 8px; border-radius: 2px; }
+
+    .detail-content { font-size: 0.97rem; color: #ccc8be; }
+    .detail-content p { margin-bottom: 1.2em; }
+    .detail-content h2 {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; letter-spacing: 0.06em;
+      color: #f0ece2; margin: 56px 0 20px; padding-top: 16px;
+      border-top: 2px solid #c9a96e44;
+    }
+    .detail-content h3 {
+      font-size: 1.1rem; font-weight: 700; color: #e0dbd0;
+      margin: 36px 0 14px; padding-left: 14px;
+      border-left: 3px solid #c9a96e;
+    }
+    .detail-content h4 {
+      font-size: 0.97rem; font-weight: 600; color: #c9a96e;
+      margin: 28px 0 10px;
+    }
+    .detail-content strong { color: #f0ece2; }
+    .detail-content small { display: block; font-size: 0.82rem; color: #777;
+      background: #161616; border-left: 2px solid #333; padding: 12px 16px;
+      margin: 16px 0; border-radius: 0 4px 4px 0; line-height: 1.7; }
+    .detail-content small b { color: #c9a96e; display: block; margin-bottom: 4px; }
+
+    .formula {
+      font-family: 'JetBrains Mono', monospace; font-size: 1rem;
+      background: #141414; border: 1px solid #2e2e2e; border-left: 3px solid #c9a96e;
+      padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0;
+      overflow-x: auto; color: #e0dbd0; line-height: 1.6;
+    }
+
+    pre code {
+      display: block; background: #111; border: 1px solid #222;
+      border-radius: 6px; padding: 20px; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem; color: #a8d8a8; overflow-x: auto; margin: 16px 0;
+      line-height: 1.6;
+    }
+
+    figure { margin: 28px 0; text-align: center; }
+    figcaption { font-size: 0.78rem; color: #666; margin-top: 8px; font-style: italic; }
+
+    .timeline {
+      position: relative; padding-left: 24px; margin: 20px 0;
+      border-left: 2px solid #2a2a2a;
+    }
+    .timeline-item { position: relative; margin-bottom: 24px; padding-left: 20px; }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -29px; top: 7px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #c9a96e; border: 2px solid #0f0f0f;
+    }
+    .timeline-year {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      color: #c9a96e; letter-spacing: 0.1em; margin-bottom: 4px;
+    }
+    .timeline-title { font-weight: 700; color: #e0dbd0; margin-bottom: 4px; font-size: 0.95rem; }
+    .timeline-desc { font-size: 0.87rem; color: #888; line-height: 1.6; }
+
+    .info-box {
+      background: #141414; border: 1px solid #2a2a2a; border-radius: 6px;
+      padding: 20px 24px; margin: 20px 0;
+    }
+    .info-box .box-title {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: #c9a96e;
+      margin-bottom: 12px;
+    }
+
+    table {
+      width: 100%; border-collapse: collapse; margin: 20px 0;
+      font-size: 0.85rem;
+    }
+    table th {
+      background: #1a1a1a; color: #c9a96e; padding: 10px 14px;
+      text-align: left; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.08em; border-bottom: 1px solid #333;
+    }
+    table td {
+      padding: 10px 14px; border-bottom: 1px solid #1e1e1e;
+      color: #b0aca2; vertical-align: top;
+    }
+    table tr:last-child td { border-bottom: none; }
+
+    .warn-box {
+      background: #1a1200; border: 1px solid #c9a96e55;
+      border-left: 3px solid #c9a96e; padding: 14px 18px;
+      margin: 16px 0; border-radius: 0 4px 4px 0; font-size: 0.88rem;
+    }
+    .warn-box::before { content: '⚠ '; color: #c9a96e; font-weight: bold; }
+
+    .keyword { color: #c9a96e; font-weight: 700; }
+
+    hr { border: none; border-top: 1px solid #222; margin: 40px 0; }
+  </style>
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../../tech.html">← 기술 분석으로 돌아가기</a>
+
+  <div class="detail-category">Deep Learning</div>
+  <h1 class="detail-title">Lec 8 — Deep Neural Nets & Tensor Manipulation</h1>
+  <div class="detail-meta">
+    <span class="detail-author">Sung Kim 강의 정리</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2026.04.22</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#DeepLearning</span>
+      <span class="detail-tag">#TensorFlow</span>
+      <span class="detail-tag">#NumPy</span>
+      <span class="detail-tag">#OpenBook</span>
+    </div>
+  </div>
+
+  <div class="detail-content">
+
+    <!-- ══════════════════════════════════════ PART 1 ══════════════════════════════════════ -->
+    <h2>Part 1. Deep Neural Nets for Everyone</h2>
+
+    <h3>1-1. 궁극의 꿈 — 생각하는 기계</h3>
+    <p>
+      딥러닝의 출발점은 <strong>인간의 뇌를 수학으로 모델링</strong>하는 것이다.<br/>
+      뉴런 구조: 수상돌기(Dendrite)가 입력 신호를 받고 → 세포체(Cell body)에서 <strong>가중합(Σ wᵢxᵢ + b)</strong>을 계산하고 → 활성화 함수(activation function) <strong>f</strong>를 통과시켜 → 축삭(Axon)으로 출력한다.
+    </p>
+    <div class="formula">
+      출력 = f( Σ wᵢxᵢ + b )
+    </div>
+    <p>
+      이것이 <strong>퍼셉트론(Perceptron)</strong>의 수식이며, 딥러닝의 기본 단위다.
+    </p>
+
+    <h3>1-2. 역사적 흐름 (연대기)</h3>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">~1957</div>
+        <div class="timeline-title">Frank Rosenblatt — Perceptron</div>
+        <div class="timeline-desc">
+          Mark I Perceptron: 20×20 카드뮴 황화물 광전지(400픽셀)로 알파벳 인식.<br/>
+          가중치 업데이트 규칙(update rule) 최초 적용.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">~1960</div>
+        <div class="timeline-title">Widrow and Hoff — Adaline / Madaline</div>
+        <div class="timeline-desc">하드웨어 구현체. 다이얼로 가중치를 조정하는 아날로그 방식.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1958 (NYT)</div>
+        <div class="timeline-title">과장된 기대 — "False Promises"</div>
+        <div class="timeline-desc">
+          뉴욕타임즈: "퍼셉트론이 걷고 말하고 보고 스스로를 의식할 것"이라는 허황된 예측.<br/>
+          → 곧 한계가 드러남.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1969</div>
+        <div class="timeline-title">Marvin Minsky — Perceptrons 책 출판 → AI 겨울</div>
+        <div class="timeline-desc">
+          <strong>XOR 문제</strong>: 단층 퍼셉트론으로는 XOR(배타적 논리합)을 선형분리 불가.<br/>
+          해결책은 <strong>MLP(Multi-Layer Perceptron)</strong>이지만, 당시 학습법이 없어 연구 침체.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1974 / 1982 / 1986</div>
+        <div class="timeline-title">Backpropagation (역전파) 등장</div>
+        <div class="timeline-desc">
+          Paul Werbos(1974/1982), Geoffrey Hinton(1986) 대중화.<br/>
+          순전파(forward) → 오차 계산 → 역전파(backward)로 가중치 업데이트.<br/>
+          그러나 <strong>층이 깊으면 기울기 소실</strong>로 실패 → SVM, RandomForest가 대세가 됨.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">~1980</div>
+        <div class="timeline-title">LeNet-5 (LeCun) — CNN 등장</div>
+        <div class="timeline-desc">
+          Hubel &amp; Wiesel(1959) 고양이 시각 피질 실험에서 영감.<br/>
+          구조: INPUT(32×32) → 합성곱(Convolutions) → 서브샘플링(Subsampling) → FC → OUTPUT(10).<br/>
+          1990년대 후반 미국 수표의 <strong>10~20%</strong>를 이 시스템이 읽어냄.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1984~1994</div>
+        <div class="timeline-title">ALVINN — 자율주행 차량</div>
+        <div class="timeline-desc">신경망으로 도로를 인식해 실제 주행 성공. NavLab 프로젝트.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1995</div>
+        <div class="timeline-title">LeCun의 비교 연구 → 새 접근법이 SVM보다 좋음</div>
+        <div class="timeline-desc">"Comparison of Learning Algorithms For Handwritten Digit Recognition"</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1987</div>
+        <div class="timeline-title">CIFAR — Hinton 캐나다 이주</div>
+        <div class="timeline-desc">
+          Canadian Institute for Advanced Research: <strong>직접 응용 없는 기초 연구</strong> 지원.<br/>
+          Hinton을 캐나다로 끌어들이고 딥러닝 연구 커뮤니티 형성에 결정적 역할.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2006</div>
+        <div class="timeline-title">Hinton et al. — "A fast learning algorithm for deep belief nets"</div>
+        <div class="timeline-desc">
+          <strong>핵심 발견</strong>: 가중치를 무작위가 아닌 <strong>영리한 방법으로 초기화</strong>하면 깊은 망도 잘 학습됨.<br/>
+          → "Deep Learning" 이름 재정립.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2007</div>
+        <div class="timeline-title">Bengio et al. — "Greedy Layer-Wise Training of Deep Networks"</div>
+        <div class="timeline-desc">얕은 방법보다 깊은 방법이 어려운 문제에 더 효율적임을 증명.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2012</div>
+        <div class="timeline-title">ImageNet — CNN이 오류율 26.2% → 15.3% 으로 대폭 감소</div>
+        <div class="timeline-desc">딥러닝이 컴퓨터 비전에서 압도적 우위를 보이는 분수령.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2015</div>
+        <div class="timeline-title">ImageNet — 인간 수준(~5%) 초과 달성</div>
+        <div class="timeline-desc">CNN이 인간 분류 오류율보다 낮아짐.</div>
+      </div>
+    </div>
+
+    <h3>1-3. AND / OR / XOR 선형 분리 문제</h3>
+
+    <table>
+      <thead>
+        <tr><th>문제</th><th>선형 분리 가능?</th><th>이유</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OR</td>
+          <td class="keyword">Yep ✔</td>
+          <td>한 직선으로 + / - 구분 가능</td>
+        </tr>
+        <tr>
+          <td>AND</td>
+          <td class="keyword">Yep ✔</td>
+          <td>한 직선으로 + / - 구분 가능</td>
+        </tr>
+        <tr>
+          <td>XOR</td>
+          <td style="color:#e07070">Nope ✗</td>
+          <td>(0,1), (1,0)=1 / (0,0),(1,1)=0 → 직선 하나로 불가 → MLP 필요</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      XOR은 진리표: <code>(0,0)→0, (0,1)→1, (1,0)→1, (1,1)→0</code><br/>
+      Minsky(1969)가 이 한계를 증명하며 퍼셉트론 연구가 침체됨.<br/>
+      해결책: <strong>은닉층(hidden layer)을 쌓은 MLP</strong>. 각 레이어마다 W, b 파라미터 존재.
+    </p>
+
+    <h3>1-4. Hinton이 정리한 과거 실패 원인 4가지</h3>
+    <div class="info-box">
+      <div class="box-title">Geoffrey Hinton's Summary</div>
+      <table>
+        <thead><tr><th>#</th><th>원인</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>데이터 부족</td><td>레이블된 데이터셋이 수천 배 너무 작았다.</td></tr>
+          <tr><td>2</td><td>연산 부족</td><td>컴퓨터가 수백만 배 너무 느렸다.</td></tr>
+          <tr><td>3</td><td>가중치 초기화</td><td>가중치를 멍청하게(무작위로) 초기화했다.</td></tr>
+          <tr><td>4</td><td>잘못된 비선형 함수</td><td>잘못된 종류의 비선형성(활성화 함수)을 사용했다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>1-5. 딥러닝의 실용적 성과 (왜 지금 써야 하는가)</h3>
+
+    <div class="info-box">
+      <div class="box-title">실제 적용 사례</div>
+      <table>
+        <thead><tr><th>분야</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>이미지 분류</td><td>ImageNet 2015: CNN이 인간 분류 오류율 초월</td></tr>
+          <tr><td>음성 인식</td><td>Baidu Deep Speech: Apple/Bing/Google API 모두 압도, 오류율 11.85%</td></tr>
+          <tr><td>자연어+이미지</td><td>CNN(Vision) + RNN(Language) 결합 → 사진 설명 자동 생성</td></tr>
+          <tr><td>코드 생성</td><td>DeepAPI: RNN Encoder-Decoder로 자연어 → Java API 시퀀스</td></tr>
+          <tr><td>강화학습</td><td>Google DeepMind: Deep Q-Learning으로 Atari Breakout 정복</td></tr>
+          <tr><td>바둑</td><td>AlphaGo vs 이세돌 (2016)</td></tr>
+          <tr><td>추천 시스템</td><td>Netflix, Amazon 개인화 추천</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>1-6. 지금 시작해야 하는 이유</h3>
+    <p>
+      <strong>연구자/학생</strong>: 세계 최고 전문가가 되기 늦지 않음. 수학적으로 그리 복잡하지 않음.<br/>
+      <strong>실무자</strong>: 실제로 쓸 만큼 정확. TensorFlow 같은 도구와 Python이 쉬워짐.<br/>
+      무엇보다 <strong>재미있다(fun!)</strong>
+    </p>
+
+    <hr/>
+
+    <!-- ══════════════════════════════════════ PART 2 ══════════════════════════════════════ -->
+    <h2>Part 2. Lab 8 — Tensor Manipulation (TF 1.0 + NumPy)</h2>
+
+    <p>코드 전체: <a href="https://github.com/hunkim/DeepLearningZeroToAll/blob/master/lab-08-tensor_manipulation.ipynb" target="_blank">GitHub — lab-08-tensor_manipulation.ipynb</a></p>
+
+    <h3>2-1. 1D 배열 (Rank 1 Tensor) — 슬라이싱</h3>
+
+    <pre><code>t = np.array([0., 1., 2., 3., 4., 5., 6.])
+pp.pprint(t)
+print(t.ndim)   # rank = 1
+print(t.shape)  # (7,)
+
+print(t[0], t[1], t[-1])   # 0.0  1.0  6.0
+print(t[2:5], t[4:-1])     # [2. 3. 4.]  [4. 5.]
+print(t[:2], t[3:])        # [0. 1.]  [3. 4. 5. 6.]</code></pre>
+
+    <div class="info-box">
+      <div class="box-title">슬라이싱 규칙</div>
+      <table>
+        <thead><tr><th>표현</th><th>의미</th></tr></thead>
+        <tbody>
+          <tr><td><code>t[i]</code></td><td>인덱스 i 원소</td></tr>
+          <tr><td><code>t[-1]</code></td><td>마지막 원소</td></tr>
+          <tr><td><code>t[2:5]</code></td><td>인덱스 2, 3, 4 (5 미포함)</td></tr>
+          <tr><td><code>t[:2]</code></td><td>처음부터 인덱스 1까지</td></tr>
+          <tr><td><code>t[3:]</code></td><td>인덱스 3부터 끝까지</td></tr>
+          <tr><td><code>t[4:-1]</code></td><td>인덱스 4 ~ 마지막 직전</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2-2. 2D 배열 (Rank 2 Tensor)</h3>
+
+    <pre><code>t = np.array([[1., 2., 3.],
+              [4., 5., 6.],
+              [7., 8., 9.],
+              [10., 11., 12.]])
+print(t.ndim)   # rank = 2
+print(t.shape)  # (4, 3)  ← 4행 3열</code></pre>
+
+    <h3>2-3. Shape / Rank / Axis</h3>
+
+    <pre><code># Rank 1 (shape=[4])
+t = tf.constant([1,2,3,4])
+tf.shape(t).eval()  # array([4], dtype=int32)
+
+# Rank 2 (shape=[2,2])
+t = tf.constant([[1,2],[3,4]])
+tf.shape(t).eval()  # array([2, 2], dtype=int32)
+
+# Rank 4 (shape=[1,2,3,4])
+t = tf.constant([[[[1,2,3,4],[5,6,7,8],[9,10,11,12]],
+                  [[13,14,15,16],[17,18,19,20],[21,22,23,24]]]])
+tf.shape(t).eval()  # array([1, 2, 3, 4], dtype=int32)</code></pre>
+
+    <div class="info-box">
+      <div class="box-title">Rank / Shape / Axis 개념 정리</div>
+      <table>
+        <thead><tr><th>개념</th><th>설명</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Rank</strong></td><td>차원의 수 (중첩 대괄호 수)</td><td>[1,2,3] → rank 1</td></tr>
+          <tr><td><strong>Shape</strong></td><td>각 축의 크기</td><td>[[1,2],[3,4]] → (2,2)</td></tr>
+          <tr><td><strong>Axis</strong></td><td>연산 방향 (0=행 방향↓, 1=열 방향→, -1=마지막 축)</td><td>reduce_mean(x, axis=0)</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.82rem; color:#888; margin-top:8px;">
+        ※ shape [1,2,3,4] → Axis 0 크기=1, Axis 1 크기=2, Axis 2 크기=3, Axis 3 크기=4
+      </p>
+    </div>
+
+    <h3>2-4. Matmul VS Multiply (행렬곱 vs 원소별 곱)</h3>
+
+    <pre><code>matrix1 = tf.constant([[1., 2.], [3., 4.]])   # shape (2,2)
+matrix2 = tf.constant([[1.],[2.]])             # shape (2,1)
+
+# 행렬곱 (내적)
+tf.matmul(matrix1, matrix2).eval()
+# → array([[ 5.], [11.]], dtype=float32)
+#   1*1+2*2=5,  3*1+4*2=11
+
+# 원소별 곱 (Broadcasting 적용)
+(matrix1 * matrix2).eval()
+# → array([[1., 2.],
+#          [6., 8.]], dtype=float32)
+#   Broadcasting: (2,2) * (2,1) → 각 열에 matrix2 값 곱함</code></pre>
+
+    <div class="warn-box">
+      딥러닝에서 레이어 연산은 반드시 <strong>tf.matmul</strong> (행렬 내적)을 써야 한다.
+      <code>*</code> 는 원소별 곱(element-wise)이므로 혼동 주의!
+    </div>
+
+    <h3>2-5. Broadcasting (형태가 다른 텐서 연산)</h3>
+
+    <pre><code># 같은 shape → 그냥 더함
+matrix1 = tf.constant([[3., 3.]])
+matrix2 = tf.constant([[2., 2.]])
+(matrix1 + matrix2).eval()  # [[5., 5.]]
+
+# 스칼라 Broadcasting
+matrix1 = tf.constant([[1., 2.]])
+matrix2 = tf.constant(3.)
+(matrix1 + matrix2).eval()  # [[4., 5.]]
+
+# 벡터 Broadcasting
+matrix1 = tf.constant([[1., 2.]])
+matrix2 = tf.constant([3., 4.])
+(matrix1 + matrix2).eval()  # [[4., 6.]]
+
+# (1,2) + (2,1) Broadcasting
+matrix1 = tf.constant([[1., 2.]])        # shape (1,2)
+matrix2 = tf.constant([[3.],[4.]])       # shape (2,1)
+(matrix1 + matrix2).eval()
+# → [[4., 5.],
+#    [5., 6.]]</code></pre>
+
+    <div class="warn-box">
+      Broadcasting은 편리하지만 <strong>의도치 않은 shape 변환</strong>이 발생할 수 있어 주의 필요.
+    </div>
+
+    <h3>2-6. Reduce Mean (축 방향 평균)</h3>
+
+    <pre><code>tf.reduce_mean([1, 2], axis=0).eval()  # 1  (int라 소수점 버림)
+
+x = [[1., 2.],
+     [3., 4.]]
+
+tf.reduce_mean(x).eval()           # 2.5   (전체 평균)
+tf.reduce_mean(x, axis=0).eval()   # [2., 3.]  (행 방향 ↓ 평균: (1+3)/2, (2+4)/2)
+tf.reduce_mean(x, axis=1).eval()   # [1.5, 3.5] (열 방향 → 평균: (1+2)/2, (3+4)/2)
+tf.reduce_mean(x, axis=-1).eval()  # [1.5, 3.5] (axis=1과 동일: 마지막 축)</code></pre>
+
+    <h3>2-7. Reduce Sum (축 방향 합)</h3>
+
+    <pre><code>x = [[1., 2.],
+     [3., 4.]]
+
+tf.reduce_sum(x).eval()            # 10.0
+tf.reduce_sum(x, axis=0).eval()    # [4., 6.]
+tf.reduce_sum(x, axis=-1).eval()   # [3., 7.]
+
+tf.reduce_mean(tf.reduce_sum(x, axis=-1)).eval()  # 5.0
+# axis=-1 합: [1+2, 3+4] = [3, 7] → 평균: (3+7)/2 = 5.0</code></pre>
+
+    <h3>2-8. Argmax (최대값의 인덱스)</h3>
+
+    <pre><code>x = [[0, 1, 2],
+     [2, 1, 0]]
+
+tf.argmax(x, axis=0).eval()   # [1, 0, 0]
+# 각 열에서 가장 큰 값의 행 인덱스:
+# 열0: max(0,2)=2 → 행1  열1: max(1,1)=1 → 행0  열2: max(2,0)=2 → 행0
+
+tf.argmax(x, axis=1).eval()   # [2, 0]
+# 각 행에서 가장 큰 값의 열 인덱스:
+# 행0: max(0,1,2)=2 → 열2  행1: max(2,1,0)=2 → 열0
+
+tf.argmax(x, axis=-1).eval()  # [2, 0]  (axis=1과 동일)</code></pre>
+
+    <h3>2-9. Reshape ⭐⭐ (가장 중요)</h3>
+
+    <pre><code>t = np.array([[[0, 1, 2],
+               [3, 4, 5]],
+              [[6, 7, 8],
+               [9,10,11]]])
+t.shape  # (2, 2, 3)  → 총 원소 12개
+
+# -1은 자동 계산 (나머지 차원으로 맞춤)
+tf.reshape(t, shape=[-1, 3]).eval()
+# shape (4, 3): 12개를 3열로 → 4행
+# [[ 0  1  2]
+#  [ 3  4  5]
+#  [ 6  7  8]
+#  [ 9 10 11]]
+
+tf.reshape(t, shape=[-1, 1, 3]).eval()
+# shape (4, 1, 3)
+# [[[0 1 2]], [[3 4 5]], [[6 7 8]], [[9 10 11]]]</code></pre>
+
+    <div class="info-box">
+      <div class="box-title">Reshape 핵심 규칙</div>
+      <p style="font-size:0.88rem; color:#b0aca2;">
+        • <strong>-1</strong>을 쓰면 TF가 나머지 차원을 자동으로 계산해준다.<br/>
+        • shape에서 -1은 <strong>한 자리에만</strong> 사용 가능.<br/>
+        • 총 원소 수는 reshape 전후 동일해야 한다.<br/>
+        • 딥러닝에서 배치 처리 시 <code>shape=[-1, feature_dim]</code> 형태를 가장 많이 씀.
+      </p>
+    </div>
+
+    <h3>2-10. Reshape — Squeeze &amp; Expand_dims</h3>
+
+    <pre><code># squeeze: 크기 1인 차원 제거
+tf.squeeze([[0], [1], [2]]).eval()
+# array([0, 1, 2], dtype=int32)  shape (3,1) → (3,)
+
+# expand_dims: 특정 축에 차원 추가
+tf.expand_dims([0, 1, 2], 1).eval()
+# array([[0],
+#        [1],
+#        [2]], dtype=int32)  shape (3,) → (3,1)</code></pre>
+
+    <h3>2-11. One Hot Encoding</h3>
+
+    <pre><code>tf.one_hot([[0], [1], [2], [0]], depth=3).eval()
+# array([[[1., 0., 0.]],   ← 클래스 0
+#        [[0., 1., 0.]],   ← 클래스 1
+#        [[0., 0., 1.]],   ← 클래스 2
+#        [[1., 0., 0.]]],  ← 클래스 0
+#       dtype=float32)
+
+# shape이 한 차원 늘어나므로 보통 reshape과 함께 사용
+t = tf.one_hot([[0], [1], [2], [0]], depth=3)
+tf.reshape(t, shape=[-1, 3]).eval()
+# array([[1., 0., 0.],
+#        [0., 1., 0.],
+#        [0., 0., 1.],
+#        [1., 0., 0.]], dtype=float32)</code></pre>
+
+    <div class="info-box">
+      <div class="box-title">One Hot 개념</div>
+      <p style="font-size:0.88rem; color:#b0aca2;">
+        클래스 인덱스를 벡터로 표현. depth=클래스 수.<br/>
+        해당 인덱스만 1, 나머지는 0.<br/>
+        예: depth=3에서 클래스 2 → [0, 0, 1]<br/>
+        <strong>주의</strong>: tf.one_hot은 입력보다 차원이 하나 늘어남 → reshape 필요.
+      </p>
+    </div>
+
+    <h3>2-12. Casting (타입 변환)</h3>
+
+    <pre><code># float → int (소수점 버림)
+tf.cast([1.8, 2.2, 3.3, 4.9], tf.int32).eval()
+# array([1, 2, 3, 4], dtype=int32)
+
+# bool → int
+tf.cast([True, False, 1 == 1, 0 == 1], tf.int32).eval()
+# array([1, 0, 1, 0], dtype=int32)</code></pre>
+
+    <small>
+      <b>활용처:</b>
+      정확도 계산 시 <code>tf.cast(correct_prediction, tf.float32)</code>로 True/False를 1.0/0.0으로 변환하여 평균을 구한다.
+    </small>
+
+    <h3>2-13. Stack (텐서 쌓기)</h3>
+
+    <pre><code>x = [1, 4]
+y = [2, 5]
+z = [3, 6]
+
+# 기본 (axis=0): 새로운 첫 번째 축으로 쌓음
+tf.stack([x, y, z]).eval()
+# array([[1, 4],
+#        [2, 5],
+#        [3, 6]], dtype=int32)  → shape (3, 2)
+
+# axis=1: 새로운 두 번째 축으로 쌓음
+tf.stack([x, y, z], axis=1).eval()
+# array([[1, 2, 3],
+#        [4, 5, 6]], dtype=int32)  → shape (2, 3)</code></pre>
+
+    <h3>2-14. Ones Like &amp; Zeros Like</h3>
+
+    <pre><code>x = [[0, 1, 2],
+     [2, 1, 0]]
+
+tf.ones_like(x).eval()
+# array([[1, 1, 1],
+#        [1, 1, 1]], dtype=int32)
+
+tf.zeros_like(x).eval()
+# array([[0, 0, 0],
+#        [0, 0, 0]], dtype=int32)</code></pre>
+
+    <small>
+      <b>활용처:</b> 마스크 생성, 초기화, 패딩 등에 사용. 입력과 같은 shape으로 0 또는 1로 채운 텐서를 즉시 만들 수 있어 편리.
+    </small>
+
+    <h3>2-15. Zip (여러 이터러블 병렬 순회)</h3>
+
+    <pre><code># 두 리스트
+for x, y in zip([1, 2, 3], [4, 5, 6]):
+    print(x, y)
+# 1 4
+# 2 5
+# 3 6
+
+# 세 리스트
+for x, y, z in zip([1, 2, 3], [4, 5, 6], [7, 8, 9]):
+    print(x, y, z)
+# 1 4 7
+# 2 5 8
+# 3 6 9</code></pre>
+
+    <small>
+      <b>딥러닝에서의 활용:</b>
+      <code>optimizer.apply_gradients(zip(gradients, trainable_variables))</code><br/>
+      → 기울기 리스트와 변수 리스트를 쌍으로 묶어 한번에 업데이트할 때 사용.
+    </small>
+
+    <hr/>
+
+    <!-- 총 정리 -->
+    <h2>총 요약 — 시험 직전 체크리스트</h2>
+
+    <div class="info-box">
+      <div class="box-title">역사 핵심 포인트</div>
+      <table>
+        <thead><tr><th>키워드</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>Perceptron</td><td>Rosenblatt(1957), 선형 분리 문제만 해결, XOR 불가</td></tr>
+          <tr><td>MLP 학습법 없음</td><td>Minsky(1969) 지적, AI 겨울 도래</td></tr>
+          <tr><td>Backprop</td><td>Werbos(1974/82), Hinton(1986) 대중화, 깊은 망에선 기울기 소실</td></tr>
+          <tr><td>CNN</td><td>LeCun LeNet-5(~1980), 수표 인식, Hubel&amp;Wiesel 시각 피질 모방</td></tr>
+          <tr><td>CIFAR</td><td>기초 연구 지원, Hinton 캐나다 이주, 커뮤니티 형성</td></tr>
+          <tr><td>2006 돌파구</td><td>깊은 망 + 영리한 초기화 = Deep Learning 재탄생</td></tr>
+          <tr><td>ImageNet 2012</td><td>26.2% → 15.3%, CNN의 시대 개막</td></tr>
+          <tr><td>Hinton 4대 실패 이유</td><td>데이터↓, 연산↓, 나쁜 초기화, 잘못된 활성화 함수</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <div class="box-title">Tensor 연산 핵심 포인트</div>
+      <table>
+        <thead><tr><th>연산</th><th>핵심</th></tr></thead>
+        <tbody>
+          <tr><td>shape / ndim</td><td>shape=(행, 열, ...), ndim=rank=차원 수</td></tr>
+          <tr><td>슬라이싱</td><td>[start:end] end 미포함, [-1]=마지막</td></tr>
+          <tr><td>matmul vs *</td><td>matmul=행렬곱(내적), *=원소별 곱(Broadcasting)</td></tr>
+          <tr><td>Broadcasting</td><td>형태가 다른 텐서 연산 시 자동 확장, 편리하지만 주의 필요</td></tr>
+          <tr><td>reduce_mean/sum</td><td>axis=0↓ axis=1→ axis=-1=마지막축</td></tr>
+          <tr><td>argmax</td><td>최대값의 인덱스 반환, axis 방향으로</td></tr>
+          <tr><td>reshape -1</td><td>-1은 자동 계산, 한 자리만 사용 가능, 원소 수 동일 유지</td></tr>
+          <tr><td>squeeze/expand_dims</td><td>squeeze=크기1 차원 제거, expand_dims=차원 추가</td></tr>
+          <tr><td>one_hot</td><td>depth=클래스수, shape 한 차원 증가 → reshape 필요</td></tr>
+          <tr><td>cast</td><td>타입 변환 (bool→int, float→int 등), 정확도 계산에 사용</td></tr>
+          <tr><td>stack</td><td>axis=0은 새 첫 번째 축, axis=1은 새 두 번째 축</td></tr>
+          <tr><td>zip</td><td>여러 리스트 병렬 순회, apply_gradients에서 사용</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+</div>
+</body>
+</html>
