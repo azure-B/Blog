@@ -1,0 +1,102 @@
+Windows 환경에서 GPU 기반 TensorFlow 딥러닝 프로그래밍 환경 구축 과정
+
+전체 설치 순서는 GPU 확인 → NVIDIA 드라이버 재설치 → CUDA Toolkit 설치 → cuDNN 설치 → Anaconda 설치 → 가상환경 생성 → TensorFlow-GPU 설치 → Jupyter Notebook 설치 → PyCharm 설치 및 인터프리터 설정 순으로 진행된다.
+
+
+1. GPU 확인
+
+딥러닝은 행렬 연산을 수백만 번 반복하는 특성 때문에 CPU만으로는 학습 속도가 매우 느리다. GPU는 수천 개의 코어로 병렬 처리가 가능하기 때문에 딥러닝 연산에 적합하다. 단, CUDA는 NVIDIA GPU에서만 작동하므로 본인 PC에 NVIDIA 제품이 있는지, 그리고 64비트 운영체제인지를 먼저 확인해야 한다. 작업관리자 성능 탭이나 장치관리자의 디스플레이 어댑터 항목에서 확인할 수 있다.
+
+
+2. NVIDIA 그래픽 드라이버 재설치
+
+CUDA Toolkit을 설치하기 전에 최신 그래픽 드라이버가 있어야 한다. 드라이버 버전이 CUDA 버전과 맞지 않으면 설치 이후에도 오류가 발생할 수 있기 때문에 nvidia.com에서 본인 GPU 모델에 맞는 드라이버를 받아서 클린 설치하는 것이 좋다.
+
+
+3. CUDA Toolkit 설치
+
+CUDA(Compute Unified Device Architecture)는 NVIDIA가 개발한 GPU 병렬 컴퓨팅 플랫폼이자 API 모델이다. GPU의 가상 명령어셋을 사용할 수 있도록 해주는 소프트웨어 계층으로, NVIDIA GPU에서만 동작한다. 2006년 G80 마이크로아키텍처와 함께 처음 발표되었으며 2007년 6월 SDK가 최초 배포되었다.
+
+설치는 developer.nvidia.com에서 운영체제와 버전을 선택한 후 exe(local) 방식으로 받아 진행하면 된다. TensorFlow 1.14/1.15를 사용할 경우 CUDA 10.0 버전을 선택해야 한다. 설치 후 아래 명령어로 정상 설치 여부를 확인한다.
+
+    nvcc --version
+
+nvcc는 NVIDIA CUDA Compiler의 약자로, 위 명령 실행 시 버전 정보가 출력되면 정상적으로 설치된 것이다.
+
+
+4. cuDNN 설치
+
+cuDNN(CUDA Deep Neural Network library)은 NVIDIA가 제공하는 딥러닝 전용 GPU 가속 라이브러리다. 합성곱, 풀링, 활성화 함수 등 딥러닝 핵심 연산을 GPU에서 최적화하여 처리해주며, TensorFlow 내부에서 자동으로 활용된다. CUDA 10.0을 설치했다면 cuDNN 7.6.x 버전을 받아야 한다.
+
+다른 소프트웨어와 달리 별도의 설치 파일(.exe)이 없고, 압축을 풀어 나온 bin, include, lib 폴더 안의 파일들을 CUDA가 설치된 경로에 직접 복사하는 방식으로 설치한다. 복사 경로는 아래와 같다.
+
+    bin\        →  C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\bin\
+    include\    →  C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include\
+    lib\x64\    →  C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64\
+
+다운로드 시 NVIDIA Developer 계정 로그인이 필요하다.
+
+
+5. Anaconda 설치
+
+Anaconda는 Python 기반의 패키지 관리 및 가상환경 관리 도구다. numpy, scipy, matplotlib 등 과학 계산 라이브러리가 기본 포함되어 있으며, conda 명령어로 패키지 설치와 가상환경 관리가 가능하다. anaconda.com에서 Windows 64-bit용 설치 파일을 받아 실행하면 된다. 설치 시 "Add Anaconda to my PATH environment variable" 항목을 체크해야 터미널에서 conda 명령어를 사용할 수 있다.
+
+
+6. 가상환경 생성 및 TensorFlow-GPU 설치
+
+프로젝트마다 필요한 패키지 버전이 다를 수 있기 때문에 가상환경을 분리해서 사용하는 것이 좋다. 환경이 꼬여도 해당 가상환경만 삭제하면 되므로 시스템에 영향이 없다는 장점도 있다.
+
+Anaconda Powershell Prompt에서 아래 명령어로 deephive라는 이름의 가상환경을 생성한다. Python 버전을 3.6으로 고정하는 이유는 TensorFlow 1.x와의 호환성 때문이다.
+
+    conda create -n deephive python=3.6 numpy scipy matplotlib spyder pandas seaborn scikit-learn pillow h5py
+
+생성 후 가상환경을 활성화한다.
+
+    conda activate deephive
+
+이후 TensorFlow를 설치할 때 GPU 유무에 따라 설치 명령어가 달라진다.
+
+    GPU가 있는 경우 : conda install tensorflow-gpu==1.15 keras-gpu
+    GPU가 없는 경우 : conda install tensorflow==1.15 keras
+
+tensorflow-gpu를 설치하면 앞서 설치한 CUDA, cuDNN과 자동으로 연동되어 GPU를 활용한 학습이 가능해진다.
+
+이후 pip을 업그레이드하고 추가 패키지를 설치한다.
+
+    python -m pip install --upgrade pip
+    pip install jupyter notebook opencv-python==4.4.0.46 gym==0.15.7
+
+패키지 버전을 명시하는 이유는 최신 버전이 TF 1.x와 호환되지 않을 수 있기 때문이다.
+
+설치 후 Python 환경에서 아래와 같이 확인한다.
+
+    import tensorflow as tf
+    print(tf.__version__)                  # 버전 확인
+    print(tf.test.is_gpu_available())      # True 이면 GPU 정상 인식
+
+
+7. Jupyter Notebook 설치 및 실행
+
+Jupyter Notebook은 Julia, Python, R의 합성어에서 이름을 따온 웹 기반 대화형 개발환경이다. 코드, 수식, 시각화, 텍스트를 하나의 문서에서 작성하고 실행할 수 있어 딥러닝 실습에 널리 사용된다.
+
+    pip install jupyter notebook
+
+설치 후 터미널에서 jupyter notebook을 입력하면 브라우저가 자동으로 열리며 http://localhost:8888에 접속된다. 셀에 코드를 입력하고 Shift+Enter로 실행하는 방식으로 사용하며, 종료할 때는 터미널에서 Ctrl+C를 누른다.
+
+
+8. PyCharm 설치 및 Interpreter 설정
+
+PyCharm은 JetBrains사에서 만든 Python 전용 통합 개발환경(IDE)으로 코드 자동완성, 디버깅, 프로젝트 관리 등을 지원한다. jetbrains.com에서 Community Edition(무료 버전)을 받아 설치하면 된다.
+
+설치 후 가장 중요한 단계가 Interpreter 설정이다. PyCharm이 앞서 만든 deephive 가상환경을 인식하도록 지정해야 TensorFlow, numpy 등의 패키지를 정상적으로 사용할 수 있다.
+
+설정 방법은 File → Settings → Project → Python Interpreter → 톱니바퀴 아이콘 → Add → Conda Environment → Existing environment 순으로 진행하며, 인터프리터 경로를 아래와 같이 지정한다.
+
+    C:\Users\[사용자명]\anaconda3\envs\deephive\python.exe
+
+설정 완료 후 패키지 목록에 tensorflow, numpy, keras 등이 표시되면 정상적으로 연결된 것이다.
+
+
+※ 버전 호환성 (TF 1.14/1.15 기준)
+
+TensorFlow 1.14 또는 1.15를 사용할 경우 Python 3.5~3.7, CUDA 10.0, cuDNN 7.4~7.6 조합을 맞춰야 한다. 이 버전 조합이 맞지 않으면 import 오류나 GPU 미인식 문제가 발생한다.
