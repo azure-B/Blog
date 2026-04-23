@@ -11,6 +11,22 @@ window.POSTS_DATA = {
 
   /* ── 기술 분석 ── */
   tech: [
+         {
+      id: 'tech-017',
+      category: 'Machine Learning',
+      title: 'DeepLearningZerotoAll / 회고',
+      excerpt: '기초 지식이 많이 부족하다 인지하여 처음부터 다시 시작하려 한다.',
+      tags: ['Machine Learning'],
+      date: '2026.04.23',
+    },  
+       {
+      id: 'tech-017',
+      category: 'Machine Learning',
+      title: 'DeepLearningZerotoAll',
+      excerpt: '기초 지식이 많이 부족하다 인지하여 처음부터 다시 시작하려 한다.',
+      tags: ['Machine Learning'],
+      date: '2026.04.23',
+    },  
     {
       id: 'tech-016',
       category: 'Algorithm',
@@ -183,30 +199,6 @@ window.POSTS_DATA = {
 
   /* ── 교내 활동 ── */
   campus: [
-     {
-      id: 'campus-006',
-      category: 'DeepLearning Programming',
-      title: 'DeepLearning Programming - Open Book Test - 3',
-      excerpt: 'DeepLearning Programming 교과의 Open Book test를 위한 정리본',
-      tags: ['DeepLearning Programming'],
-      date: '2026.04.01',
-    },
-    {
-      id: 'campus-004',
-      category: 'DeepLearning Programming',
-      title: 'DeepLearning Programming - Open Book Test - 2',
-      excerpt: 'DeepLearning Programming 교과의 Open Book test를 위한 정리본',
-      tags: ['DeepLearning Programming'],
-      date: '2026.04.01',
-    },
-    {
-      id: 'campus-005',
-      category: 'DeepLearning Programming',
-      title: 'DeepLearning Programming - Open Book Test',
-      excerpt: 'DeepLearning Programming 교과의 Open Book test를 위한 정리본',
-      tags: ['DeepLearning Programming'],
-      date: '2026.04.01',
-    },
     {
       id: 'campus-003',
       category: 'IPCG Lab',
