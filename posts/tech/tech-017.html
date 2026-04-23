@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DeepLearningZerotoAll #1</title>
+  <title>DeepLearningZerotoAll</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../common.css" />
   <script src="../../data/posts.js"></script>
@@ -15,7 +15,7 @@
   <a class="detail-back" href="../../tech.html">← 기술 분석으로 돌아가기</a>
 
   <div class="detail-category">Machine Learning</div>
-  <h1 class="detail-title">DeepLearningZerotoAll #1</h1>
+  <h1 class="detail-title">DeepLearningZerotoAll</h1>
   <div class="detail-meta">
     <span class="detail-author">이승빈</span>
     <span class="meta-dot"></span>
@@ -31,7 +31,9 @@
 
         <p>
             금일 모 랩 연구실에 학부 인턴을 다녀왔다.<br/>
-            하지만, 기초 지식이 많이 부족하다 인지하여 처음부터 다시 시작하려 한다.
+            하지만, 기초 지식이 많이 부족하다 인지하여 처음부터 다시 시작하려 한다.<br/><br/>
+
+            <a href="./tech-018.html">회고록</a>
         </p>
 
         <h2>1. Machine Learning?</h2>
@@ -74,14 +76,156 @@
             Grade를 준다 ( A, B, C, D, E )
         </p>
 
-        <p>
-            <a href="tech-018.html">자세히 알아보기</a>
-        </p>
+        <h2>2. Linear Regression</h2>
 
-         <p>
+        <p>
             <a href="https://www.youtube.com/watch?v=qPMeuL2LIqY">
                 Lec 02. YOUTUBE LINK
             </a>
+        </p>
+
+        <p>
+            어떤 Linear한 Model이 가지고 있는 데이터에 맞을 것이다.<br/>
+            가설을 세우며 진행 하는 것을 말한다. <br/><br/>
+
+            예를들어 공부 시간이 성적시간에 비례하듯이, 많은 경우에 쓰인다.
+        </p>
+
+        <h3>2-1. Hypothesis ( 가설 )</h3>
+
+        <p>
+            어떤 것이 우리에게 잘 맞는 데이터일까?<br/>
+            그 선을 찾는 것이 학습이다.
+        </p>
+
+        <div class="deriv-step">
+            <span class="deriv-label">가설</span>
+            <div class="deriv-eq">
+              $H(x) = Wx + b$
+            </div>
+        </div>
+
+        <p>
+            Linear Regression의 경우, 데이터를 연결 했을 때 어떤 선형이 나온다.<br/>
+            이 경우 우리의 가설은 $H(x) = Wx + b$의 일차방정식 선형을 띄게 된다.
+        </p>
+
+        <h3>2-2. Which Hypothesis is better?</h3>
+
+        <p>
+            어떤 선이 우리 데이터에 가장 좋은 값인지? 찾아야 하기 때문에,<br/>
+            가설과 데이터의 거리를 계산한다.
+        </p>
+
+        <h3>2-3. Cost(Loss) function</h3>
+
+        <p>
+            여기서 가설과 실제 데이터가 얼마나 다른지 표시해주는 것이 Cost function이다.
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Cost</span>
+            <div class="deriv-eq">
+              $H(x) - y$
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            즉 실제 값에서, 가설의 값을 빼주는 것 이다.<br/>
+            허나 이 경우 거리의 값이 음수가 되는 경우가 있기에
+        </p>
+        
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Cost</span>
+            <div class="deriv-eq">
+              $(H(x) - y)^2$
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            자승을 취하여 사용한다.<br/>
+            이 경우 실제 데이터와 가설의 거리가 멀 경우, 큰 페널티를 줄 수도 있다.
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Cost</span>
+            <div class="deriv-eq">
+              $cost = \frac{1}{m} \sum_{i=1}^{m} (H(x^{(i)}) - y^{(i)})^2$
+            </div>
+        </div>
+
+        <br/>
+
+        <small>
+            <b>변수 정의</b>
+            $m$ = 데이터의 갯수<br/>
+            $H(x^(i))$ = 모델의 입력 값에 따른 예측 출력 값<br/>
+            $y^(i)$ = 실제 결과
+        </small>
+
+        <p>
+            모든 입력 값에 대한 예측값과 실제값의 차이를 자승하여 더하고,<br/>
+            평균을 내는 것을 Cost Function이라 한다.
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Cost</span>
+            <div class="deriv-eq">
+              $H(x) = Wx + b$
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            이 때 앞서 배운 Linear Regression의 함수를 자연스레 $H(x)$에 대입하면,
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Cost</span>
+            <div class="deriv-eq">
+              $cost(W,b) = \frac{1}{m} \sum_{i=1}^{m} (H(x^{(i)}) - y^{(i)})^2$
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            위와 같이 표현 해줄 수 있다.<br/><br/>
+
+            여기서 Linear Regression의 숙제는 W와 b를 가장 작게 만드는 것이고,<br/>
+            이 것이 곧 학습이다.
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Goal</span>
+            <div class="deriv-eq">
+              $minimize cost(W,b)$
+            </div>
+        </div>
+
+        <br/>
+
+        <h2>3. How to minimize cost</h2>
+
+        <p>
+            <a href="https://www.youtube.com/watch?v=TxIVr-nk1so">Lec 3 Link</a>
         </p>
 
     </div>
@@ -93,7 +237,7 @@
 <script>
   renderLayout({
     page: 'tech',
-    breadcrumb: '기술 분석 / DeepLearningZerotoAll #1',
+    breadcrumb: '기술 분석 / DeepLearningZerotoAll',
     root: "../../",
   });
 </script>

@@ -11,8 +11,8 @@ window.POSTS_DATA = {
 
   /* ── 기술 분석 ── */
   tech: [
-         {
-      id: 'tech-017',
+      {
+      id: 'tech-018',
       category: 'Machine Learning',
       title: 'DeepLearningZerotoAll / 회고',
       excerpt: '기초 지식이 많이 부족하다 인지하여 처음부터 다시 시작하려 한다.',

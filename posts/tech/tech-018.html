@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DeepLearningZerotoAll #1</title>
+  <title>DeepLearningZerotoAll / 회고</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../common.css" />
   <script src="../../data/posts.js"></script>
@@ -53,6 +53,67 @@
             가장 직관적인 예시는 영화 장르 분류나 이미지 태깅이다.
         </p>
 
+        <h2>2. Linear Regression</h2>
+
+        <p>
+            선형 회귀는 머신러닝의 가장 기초적인 알고리즘이면서<br/>
+            동시에 모든 딥러닝 아키텍처를 구성하는 선형 변환의 수학적 근간이다.
+        </p>
+
+        <h3>2-1. Hypothesis</h3>
+
+        <p>
+            선형회귀의 핵심 전제는 독립 변수 X와 종속 변수 Y 사이에 선형적 상관관계가 존재한다. 이다.<br/>
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Cost</span>
+            <div class="deriv-eq">
+              $H(x) = Wx + b$
+            </div>
+        </div>
+
+        <br/>
+ 
+        <p>
+            예를 들어 우리가 공부에 투자한 시간 x에 대해 나올 성적이 y라면,<br/>
+            단일 변수에 대한 가설 함수는 위와 같다.
+        </p>
+
+
+        <h3>2-2. Cost</h3>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Cost</span>
+            <div class="deriv-eq">
+              $cost(W,b) = \frac{1}{m} \sum_{i=1}^{m} (H(x^{(i)}) - y^{(i)})^2$
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            결국 우리의 목표는 W,b를 최소화 하는 cost Func를 구하는 것이다.
+        </p>
+
+        <small>
+            <b> 절댓값이 아니라 자승을 취한 이유</b>
+            1. 미분 가능성<br/>
+            절댓값 그래프는 V자 모양의 불연속성으로 미분이 불가능하다.<br/><br/>
+
+            2. m으로 평균을 내는 이유<br/>
+            데이터가 10개일 떄의 오차합과 10000개일 때의 오차합은 스케일 자체가 다르다.<br/><br/>
+
+            3. 오차가 적을 때, 보폭이 줄어드진 않는가?<br/>
+            모델이 가중치를 업데이트 하는 보폭은 Cost가 아니라 Cost 그래프의 기울기이며,<br/>
+            Cost가 0이되는 최저점에 수렴할 수록 보폭을 미세하게 줄여 안착시켜야한다.<br/>
+            절댓값은 일정한 속도를 지니기에, OverShooting이 발생한다.
+        </small>
+
     </div>
 
 </div>
@@ -62,7 +123,7 @@
 <script>
   renderLayout({
     page: 'tech',
-    breadcrumb: '기술 분석 / DeepLearningZerotoAll #1',
+    breadcrumb: '기술 분석 / DeepLearningZerotoAll 회고',
     root: "../../",
   });
 </script>
