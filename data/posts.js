@@ -11,6 +11,14 @@ window.POSTS_DATA = {
 
   /* ── 기술 분석 ── */
   tech: [
+    {
+      id: 'tech-019',
+      category: 'Math',
+      title: 'LogSumExp',
+      excerpt: 'LogSumExp에 대하여.',
+      tags: ['Math'],
+      date: '2026.04.23',
+    },  
       {
       id: 'tech-018',
       category: 'Machine Learning',
