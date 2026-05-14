@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogSumEXP ( Real Softmax )</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../common.css" />
+  <script src="../../data/posts.js"></script>
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../../tech.html">← 기술 분석으로 돌아가기</a>
+
+  <div class="detail-category">Math</div>
+  <h1 class="detail-title">LogSumEXP ( Real Softmax )</h1>
+  <div class="detail-meta">
+    <span class="detail-author">이승빈</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2026.05.14</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#Math</span>
+    </div>
+  </div>
+
+    <div class="detail-content">
+
+        <h2>LogSumExp ( Real Softmax, LSE )</h2>
+
+        <div class="deriv-step">
+            <span class="deriv-label">LogSumExp</span>
+            <div class="deriv-eq">  
+                $y = \ln\left(\sum_{i=1}^{m} e^{x_i}\right)$
+            </div>
+        </div>
+
+        <figure>
+            <img src="../../image/tech-019.04.jpg" alt="LSE 함수" />
+            <figcaption>LSE 함수</figcaption>
+        </figure>
+
+        <p>
+            파란선은 Softplus로, LSE의 특수한 경우이며 Real Softmax라고도 불린다.<br/>
+            SoftPlus는 ReLU와 모양이 유사하다.<br/>
+            ReLU는 $\max(0,x)$로 원점 근처에 뾰족한 꺾임이 있다.<br/><br/>
+
+            파란선은 Real Softmax로, 0과 x 두 값에 LSE를 적용한다.<br/>
+            LSE는 입력 하나를 0으로 고정하며 max 안의 값들을 e로 부풀려서 더한 뒤 ln으로 눌러주는데,<br/>
+            이 과정에서 꺾임이 사라지고 부드러운 곡선이 된다.<br/><br/>
+
+            즉, ReLU인 $\max(0,x)$에서 지수함수를 씌워 지수함수를 씌워 $e^0$, $e^x$를 만들고,<br/>
+            서로 더하면 $e^0+e^x$가 되는데, 여기서 ln을 통해 눌러준다.<br/>
+            $\ln(e^0+e^x)$가 되는 것이다. 최종 수식은 아래와 같다.<br/><br/>
+
+            $y = \ln(e^0 + e^x), LSE(0,x)$<br/>
+            즉, $y = \ln\left(\sum_{i=1}^{m} e^{x_i}\right)$ 에서 $m=2$이며, 
+            $x_1 = 0$이고, $x_2 = x$인 케이스 이다.
+        </p>
+
+        <small>
+            <b>ML의 SoftMax</b>
+            Softmax라는 이름은 max의 값을 근사하여 max함수의 부드러운 버전인데,<br/>
+            ML에서 Softmax라는 것은 max 값이 아니라 max의 index중 하나를 근사하며,<br/>
+            정확한 명칭은 SoftArgMax이다.<br/>
+            그러나 Softmax라는 것이 ML에 굳어져 LSE에서 Real Softmax라는 명칭을 사용한다.<br/>
+
+            <b>Binary가 아니라면?</b>
+            위의 Real SoftMax는 입력이 2개인 Binary 상황에서 입력 중 하나가 0인 경우 이다.<br/>
+            만약 m이 커지면 2D 그래프로 표현 자체가 불가능 하다.
+        </small>
+
+        <h3>1. Log Scale</h3>
+
+        <p>
+            통계 모델링과 머신 러닝에서는 종종 로그 스케일로 연산을 수행한다.<br/>
+            하지만 큰 값을 지수화 할 때 UnderFlow나 OverFlow를 유발 할 수 있다. <br/>
+        </p>
+
+        <div class="deriv-step">
+            <span class="deriv-label">LogSumEXP</span>
+            <div class="deriv-eq">  
+                $ \log(xy) = \log(x) + \log(y) \quad $
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            하지만 로그 스케일을 사용하면 곱셈을 덧셈으로 변환 할 수 있다. <br/>
+        </p>
+        
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Log의 미분</span>
+            <div class="deriv-eq">  
+                $ \frac{\partial}{\partial x} \log[f(x)g(x)] = \frac{\partial}{\partial x} \log f(x) + \frac{\partial}{\partial x} \log g(x) \quad (2) $
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            나아가 $f(x)와 g(x)$같은 함수를 드룰 때 미분의 선형성에 의해 다음이 성립한다.
+            종종 곱의 미분법을 적용하는 것 보다 이처럼 함수를 따로 미분하는 것이 훨씬 쉬울 것 이다.
+        </p>
+
+        <h3>2. 사용 이유</h3>
+
+        <p>
+            하지만 때로는 상당히 클 수도 있는 로그 스케일의 값들을 다시 원래 스케일로 되돌려야 할 때가 있다.<br/>
+            예를들어 길이가 $N$인 로그 확률 벡터 $x_i = \log(p_i)$를 정규화해야 한다면,
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Softmax</span>
+            <div class="deriv-eq">  
+                $ p_i = \frac{\exp(x_i)}{\sum_{n=1}^N \exp(x_n)}, \quad \sum_{n=1}^N p_n = 1 \quad $
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            Softmax에서 각각의 $x_n$은 매우 크거나 음수 or 양수일 수도 있는 로그 확률이기에,<br/>
+            이를 지수화하면 값에 따라 언더플로우나 오버플로우가 발생 할 수 있다.
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">LogSumEXP</span>
+            <div class="deriv-eq">  
+                $ \text{LSE}(x_1, \dots, x_N) = \log\left(\sum_{n=1}^N \exp(x_n)\right) \quad$
+            </div>
+        </div>
+        
+        <br/>
+
+        <p>
+            LogSumExp연산은 앞서 말한 수치적 문제들을 예방하는 데 도움을 줄 수 있다.
+        </p>
+
+        <h3>3. Softmax 공식유도</h3>
+
+        <p>
+            Softmax부터 시작하여 식을 정리해 보겠다.
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Softmax</span>
+            <div class="deriv-eq">  
+                $ p_i = \frac{\exp(x_i)}{\sum_{n=1}^N \exp(x_n)} $
+            </div>
+        </div>
+        <div class="deriv-arrow">↓ 양 변에 ${\sum_{n=1}^N \exp(x_n)}$를 곱하면 </div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Softmax</span>
+            <div class="deriv-eq">  
+                $ \exp(x_i) = p_i \sum_{n=1}^N \exp(x_n) $
+            </div>
+        </div>
+        <div class="deriv-arrow">↓ 양변에 $\ln$을 취하면</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Softmax</span>
+            <div class="deriv-eq">  
+                $ x_i = \log(p_i) + \log\left(\sum_{n=1}^N \exp(x_n)\right) $
+            </div>
+        </div>
+        <div class="deriv-arrow">↓ $\log(p_i)$에 대해 정리</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Softmax</span>
+            <div class="deriv-eq">  
+                $ \log(p_i) = x_i - \log\left(\sum_{n=1}^N \exp(x_n)\right) $
+            </div>
+        </div>
+        <div class="deriv-arrow">↓ 양변에 지수화</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">Softmax</span>
+            <div class="deriv-eq">  
+                $ p_i = \exp\left(x_i - \underbrace{\log\sum_{n=1}^N \exp(x_n)}_{\text{LSE}(x_1, \dots, x_N)}\right) \quad $
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            확률 $p_i$가 LSE를 사용한 식으로 정리되어진다. <br/>
+            이 때 LSE를 사용하는 것이 왜 overflow나 underflow가 발생하는 것을 예방하는지 알아보자.
+        </p>
+
+        <h3>4. LogSumExp Trick</h3>
+
+        <p>
+            우리는 LogSumExp를 아래 연산을 통해서<br/>
+            지수 안의 값들을 임의의 상수 c만큼 이동 시키면서도 최종적으로는 동일한 값을 낼 수 있다.
+        </p>
+
+        <br/>
+
+        <div class="deriv-step">
+            <span class="deriv-label">LogSumExp Trick</span>
+            <div class="deriv-eq">  
+                $y = \ln\left(\sum_{i=1}^{m} e^{x_i}\right)$
+            </div>
+        </div>
+        <div class="deriv-arrow">↓ 양변에 $\log$를 곱하면</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">LogSumExp Trick</span>
+            <div class="deriv-eq">  
+                $ e^y = \sum_{n=1}^N \exp(x_n) $
+            </div>
+        </div>
+        <div class="deriv-arrow">↓ $exp(x_n + c - c)$를 거치면</div>
+
+        <div class="deriv-step">
+            <span class="deriv-label">LogSumExp Trick</span>
+            <div class="deriv-eq">  
+                $ e^y = e^c \sum_{n=1}^N \exp(x_n - c) $
+            </div>
+        </div>
+        <div class="deriv-arrow">↓ 다시 양변에 $\log$를 취하면</div>
+
+         <div class="deriv-step">
+            <span class="deriv-label">LogSumExp Trick</span>
+            <div class="deriv-eq">  
+                $ y = c + \log\left(\sum_{n=1}^N \exp(x_n - c)\right) \quad $
+            </div>
+        </div>
+
+        <p>
+            여기서 $x_n$의 값중 가장 큰 값을 c로 지정하게 된다면,<br/>
+            overflow가 발생 할 일이 없다.<br/>
+            결과적으론 값이 동일하게 계산되지만, 오버플로우를 피한 것 이다.
+        </p>
+
+        <small>
+            <b>OverFlow를 피할 수 있는 이유</b>
+            $ y = c + \log\left(\sum_{n=1}^N \exp(x_n - c)\right) \quad $에서 가장 큰 값$x_n$이 1000이라고 하면,<br/>
+            $exp(x_n - c)$에서 가장 큰 값이 $exp(1000-c)$이며, 이는 가장 큰 값 $x_n = c$이므로 <br/>
+            $ \exp(1000 - 1000) = \exp(0) = \mathbf{1} $이 되어 최댓값이 1이 된다.<br/>
+            나머지 값들은 무조건 0~1 사이의 수가 나오며 전체 합은 최소 1에서 최대 N(데이터 개수)사이의 값이 된다.<br/><br/>
+            
+            <b>UnderFlow가 일어나지 않는가?</b>
+            무조건 발생하지만 놀랍게도 아무런 상관이 없다.<br/>
+            어차피 결과에 영향도 못 주는 쩌리 값들은 0으로 스스로 소멸하도록 내버려 두는 전략을 취했다.
+        </small>
+
+        <h3>5. LSE을 미분하면</h3>
+
+        <div class="deriv-step">
+            <span class="deriv-label">LSE</span>
+            <div class="deriv-eq">  
+                $y = \ln\left(\sum_{i=1}^{m} e^{x_i}\right)$
+            </div>
+        </div>
+
+        <br/>
+
+        <p>
+            $\sum_{i=1}^{m}$에서 m은 우리가 예측할 클래스의 개수이며,<br/>
+            여기서 우리가 예측할 문제의 확률을 지수화를 한 $e^x_j$의 $x_j$ 기준으로 미분을 해보겠다.<br/>
+            즉, m개의 클래스 중 j번째 점수를 변화시켰을 때의 전체 값에 어떤 영향을 주는지 알아보겠다.
+        </p>
+
+        <small>
+            <b>$x_j$</b>
+            여기서 $x_j$는 확률이 되기 전 점수 즉 Logit 이다.
+        </small>
+
+        <h4>5-1. Binary Classification일때</h4>
+
+        <figure>
+            <img src="../../image/tech-019.01.jpg" alt="Binary 미분" />
+            <figcaption>Binary 미분</figcaption>
+        </figure>
+
+        <h4>5-2. Multiple Classification일때</h4>
+        
+        <figure>
+            <img src="../../image/tech-019.02.jpg" alt="Multiple 미분" />
+            <figcaption>Multiple 미분</figcaption>
+        </figure>
+
+        <h4>5-3. 즉, Softmax에서 Sigmoid 유도 가능</h4>
+        
+        <figure>
+            <img src="../../image/tech-019.03.jpg" alt="Multiple 미분" />
+            <figcaption>Sigmoid 유도</figcaption>
+        </figure>
+
+        <br/>
+
+        <h3>6. LSE를 미분하면 왜 Softmax, Sigmoid이 나오지?</h3>
+
+        <p>
+            LSE는 결국 max의 Smooth 버전(Real Softmax)으로,<br/>
+            미분의 의미는 "$x_i$를 조절하였을 때 $y$가 얼마나 변하는가?" 이다.<br/><br/>
+
+            $e^{x_i}$가 $S = \sum e^{x_j}$ 전체에서 차지하는 비율이 곧 $x_i$의 영향력이므로,<br/>
+            미분하면 자연스럽게 $\frac{e^{x_i}}{\sum e^{x_j}}$ 형태, 즉 비율이 나온다.<br/><br/>
+
+            분류할 Class가 2개라면 비율이 하나로 줄어 Sigmoid,<br/>
+            분류할 Class가 n개라면 Softmax가 된다.
+        </p>
+
+    </div>
+
+</div>
+</div>
+
+<script src="../../components.js"></script>
+<script>
+  renderLayout({
+    page: 'tech',
+    breadcrumb: '기술 분석 / LogSumEXP ( Real Softmax )',
+    root: "../../",
+  });
+</script>
+</body>
+</html>
