@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPCG 랩 세미나 | 2026.04.01</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../common.css" />
+  <script src="../../data/posts.js"></script>
+</head>
+<body>
+<div id="app">
+<div class="post-detail">
+
+  <a class="detail-back" href="../../campus.html">← 교내 활동으로 돌아가기</a>
+
+  <div class="detail-category">IPCG Lab</div>
+  <h1 class="detail-title">IPCG 연구 과정 - BT-VAE</h1>
+  <div class="detail-meta">
+    <span class="detail-author">이승빈</span>
+    <span class="meta-dot"></span>
+    <span class="detail-date">2026.08.30</span>
+    <div class="detail-tags">
+      <span class="detail-tag">#IPCG Lab</span>
+      <span class="detail-tag">#BT-VAE</span>
+    </div>
+  </div>
+
+  <div class="detail-content">
+
+    <a class="github-link" href="https://github.com/azure-B/read-the-paper-of-BT_VAE" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub — 소스코드
+    </a>
+    <br/>
+
+    <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12854422">논문 보기</a>
+    <br/>
+
+    <p>
+        IPCG Lab에서 교수님께 제안 받아 연구하기 시작한 BT-VAE에 대해 정리해놓은 문서입니다.
+    </p>
+
+
+    <h2>Barlow-Twins</h2>
+
+    <a href="https://arxiv.org/pdf/2103.03230">Barlow-Twins 논문 보기</a>
+    <br/>
+
+    <h3>1.이름의 유래</h3>
+
+    <figure>
+        <img src="../../image/campus-004.01.jpg" alt="Barlow-Twins 논문 일부" />
+        <figcaption>논문 발췌본</figcaption>
+    </figure>
+
+    <p>
+        Barlow-Twins 이름의 유래는 <br/>
+        영국의 신경학자 Horace Barlow의 이름과 2개의 Encoder가 쌍둥이 같다하여 붙혀진 이름이다.<br/><br/>
+
+        Horace Barlow의 논문, <br/>
+        Possible Principles Underlying the Transformations of Sensory Messages에서<br/>
+        중복성 감소의 원리에 아이디어를 얻어 독립적인 요소를 추출 하는 방법을 얻었다.
+    </p>
+
+    <h3>2. 원리</h3>
+
+    <p>
+        "We propose an objective function that naturally avoids collapse by measuring the cross-correlation matrix between the outputs of two identical networks fed with distorted versions of a sample, and making it as close to the identity matrix as possible."<br/><br/>
+
+        논문의 원문에 의거하면, 두개의 증강된 샘플이 입력된 동일한 네트워크 출력간의 <br/>
+        교차 상관 행렬을 구하고, 단위 행렬에 최대한 가깝게 만들어가며 붕괴를 자연스럽게 방지한다.
+    </p>
+
+    <figure>
+        <img src="../../image/campus-004.02.jpg" alt="Barlow-Twins 논문 일부" />
+        <figcaption>논문 발췌본</figcaption>
+    </figure>
+    <p>
+        코드레벨에서 보면 다음과 같은데,<br/>
+        agument(x)에서 두개의 증강을 얻은 뒤, 동일한 네트워크 f(x)에 통과시킨다.<br/>
+        그에 따라 나온 결과를 z_a, z_b라 했을 때, 두개의 행렬을 곱한 뒤 단위 행렬에 가깝게 만든다.
+    </p>
+
+    <h4>2-1. 왜?</h4>
+    
+    <p>
+        같은 네트워크 (샴 쌍둥이)를 통과 시킨 결과값의 두 행렬의 교차 상관 행렬을<br/>
+        단위 행렬에 가깝게 만든다는 것은,<br/>
+        서로 다른 차원간의 상관 계수 $C_{ij}$을 0으로 만들고 $C_{ii}$를 1로 만든다는 것인데<br/>
+        다른 특징을 뽑아내는 차원의 연관을 0으로 만들어 중복성을 제거하고,<br/>
+        같은 특징을 뽑아내는 차원의 연관을 1로 고유한 특징을 뽑아낸다.
+    </p>
+
+    <h3>3. 수식</h3>
+
+    <h4>3-1. Loss func</h4>
+    
+    <div class="deriv-step">
+        <span class="deriv-label">BT_loss</span>
+        <div class="deriv-eq">  
+            $$\mathcal{L}_{\mathcal{BT}} \triangleq \underbrace{\sum_i (1 - \mathcal{C}_{ii})^2}_{\text{invariance term}} + \lambda \underbrace{\sum_i \sum_{j \neq i} \mathcal{C}_{ij}^2}_{\text{redundancy reduction term}}$$
+        </div>
+    </div>
+
+    <br/>
+    <p>
+        먼저 Invariance term에 대해 알아보자.
+    </p>
+    
+    <div class="deriv-step">
+        <span class="deriv-label">BT_loss Invariance term</span>
+        <div class="deriv-eq">  
+            $\sum_i (1 - \mathcal{C}_{ii})^2$
+        </div>
+    </div>
+
+    <br/>
+
+    <p>
+        주어진 교차 상관 행렬 $C$에서 $C_{ii}$ 즉, 같은 차원끼리의 상관계수를 1로 만드는 것을 목표로 한다.<br/>
+        Invariance (불변성)이라는 이름에 맞게, <br/>
+        두개의 증강 이미지에서 나온 값 $C_i$와 $C_j$에서 동일한 핵심을 뽑아 내는 것을 강제하도록 한다.
+    </p>
+
+    <br/>
+
+    <div class="deriv-step">
+        <span class="deriv-label">BT_loss Redundancy reduction term</span>
+        <div class="deriv-eq">  
+            $\lambda \sum_i \sum_{j \neq i} \mathcal{C}_{ij}^2$ 
+        </div>
+    </div>
+
+    <br/>
+
+    <p>
+        주어진 교차 상관 행렬 $C$에서 $C_{ij}$ 즉, 다른 차원끼리의 상관계수를 0로 만드는 것을 목표로 한다.<br/>
+        Redundancy reduction (중복성 감소)역시 이름은 걸맞게 <br/>
+        두개의 증강 이미지에서 나온 값 $C_i$와 $C_j$에서 같은 특징을 추출하지 않도록 강제한다.<br/><br/>
+
+        여기서 $\lambda$는 불변성과 중복성 감소 항의 학습을 조율하는 가중치이다.
+    </p>
+    
+    <small>
+        <b>$\lambda$가 크다면</b>
+        중복성 감소 항은 불변성 항보다 압도적으로 많기 때문에, 불변성 항의 학습을 방해한다.
+
+        <b>$\lambda$가 작다면</b>
+        모델이 대각성분에 크게 집중하게 되어 비대각항에서 Loss가 크게 나오더라도<br/>
+        $\lambda$에 의해 비대각항의 Loss가 작아져 중복을 충분히 끊어내지 못한다.
+    </small>
+
+    <h4>3-2. $C_{ij}$ 결정 요소</h4>
+
+
+    
+  </div>
+</div>
+</div>
+
+<script src="../../components.js"></script>
+<script>
+  renderLayout({
+    page: 'campus',
+    breadcrumb: '교내 활동 / IPCG 랩 세미나',
+    root: "../../",
+  });
+</script>
+</body>
+</html>
+ 
